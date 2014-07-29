@@ -36,13 +36,14 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Systems', 'url' => ['/system/index']],
-            /*['label' => 'Contact', 'url' => ['/site/contact']],*/
+            ['label' => 'Systems', 'url' => ['/systems/index']],
+            ['label' => 'Distributors', 'url' => ['/distributors/index']],
+            /*['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                     'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']],
+                    'linkOptions' => ['data-method' => 'post']],*/
         ],
     ]);
     NavBar::end();

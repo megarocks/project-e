@@ -33,12 +33,12 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  *
- * @property Country $country
- * @property EndUser $endUser
- * @property Currency $currency
- * @property Distributor $distributor
+ * @property Countries $country
+ * @property EndUsers $endUser
+ * @property Currencies $currency
+ * @property Distributors $distributor
  */
-class System extends \yii\db\ActiveRecord
+class Systems extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -54,7 +54,6 @@ class System extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'sn'], 'required'],
             [['id', 'sn', 'end_user_id', 'distributor_id', 'country_id', 'currency_id'], 'integer'],
             [['status'], 'string'],
             [['cpup', 'epup', 'esp', 'csp', 'nop', 'cmp', 'emp', 'dmp', 'npl', 'ctpl', 'etpl', 'dtpl'], 'number'],
@@ -72,8 +71,8 @@ class System extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'sn' => 'Serial Number',
-            'po' => 'PO#',
-            'status' => 'Status',
+            'po' => 'System PO#',
+            'status' => 'System Status',
             'cpup' => 'CPUP (Customer Payment Upon Purchase)',
             'epup' => 'EPUP (EndyMed Payment Upon Purchase)',
             'esp' => 'ESP (EndyMed System Price)',
@@ -103,7 +102,7 @@ class System extends \yii\db\ActiveRecord
      */
     public function getCountry()
     {
-        return $this->hasOne(Country::className(), ['id' => 'country_id']);
+        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
     }
 
     /**
@@ -111,7 +110,7 @@ class System extends \yii\db\ActiveRecord
      */
     public function getEndUser()
     {
-        return $this->hasOne(EndUser::className(), ['id' => 'end_user_id']);
+        return $this->hasOne(EndUsers::className(), ['id' => 'end_user_id']);
     }
 
     /**
@@ -119,7 +118,7 @@ class System extends \yii\db\ActiveRecord
      */
     public function getCurrency()
     {
-        return $this->hasOne(Currency::className(), ['id' => 'currency_id']);
+        return $this->hasOne(Currencies::className(), ['id' => 'currency_id']);
     }
 
     /**
@@ -127,6 +126,14 @@ class System extends \yii\db\ActiveRecord
      */
     public function getDistributor()
     {
-        return $this->hasOne(Distributor::className(), ['id' => 'distributor_id']);
+        return $this->hasOne(Distributors::className(), ['id' => 'distributor_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSystemEmails()
+    {
+        return $this->hasMany(SystemEmails::className(), ['system_id' => 'id']);
     }
 }

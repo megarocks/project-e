@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\System;
+use app\models\Systems;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * SystemController implements the CRUD actions for System model.
  */
-class SystemController extends Controller
+class SystemsController extends Controller
 {
     public function behaviors()
     {
@@ -33,7 +33,7 @@ class SystemController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => System::find(),
+            'query' => Systems::find(),
         ]);
 
         return $this->render('index', [
@@ -60,7 +60,7 @@ class SystemController extends Controller
      */
     public function actionCreate()
     {
-        $model = new System();
+        $model = new Systems();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -107,12 +107,12 @@ class SystemController extends Controller
      * Finds the System model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return System the loaded model
+     * @return Systems the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = System::findOne($id)) !== null) {
+        if (($model = Systems::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

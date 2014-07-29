@@ -17,7 +17,7 @@ use Yii;
  *
  * @property System[] $systems
  */
-class Country extends \yii\db\ActiveRecord
+class Countries extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

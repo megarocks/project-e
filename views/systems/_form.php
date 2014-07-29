@@ -1,11 +1,13 @@
 <?php
 
+use app\models\Distributors;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\System */
+/* @var $model app\models\Systems */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -13,13 +15,9 @@ use kartik\widgets\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <!--<?= $form->field($model, 'id')->textInput() ?>-->
-
-    <?= $form->field($model, 'sn')->textInput() ?>
-
     <?= $form->field($model, 'po')->textInput(['maxlength' => 45]) ?>
 
-    <?= $form->field($model, 'status')->dropDownList(['unlocked' => 'Unlocked', 'active' => 'Active', 'active_payment' => 'Active payment',], ['prompt' => '']) ?>
+    <?= $form->field($model, 'status')->dropDownList(['unlocked' => 'Unlocked', 'active' => 'Active locking no payment', 'active_payment' => 'Active locking payment',], ['prompt' => 'Select locking type...']) ?>
 
     <?= $form->field($model, 'cpup')->textInput(['maxlength' => 10]) ?>
 
@@ -31,19 +29,23 @@ use kartik\widgets\DatePicker;
 
     <?= $form->field($model, 'nop')->textInput(['maxlength' => 10]) ?>
 
-    <?= '<label>Next Locking Date</label>'; ?>
-    <?=
-    DatePicker::widget([
-        'name' => 'System[next_lock_date]',
-        'value' => date('d-M-Y', strtotime('+2 days')),
-        'options' => ['placeholder' => 'Select next locking ...'],
-        'pluginOptions' => [
-            'format' => 'dd-M-yyyy',
-            'todayHighlight' => true
-        ]
-    ]); ?>
+    <div class="form-group">
+        <?= '<label>Next Locking Date</label>'; ?>
+        <?=
+        DatePicker::widget([
+            'name' => 'System[next_lock_date]',
+            'value' => date('d-M-Y', strtotime('+2 days')),
+            'options' => ['placeholder' => 'Select next locking ...'],
+            'pluginOptions' => [
+                'format' => 'dd-M-yyyy',
+                'todayHighlight' => true
+            ]
+        ]); ?>
 
-    <?= $form->field($model, 'distributor_id')->textInput() ?>
+
+    </div>
+
+    <?= $form->field($model, 'distributor_id')->dropDownList(ArrayHelper::map(Distributors::find()->all(), 'id', 'first_name')) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
