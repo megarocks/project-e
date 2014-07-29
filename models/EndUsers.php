@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "end_users".
  *
  * @property integer $id
+ * @property string $title
  * @property string $email
  *
  * @property Systems[] $systems
@@ -28,7 +29,8 @@ class EndUsers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['email'], 'string', 'max' => 45]
+            [['title'], 'required'],
+            [['title', 'email'], 'string', 'max' => 45]
         ];
     }
 
@@ -39,6 +41,7 @@ class EndUsers extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'title' => 'Title',
             'email' => 'Email',
         ];
     }

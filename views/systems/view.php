@@ -10,7 +10,7 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="system-view">
+<div class="systems-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -33,28 +33,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'sn',
             'po',
+            'email:email',
             'status',
             'cpup',
             'epup',
             'esp',
             'csp',
             'nop',
-            'cmp',
-            'emp',
-            'dmp',
-            'npl',
-            'ctpl',
-            'etpl',
-            'dtpl',
-            'current_code',
             'next_lock_date',
-            'main_unlock_code',
-            'end_user_id',
-            'distributer_id',
-            'country_id',
-            'currency_id',
-            'created_at',
-            'updated_at',
+            'endusertitle',
+            'distributortitle',
         ],
     ]) ?>
 

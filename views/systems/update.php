@@ -6,13 +6,13 @@ use yii\helpers\Html;
 /* @var $model app\models\Systems */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-        'modelClass' => 'System',
+        'modelClass' => 'Systems',
     ]) . ' ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="system-update">
+<div class="systems-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

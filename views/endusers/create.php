@@ -4,15 +4,15 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Systems */
+/* @var $model app\models\EndUsers */
 
 $this->title = Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => 'Systems',
+    'modelClass' => 'End Users',
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'End Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="systems-create">
+<div class="end-users-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

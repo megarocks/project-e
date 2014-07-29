@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Distributors;
-use app\models\search\DistributorsSearch;
+use app\models\EndUsers;
+use app\models\search\EndUsersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DistributorsController implements the CRUD actions for Distributors model.
+ * EndusersController implements the CRUD actions for EndUsers model.
  */
-class DistributorsController extends Controller
+class EndusersController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +27,12 @@ class DistributorsController extends Controller
     }
 
     /**
-     * Lists all Distributors models.
+     * Lists all EndUsers models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new DistributorsSearch();
+        $searchModel = new EndUsersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,7 +42,7 @@ class DistributorsController extends Controller
     }
 
     /**
-     * Displays a single Distributors model.
+     * Displays a single EndUsers model.
      * @param integer $id
      * @return mixed
      */
@@ -54,13 +54,13 @@ class DistributorsController extends Controller
     }
 
     /**
-     * Creates a new Distributors model.
+     * Creates a new EndUsers model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Distributors();
+        $model = new EndUsers();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,7 +72,7 @@ class DistributorsController extends Controller
     }
 
     /**
-     * Updates an existing Distributors model.
+     * Updates an existing EndUsers model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,7 +91,7 @@ class DistributorsController extends Controller
     }
 
     /**
-     * Deletes an existing Distributors model.
+     * Deletes an existing EndUsers model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,15 +104,15 @@ class DistributorsController extends Controller
     }
 
     /**
-     * Finds the Distributors model based on its primary key value.
+     * Finds the EndUsers model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Distributors the loaded model
+     * @return EndUsers the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Distributors::findOne($id)) !== null) {
+        if (($model = EndUsers::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "distributors".
  *
  * @property integer $id
- * @property string $first_name
+ * @property string $title
  * @property string $email
  *
  * @property Systems[] $systems
@@ -29,8 +29,8 @@ class Distributors extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['first_name', 'email'], 'required'],
-            [['first_name', 'email'], 'string', 'max' => 45]
+            [['title'], 'required'],
+            [['title', 'email'], 'string', 'max' => 45]
         ];
     }
 
@@ -41,7 +41,7 @@ class Distributors extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'first_name' => 'First Name',
+            'title' => 'Title',
             'email' => 'Email',
         ];
     }

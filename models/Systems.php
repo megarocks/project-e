@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property integer $sn
  * @property string $po
+ * @property string $email
  * @property string $status
  * @property string $cpup
  * @property string $epup
@@ -54,11 +55,11 @@ class Systems extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'sn', 'end_user_id', 'distributor_id', 'country_id', 'currency_id'], 'integer'],
+            [['sn', 'end_user_id', 'distributor_id', 'country_id', 'currency_id'], 'integer'],
             [['status'], 'string'],
             [['cpup', 'epup', 'esp', 'csp', 'nop', 'cmp', 'emp', 'dmp', 'npl', 'ctpl', 'etpl', 'dtpl'], 'number'],
             [['next_lock_date', 'created_at', 'updated_at'], 'safe'],
-            [['po'], 'string', 'max' => 45],
+            [['po', 'email'], 'string', 'max' => 45],
             [['current_code', 'main_unlock_code'], 'string', 'max' => 512]
         ];
     }
@@ -71,13 +72,14 @@ class Systems extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'sn' => 'Serial Number',
-            'po' => 'System PO#',
-            'status' => 'System Status',
-            'cpup' => 'CPUP (Customer Payment Upon Purchase)',
-            'epup' => 'EPUP (EndyMed Payment Upon Purchase)',
-            'esp' => 'ESP (EndyMed System Price)',
-            'csp' => 'CSP (Customer System Price)',
-            'nop' => 'NOP (Number of Payments in Plan)',
+            'po' => 'PO#',
+            'email' => 'Related Email',
+            'status' => 'Status',
+            'cpup' => 'CPUP (Customer payment upon purchase)',
+            'epup' => 'EPUP (EndyMed payment upon purchase)',
+            'esp' => 'ESP (EndyMed system price)',
+            'csp' => 'CSP (Customer System price)',
+            'nop' => 'NOP (Number of payments in plan)',
             'cmp' => 'CMP',
             'emp' => 'EMP',
             'dmp' => 'DMP',
@@ -86,7 +88,7 @@ class Systems extends \yii\db\ActiveRecord
             'etpl' => 'ETPL',
             'dtpl' => 'DTPL',
             'current_code' => 'Current Code',
-            'next_lock_date' => 'Next Lock Date',
+            'next_lock_date' => 'Next Locking Date',
             'main_unlock_code' => 'Main Unlock Code',
             'end_user_id' => 'End User ID',
             'distributor_id' => 'Distributor ID',
@@ -94,6 +96,8 @@ class Systems extends \yii\db\ActiveRecord
             'currency_id' => 'Currency ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'endusertitle' => 'End-User',
+            'distributortitle' => 'Distributor'
         ];
     }
 
@@ -113,6 +117,11 @@ class Systems extends \yii\db\ActiveRecord
         return $this->hasOne(EndUsers::className(), ['id' => 'end_user_id']);
     }
 
+    public function getEndUserTitle()
+    {
+        return $this->endUser->title;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -129,11 +138,8 @@ class Systems extends \yii\db\ActiveRecord
         return $this->hasOne(Distributors::className(), ['id' => 'distributor_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSystemEmails()
+    public function getDistributorTitle()
     {
-        return $this->hasMany(SystemEmails::className(), ['system_id' => 'id']);
+        return $this->distributor->title;
     }
 }

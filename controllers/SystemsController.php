@@ -4,13 +4,13 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Systems;
-use yii\data\ActiveDataProvider;
+use app\models\search\SystemsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SystemController implements the CRUD actions for System model.
+ * SystemsController implements the CRUD actions for Systems model.
  */
 class SystemsController extends Controller
 {
@@ -27,22 +27,22 @@ class SystemsController extends Controller
     }
 
     /**
-     * Lists all System models.
+     * Lists all Systems models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Systems::find(),
-        ]);
+        $searchModel = new SystemsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single System model.
+     * Displays a single Systems model.
      * @param integer $id
      * @return mixed
      */
@@ -54,7 +54,7 @@ class SystemsController extends Controller
     }
 
     /**
-     * Creates a new System model.
+     * Creates a new Systems model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
@@ -62,8 +62,14 @@ class SystemsController extends Controller
     {
         $model = new Systems();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $request = Yii::$app->request->post();
+
+        if (!empty($request)) {
+            $model->load($request);
+            $model->next_lock_date = date('c', strtotime($request['Systems']['next_lock_date']));
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -72,7 +78,7 @@ class SystemsController extends Controller
     }
 
     /**
-     * Updates an existing System model.
+     * Updates an existing Systems model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -81,8 +87,16 @@ class SystemsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $request = Yii::$app->request->post();
+
+        if (!empty($request)) {
+            $model->load($request);
+            $model->next_lock_date = date('c', strtotime($request['Systems']['next_lock_date']));
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                //TODO Handle error while saving
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -91,7 +105,7 @@ class SystemsController extends Controller
     }
 
     /**
-     * Deletes an existing System model.
+     * Deletes an existing Systems model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,7 +118,7 @@ class SystemsController extends Controller
     }
 
     /**
-     * Finds the System model based on its primary key value.
+     * Finds the Systems model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
      * @return Systems the loaded model
