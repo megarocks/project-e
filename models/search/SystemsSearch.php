@@ -12,6 +12,8 @@ use app\models\Systems;
  */
 class SystemsSearch extends Systems
 {
+    public $distributortitle;
+
     /**
      * @inheritdoc
      */
@@ -19,7 +21,7 @@ class SystemsSearch extends Systems
     {
         return [
             [['id', 'sn', 'end_user_id', 'distributor_id', 'country_id', 'currency_id'], 'integer'],
-            [['po', 'email', 'status', 'current_code', 'next_lock_date', 'main_unlock_code', 'created_at', 'updated_at'], 'safe'],
+            [['po', 'email', 'status', 'current_code', 'next_lock_date', 'main_unlock_code', 'created_at', 'updated_at', 'distributortitle'], 'safe'],
             [['cpup', 'epup', 'esp', 'csp', 'nop', 'cmp', 'emp', 'dmp', 'npl', 'ctpl', 'etpl', 'dtpl'], 'number'],
         ];
     }
@@ -48,7 +50,19 @@ class SystemsSearch extends Systems
             'query' => $query,
         ]);
 
+
+        $dataProvider->setSort([
+            'attributes' => [
+                'sn', 'po', 'email', 'status', 'next_lock_date',
+                'distributortitle' => [
+                    'asc' => ['distributors.title' => SORT_ASC],
+                    'desc' => ['distributors.title' => SORT_DESC],
+                ]
+            ]
+        ]);
+
         if (!($this->load($params) && $this->validate())) {
+            $query->joinWith(['distributor']);
             return $dataProvider;
         }
 
@@ -76,11 +90,15 @@ class SystemsSearch extends Systems
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'po', $this->po])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'current_code', $this->current_code])
+        $query->andFilterWhere(['like', 'systems.po', $this->po])
+            ->andFilterWhere(['like', 'systems.email', $this->email])
+            ->andFilterWhere(['like', 'systems.status', $this->status])
+            ->andFilterWhere(['like', 'systems.current_code', $this->current_code])
             ->andFilterWhere(['like', 'main_unlock_code', $this->main_unlock_code]);
+
+        $query->joinWith(['distributor' => function ($q) {
+                $q->andFilterWhere(['like', 'title', $this->distributortitle]);
+            }]);
 
         return $dataProvider;
     }

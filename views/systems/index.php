@@ -55,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'currency_id',
             // 'created_at',
             // 'updated_at',
+            'distributortitle',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
