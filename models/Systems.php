@@ -146,7 +146,7 @@ class Systems extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'sn', 'po', 'email', 'status', 'next_lock_date', 'distributortitle',
+            'id', 'sn', 'po', 'email', 'status', 'next_lock_date', 'distributortitle',
         ];
     }
 }

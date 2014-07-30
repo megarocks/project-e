@@ -7,9 +7,11 @@
  */
 
 use app\assets\DataTableAsset;
+use app\assets\SystemsAsset;
 use yii\helpers\Html;
 
 DataTableAsset::register($this);
+SystemsAsset::register($this);
 
 $this->title = Yii::t('app', 'Systems');
 $this->params['breadcrumbs'][] = $this->title;
@@ -20,12 +22,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?=
-        Html::a(Yii::t('app', 'Create {modelClass}', [
+        Html::a(Yii::t('app', 'Add New System', [
             'modelClass' => 'Systems',
-        ]), ['create'], ['class' => 'btn btn-success']) ?>
+        ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
-    <table id="example-table" class="display" cellspacing="0" width="100%">
+    <table id="example-table">
         <thead>
         <tr>
             <th>Serial Number</th>
@@ -34,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Status</th>
             <th>Next Locking Date</th>
             <th>Distributor</th>
+            <th>Actions</th>
         </tr>
         </thead>
     </table>
