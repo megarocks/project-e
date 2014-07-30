@@ -142,4 +142,11 @@ class Systems extends \yii\db\ActiveRecord
     {
         return $this->distributor->title;
     }
+
+    public function fields()
+    {
+        return [
+            'sn', 'po', 'email', 'status', 'next_lock_date', 'distributortitle',
+        ];
+    }
 }
