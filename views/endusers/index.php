@@ -2,6 +2,11 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\assets\DataTableAsset;
+use app\assets\EndUsersAsset;
+
+DataTableAsset::register($this);
+EndUsersAsset::register($this);
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\EndUsersSearch */
@@ -13,26 +18,21 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="end-users-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?=
         Html::a(Yii::t('app', 'Create {modelClass}', [
             'modelClass' => 'End Users',
-        ]), ['create'], ['class' => 'btn btn-success']) ?>
+        ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-
-            'title',
-            'email:email',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
+    <table id="end-users-table" class="table-hover">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+    </table>
 </div>

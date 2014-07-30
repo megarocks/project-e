@@ -3,22 +3,19 @@
  * Created by PhpStorm.
  * User: rocks
  * Date: 7/30/14
- * Time: 11:55 AM
+ * Time: 4:52 PM
  */
-
 namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class DataTableAsset extends AssetBundle
+class EndUsersAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-    public $css = [
-        'vendors/datatables/css/jquery.dataTables.min.css',
-    ];
+    public $css = [];
     public $js = [
-        'vendors/datatables/js/jquery.dataTables.min.js',
+        '/js/endusers-list.js'
     ];
     public $depends = [
         'app\assets\AppAsset',

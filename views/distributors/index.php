@@ -3,6 +3,12 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
+use app\assets\DataTableAsset;
+use app\assets\DistributorsAsset;
+
+DataTableAsset::register($this);
+DistributorsAsset::register($this);
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\DistributorsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,26 +19,21 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="distributors-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?=
         Html::a(Yii::t('app', 'Create {modelClass}', [
             'modelClass' => 'Distributors',
-        ]), ['create'], ['class' => 'btn btn-success']) ?>
+        ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-
-            'title',
-            'email:email',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
+    <table id="distributors-table" class="table-hover">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+    </table>
 </div>

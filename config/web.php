@@ -47,6 +47,8 @@ $config = [
             //'enableStrictParsing' => true,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'systems'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'distributors'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'endusers'],
             ],
         ],
     ],

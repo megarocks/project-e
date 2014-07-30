@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
-    <table id="example-table">
+    <table id="systems-table" class="table-hover">
         <thead>
         <tr>
             <th>Serial Number</th>
@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Status</th>
             <th>Next Locking Date</th>
             <th>Distributor</th>
+            <th>End-User</th>
             <th>Actions</th>
         </tr>
         </thead>

@@ -3,7 +3,8 @@
  */
 (function () {
     $(document).ready(function () {
-        $('#example-table').dataTable({
+        $('#systems-table').dataTable({
+            "deferRender": true,
             "ajax": {
                 "url": '/rest/systems',
                 "dataSrc": ""
@@ -15,10 +16,11 @@
                 {data: "status"},
                 {data: "next_lock_date"},
                 {data: "distributortitle"},
+                {data: "endusertitle"},
             ],
             "columnDefs": [
                 {
-                    "targets": 6,
+                    "targets": 7,
                     "data": "id",
                     "render": function (id) {
                         return '<a href="/systems/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
