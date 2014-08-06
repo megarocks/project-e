@@ -19,7 +19,7 @@ use Yii;
  * @property string $updated_at
  */
 
-class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
 
     /**
