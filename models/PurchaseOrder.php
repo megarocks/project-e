@@ -31,7 +31,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property EndUsers $endUser
  * @property Country $country
- * @property Distributors $distributor
+ * @property Distributor $distributor
  * @property System[] $systems
  */
 class PurchaseOrder extends \yii\db\ActiveRecord
@@ -126,7 +126,7 @@ class PurchaseOrder extends \yii\db\ActiveRecord
      */
     public function getDistributor()
     {
-        return $this->hasOne(Distributors::className(), ['id' => 'distributor_id']);
+        return $this->hasOne(Distributor::className(), ['id' => 'distributor_id']);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Country;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -20,7 +21,7 @@ use kartik\widgets\DatePicker;
     <?= $form->field($model, 'esp')->textInput() ?>
     <?= $form->field($model, 'csp')->textInput() ?>
     <?= $form->field($model, 'nop')->textInput() ?>
-
+    <?= $form->field($model, 'country_id')->dropDownList(ArrayHelper::map(Country::find()->all(), 'id_countries', 'name')) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
