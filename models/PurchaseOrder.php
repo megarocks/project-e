@@ -144,4 +144,18 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     {
         return $this->hasMany(System::className(), ['po' => 'id']);
     }
+
+    private function calculateValues()
+    {
+        if ($this->nop != 0) {
+            $this->cmp = ($this->csp - $this->cpup) / $this->nop;
+            if ($this->epup >= $this->esp) {
+                $this->emp = 0;
+            } else {
+                $this->emp = ($this->esp - $this->epup) / $this->nop;
+            }
+            $this->dmp = $this->cmp - $this->emp;
+        }
+    }
+
 }
