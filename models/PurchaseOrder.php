@@ -2,8 +2,10 @@
 
 namespace app\models;
 
+use app\models\behaviors\DateTimeStampBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "po".
@@ -50,7 +52,13 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            'dateTimeStampBehavior' => [
+                'class' => DateTimeStampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ]
+            ]
         ];
     }
 
@@ -62,7 +70,7 @@ class PurchaseOrder extends \yii\db\ActiveRecord
         return [
             [['po_num'], 'required'],
             [['cpup', 'epup', 'esp', 'csp', 'cmp', 'emp', 'dmp', 'ctpl', 'etpl', 'dtpl'], 'number'],
-            [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id', 'currency_id'], 'integer'],
+            [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['email'], 'string', 'max' => 64]
         ];
@@ -75,22 +83,22 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'po_num' => 'Po Num',
-            'cpup' => 'Cpup',
-            'epup' => 'Epup',
-            'esp' => 'Esp',
-            'csp' => 'Csp',
-            'nop' => 'Nop',
-            'cmp' => 'Cmp',
-            'emp' => 'Emp',
-            'dmp' => 'Dmp',
-            'npl' => 'Npl',
-            'ctpl' => 'Ctpl',
-            'etpl' => 'Etpl',
-            'dtpl' => 'Dtpl',
-            'end_user_id' => 'End User ID',
-            'distributor_id' => 'Distributor ID',
-            'country_id' => 'Country ID',
+            'po_num' => 'PO#',
+            'cpup' => 'CPUP',
+            'epup' => 'EPUP',
+            'esp' => 'ESP',
+            'csp' => 'CSP',
+            'nop' => 'NOP',
+            'cmp' => 'CMP',
+            'emp' => 'EMP',
+            'dmp' => 'DMP',
+            'npl' => 'NPL',
+            'ctpl' => 'CTPL',
+            'etpl' => 'ETPL',
+            'dtpl' => 'DTPL',
+            'end_user_id' => 'End-User',
+            'distributor_id' => 'Distributor',
+            'country_id' => 'Country',
             'email' => 'Email',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

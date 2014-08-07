@@ -47,7 +47,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'etpl',
             'dtpl',
             'country_id',
-            'currency_id',
             'distributor_id',
             'email:email',
             'created_at',
