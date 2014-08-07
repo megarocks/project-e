@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Distributor;
 use app\models\Distributors;
 use app\models\EndUsers;
 use yii\helpers\ArrayHelper;
@@ -51,7 +52,7 @@ use kartik\widgets\DatePicker;
 
     <?= $form->field($model, 'end_user_id')->dropDownList(ArrayHelper::map(EndUsers::find()->all(), 'id', 'title')) ?>
 
-    <?= $form->field($model, 'distributor_id')->dropDownList(ArrayHelper::map(Distributors::find()->all(), 'id', 'title')) ?>
+    <?= $form->field($model, 'distributor_id')->dropDownList(ArrayHelper::map(Distributor::find()->all(), 'id', 'title')) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

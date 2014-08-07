@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "po".
@@ -24,14 +25,12 @@ use Yii;
  * @property integer $end_user_id
  * @property integer $distributor_id
  * @property integer $country_id
- * @property integer $currency_id
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
  *
  * @property EndUsers $endUser
  * @property Country $country
- * @property Currency $currency
  * @property Distributors $distributor
  * @property System[] $systems
  */
@@ -43,6 +42,16 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'po';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
     }
 
     /**
@@ -82,7 +91,6 @@ class PurchaseOrder extends \yii\db\ActiveRecord
             'end_user_id' => 'End User ID',
             'distributor_id' => 'Distributor ID',
             'country_id' => 'Country ID',
-            'currency_id' => 'Currency ID',
             'email' => 'Email',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -106,11 +114,11 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return string
      */
     public function getCurrency()
     {
-        return $this->hasOne(Currency::className(), ['id' => 'currency_id']);
+        return $this->country->currency_name;
     }
 
     /**

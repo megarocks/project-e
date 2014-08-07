@@ -36,7 +36,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Systems', 'url' => ['/systems/index']],
+            ['label' => 'PO', 'url' => ['/purchase-order/index']],
             ['label' => 'Distributors', 'url' => ['/distributors/index']],
             ['label' => 'End Users', 'url' => ['/endusers/index']],
             /*['label' => 'Contact', 'url' => ['/site/contact']],

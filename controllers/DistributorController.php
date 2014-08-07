@@ -2,17 +2,18 @@
 
 namespace app\controllers;
 
+use app\models\DistributorCountry;
 use Yii;
-use app\models\Distributors;
-use app\models\search\DistributorsSearch;
+use app\models\Distributor;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 
 /**
  * DistributorsController implements the CRUD actions for Distributors model.
  */
-class DistributorsController extends Controller
+class DistributorController extends Controller
 {
     public function behaviors()
     {
@@ -32,13 +33,7 @@ class DistributorsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new DistributorsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render('index');
     }
 
     /**
@@ -60,10 +55,16 @@ class DistributorsController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Distributors();
+        $model = new Distributor();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $request = Yii::$app->request->post();
+
+        if (!empty($request)) {
+            $model->load($request);
+            if ($model->save()) {
+                $model->saveCountry();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -80,10 +81,18 @@ class DistributorsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $request = Yii::$app->request->post();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (!empty($request)) {
+            $model->load($request);
+            if ($model->save()) {
+                $model->saveCountry();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                //TODO Handle error while saving
+            }
         } else {
+            $model->countryId = $model->getCountryId();
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -107,15 +116,30 @@ class DistributorsController extends Controller
      * Finds the Distributors model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Distributors the loaded model
+     * @return Distributor the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Distributors::findOne($id)) !== null) {
+        if (($model = Distributor::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionList()
+    {
+        $distributors = Distributor::find()->all();
+        $result = [];
+        foreach ($distributors as $distributor) {
+            $d['id'] = $distributor->id;
+            $d['title'] = $distributor->title;
+            $d['email'] = $distributor->email;
+            $d['country'] = $distributor->countryName;
+            $result[] = $d;
+        }
+
+        echo(Json::encode($result));
     }
 }

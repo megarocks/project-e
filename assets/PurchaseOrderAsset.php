@@ -3,14 +3,14 @@
  * Created by PhpStorm.
  * User: rocks
  * Date: 7/30/14
- * Time: 4:17 PM
+ * Time: 11:55 AM
  */
 
 namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class DistributorsAsset extends AssetBundle
+class PurchaseOrderAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
@@ -18,9 +18,10 @@ class DistributorsAsset extends AssetBundle
 
     ];
     public $js = [
-        '/js/distributors-list.js'
+        '/js/purchase-order-list.js'
     ];
     public $depends = [
         'app\assets\AppAsset',
+        'app\assets\DataTableAsset',
     ];
 }

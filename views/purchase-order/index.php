@@ -5,12 +5,10 @@
  * Date: 8/6/14
  * Time: 5:17 PM
  */
-use app\assets\DataTableAsset;
-use app\assets\SystemsAsset;
+use app\assets\PurchaseOrderAsset;
 use yii\helpers\Html;
 
-DataTableAsset::register($this);
-SystemsAsset::register($this);
+PurchaseOrderAsset::register($this);
 
 $this->title = Yii::t('app', 'Purchase Orders');
 $this->params['breadcrumbs'][] = $this->title;

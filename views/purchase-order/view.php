@@ -1,17 +1,20 @@
 <?php
 
+use app\assets\PurchaseOrderAsset;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Distributors */
+/* @var $model app\models\PurchaseOrder */
 
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Distributors'), 'url' => ['index']];
+PurchaseOrderAsset::register($this);
+
+$this->title = Yii::t('app', 'Purchase Order Details');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="distributors-view">
 
+<div class="po-view">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
@@ -30,9 +33,25 @@ $this->params['breadcrumbs'][] = $this->title;
     DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'title',
+            'po_num',
+            'cpup',
+            'epup',
+            'esp',
+            'csp',
+            'nop',
+            'cmp',
+            'emp',
+            'dmp',
+            'npl',
+            'ctpl',
+            'etpl',
+            'dtpl',
+            'country_id',
+            'currency_id',
+            'distributor_id',
             'email:email',
+            'created_at',
+            'updated_at'
         ],
     ]) ?>
 

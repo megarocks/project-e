@@ -44,8 +44,10 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            //'enableStrictParsing' => true,
             'rules' => [
+                '<controller>/<id:\d+>' => '<controller>/view',
+                '<controller>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller>/<action:\w+>' => '<controller>/<action>',
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'systems'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'distributors'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'endusers'],

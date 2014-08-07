@@ -2,22 +2,27 @@
  * Created by rocks on 7/30/14.
  */
 (function () {
-    var ctrlName = "distributor"; //define controller name here
+    var ctrlName = "purchase-order"; //define controller name here
     $(document).ready(function () {
-        $('#distributors-table').dataTable({
+        $('#po-table').dataTable({
             "deferRender": true,
             "ajax": {
                 "url": '/' + ctrlName + '/list',
                 "dataSrc": ""
             },
             "columns": [
-                {data: "title"},
-                {data: "email"},
-                {data: "country"}
+                {data: "created_at"},
+                {data: "po_num"},
+                {data: "cpup"},
+                {data: "epup"},
+                {data: "esp"},
+                {data: "csp"},
+                {data: "nop"},
+                {data: "distributor_id"},
             ],
             "columnDefs": [
                 {
-                    "targets": 3,
+                    "targets": 8,
                     "data": "id",
                     "render": function (id) {
                         return '<a href="/' + ctrlName + '/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
