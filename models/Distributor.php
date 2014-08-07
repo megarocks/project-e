@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\models\behaviors\DateTimeStampBehavior;
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "distributors".
@@ -28,6 +30,19 @@ class Distributor extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'distributors';
+    }
+
+    public function behaviors()
+    {
+        return [
+            'dateTimeStampBehavior' => [
+                'class' => DateTimeStampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ]
+            ]
+        ];
     }
 
     /**
