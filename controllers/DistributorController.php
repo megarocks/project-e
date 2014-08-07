@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Country;
 use app\models\DistributorCountry;
 use Yii;
 use app\models\Distributor;
@@ -141,5 +142,27 @@ class DistributorController extends Controller
         }
 
         echo(Json::encode($result));
+    }
+
+    public function actionDynamic()
+    {
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $countryId = $parents[0];
+                $country = Country::findOne(['id_countries' => $countryId]);
+                $distributors = $country->distributors;
+                $out = [];
+                $res = [];
+                foreach ($distributors as $d) {
+                    $res['id'] = $d->id;
+                    $res['name'] = $d->title;
+                    $out[] = $res;
+                }
+                echo Json::encode(['output' => $out, 'selected' => '']);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected' => '']);
     }
 }
