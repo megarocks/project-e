@@ -1,8 +1,6 @@
 <?php
 
-use app\models\Distributor;
-use app\models\Distributors;
-use app\models\EndUsers;
+
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;

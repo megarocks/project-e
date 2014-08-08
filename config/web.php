@@ -46,7 +46,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 '<controller>/<id:\d+>' => '<controller>/view',
-                '<controller>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller>/<action>/<id:\d+>' => '<controller>/<action>',
                 '<controller>/<action:\w+>' => '<controller>/<action>',
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'systems'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'distributors'],

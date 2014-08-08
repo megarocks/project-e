@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\PurchaseOrder;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -13,6 +14,18 @@ use yii\web\NotFoundHttpException;
  */
 class PurchaseOrderController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+
     /**
      * Renders view with list of PurchaseOrders
      * @return mixed
@@ -99,24 +112,45 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function actionList()
+    /**
+     * Return list of PurchaseOrders in json format
+     */
+    public function actionList($fields = [])
     {
         $orders = PurchaseOrder::find()->all();
         $result = [];
-        /** @var $order PurchaseOrder */
-        foreach ($orders as $order) {
-            $o['id'] = $order->id;
-            $o['po_num'] = $order->po_num;
-            $o['created_at'] = date('M d, Y h:i A', strtotime($order->created_at));
-            $o['cpup'] = $order->cpup;
-            $o['dpup'] = $order->dpup;
-            $o['dsp'] = $order->dsp;
-            $o['csp'] = $order->csp;
-            $o['nop'] = $order->nop;
-            $o['distributor'] = $order->distributor->title;
-            $o['country'] = $order->country->name;
-            $result[] = $o;
+        //if fields are defined in request
+        if (count($fields) > 0) {
+            $specField = explode(",", $fields);
+            /** @var $order PurchaseOrder */
+            foreach ($orders as $order) {
+                $o = null;
+                foreach ($specField as $field) {
+                    if ($field != "") {
+                        $o[$field] = $order[$field];
+                    }
+                }
+                if (isset($o)) {
+                    $result[] = $o;
+                }
+            }
+        } else { //return default fields set if not specified
+            /** @var $order PurchaseOrder */
+            foreach ($orders as $order) {
+                $o['id'] = $order->id;
+                $o['po_num'] = $order->po_num;
+                $o['created_at'] = date('M d, Y h:i A', strtotime($order->created_at));
+                $o['cpup'] = $order->cpup;
+                $o['dpup'] = $order->dpup;
+                $o['dsp'] = $order->dsp;
+                $o['csp'] = $order->csp;
+                $o['nop'] = $order->nop;
+                $o['distributor'] = $order->distributor->title;
+                $o['country'] = $order->country->name;
+                $result[] = $o;
+            }
         }
         echo(Json::encode($result));
     }
+
 }

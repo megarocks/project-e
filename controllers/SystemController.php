@@ -2,9 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\PurchaseOrder;
 use Yii;
-use app\models\Systems;
-use app\models\search\SystemsSearch;
+use app\models\System;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * SystemsController implements the CRUD actions for Systems model.
  */
-class SystemsController extends Controller
+class SystemController extends Controller
 {
     public function behaviors()
     {
@@ -32,13 +33,7 @@ class SystemsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new SystemsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render('index');
     }
 
     /**
@@ -126,15 +121,53 @@ class SystemsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Systems::findOne($id)) !== null) {
+        if (($model = System::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 
-    public function actionList()
+    public function actionListOrders()
     {
-        return $this->render('list');
+        return $this->render('list-orders');
+    }
+
+    public function actionViewOrder($id)
+    {
+        return $this->render('view-system-order', [
+            'model' => PurchaseOrder::findOne($id),
+        ]);
+    }
+
+    public function actionUpdateOrder($id)
+    {
+        $model = PurchaseOrder::findOne($id);
+
+        $request = Yii::$app->request->post();
+
+        if (!empty($request)) {
+            $model->load($request);
+
+            if (($model->system_sn) && ($model->validate())) {
+                $system = System::findOne(['sn' => $model->system_sn]);
+                if (is_null($system)) {
+                    $system = new System();
+                }
+                $system->sn = $model->system_sn;
+                $system->save();
+            }
+            if ($model->save()) {
+                return $this->redirect(['view-order', 'id' => $model->id]);
+            } else {
+                return $this->render('update-order', [
+                    'model' => $model,
+                ]);
+            }
+        } else {
+            return $this->render('update-order', [
+                'model' => $model,
+            ]);
+        }
     }
 }

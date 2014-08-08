@@ -29,6 +29,8 @@ use yii\db\ActiveRecord;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
+ * @property integer $system_sn
+ *
  *
  * @property EndUsers $endUser
  * @property Country $country
@@ -69,9 +71,10 @@ class PurchaseOrder extends \yii\db\ActiveRecord
         return [
             [['po_num'], 'required'],
             [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number'],
-            [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id'], 'integer'],
+            [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['email'], 'string', 'max' => 64]
+            [['email'], 'string', 'max' => 64],
+            [['system_sn'], 'unique'],
         ];
     }
 
@@ -97,6 +100,7 @@ class PurchaseOrder extends \yii\db\ActiveRecord
             'distributor_id' => 'Distributor',
             'country_id' => 'Country',
             'email' => 'Email',
+            'system_sn' => 'System SN',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -137,9 +141,9 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSystems()
+    public function getSystem()
     {
-        return $this->hasMany(System::className(), ['po' => 'id']);
+        return $this->hasOne(System::className(), ['sn' => 'system_sn']);
     }
 
     private function calculateValues($initial = true)
