@@ -22,6 +22,10 @@ use yii\db\ActiveRecord;
  */
 class System extends \yii\db\ActiveRecord
 {
+    const STATUS_UNLOCKED = "unlocked";
+    const STATUS_ACTIVE = "active";
+    const STATUS_ACTIVE_PAYMENT = "active_payment";
+
     /**
      * @inheritdoc
      */
@@ -86,5 +90,25 @@ class System extends \yii\db\ActiveRecord
     public function getPurchaseOrder()
     {
         return $this->hasOne(PurchaseOrder::className(), ['system_sn' => 'sn']);
+    }
+
+    private function generateLockingParams()
+    {
+        $this->main_unlock_code = Yii::$app->security->generateRandomString(10); //TODO Code generation logic will be here
+        $this->next_lock_date = date("Y-m-d", strtotime("+3 months"));
+        $this->current_code = Yii::$app->security->generateRandomString(10);
+        $this->status = static::STATUS_ACTIVE_PAYMENT;
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->generateLockingParams();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
