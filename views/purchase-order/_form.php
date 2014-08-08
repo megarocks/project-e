@@ -19,8 +19,8 @@ use kartik\widgets\DepDrop;
     <?= $form->field($model, 'po_num')->textInput() ?>
     <?= $form->field($model, 'email')->textInput() ?>
     <?= $form->field($model, 'cpup')->textInput() ?>
-    <?= $form->field($model, 'epup')->textInput() ?>
-    <?= $form->field($model, 'esp')->textInput() ?>
+    <?= $form->field($model, 'dpup')->textInput() ?>
+    <?= $form->field($model, 'dsp')->textInput() ?>
     <?= $form->field($model, 'csp')->textInput() ?>
     <?= $form->field($model, 'nop')->textInput() ?>
     <?= $form->field($model, 'country_id')->dropDownList(ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'country-id']) ?>

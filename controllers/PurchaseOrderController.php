@@ -101,9 +101,22 @@ class PurchaseOrderController extends Controller
 
     public function actionList()
     {
-        //TODO Improve method
-        $records = PurchaseOrder::find()->all();
-        $recordsJson = Json::encode($records);
-        echo $recordsJson;
+        $orders = PurchaseOrder::find()->all();
+        $result = [];
+        /** @var $order PurchaseOrder */
+        foreach ($orders as $order) {
+            $o['id'] = $order->id;
+            $o['po_num'] = $order->po_num;
+            $o['created_at'] = date('M d, Y h:i A', strtotime($order->created_at));
+            $o['cpup'] = $order->cpup;
+            $o['dpup'] = $order->dpup;
+            $o['dsp'] = $order->dsp;
+            $o['csp'] = $order->csp;
+            $o['nop'] = $order->nop;
+            $o['distributor'] = $order->distributor->title;
+            $o['country'] = $order->country->name;
+            $result[] = $o;
+        }
+        echo(Json::encode($result));
     }
 }

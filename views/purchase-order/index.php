@@ -30,11 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Added at</th>
             <th>PO#</th>
             <th>CPUP</th>
-            <th>EPUP</th>
-            <th>ESP</th>
+            <th>DPUP</th>
+            <th>DSP</th>
             <th>CSP</th>
             <th>NOP</th>
             <th>Distributer</th>
+            <th>Country</th>
             <th>Actions</th>
         </tr>
         </thead>

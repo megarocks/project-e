@@ -14,15 +14,16 @@
                 {data: "created_at"},
                 {data: "po_num"},
                 {data: "cpup"},
-                {data: "epup"},
-                {data: "esp"},
+                {data: "dpup"},
+                {data: "dsp"},
                 {data: "csp"},
                 {data: "nop"},
-                {data: "distributor_id"},
+                {data: "distributor"},
+                {data: "country"}
             ],
             "columnDefs": [
                 {
-                    "targets": 8,
+                    "targets": 9,
                     "data": "id",
                     "render": function (id) {
                         return '<a href="/' + ctrlName + '/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +

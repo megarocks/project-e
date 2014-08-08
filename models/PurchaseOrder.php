@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\models\behaviors\DateTimeStampBehavior;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -13,16 +14,14 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $po_num
  * @property string $cpup
- * @property string $epup
- * @property string $esp
+ * @property string $dpup
+ * @property string $dsp
  * @property string $csp
  * @property integer $nop
- * @property string $cmp
- * @property string $emp
- * @property string $dmp
  * @property integer $npl
+ * @property string $cmp
+ * @property string $dmp
  * @property string $ctpl
- * @property string $etpl
  * @property string $dtpl
  * @property integer $end_user_id
  * @property integer $distributor_id
@@ -69,7 +68,7 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     {
         return [
             [['po_num'], 'required'],
-            [['cpup', 'epup', 'esp', 'csp', 'cmp', 'emp', 'dmp', 'ctpl', 'etpl', 'dtpl'], 'number'],
+            [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number'],
             [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['email'], 'string', 'max' => 64]
@@ -83,19 +82,17 @@ class PurchaseOrder extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'po_num' => 'PO#',
-            'cpup' => 'CPUP',
-            'epup' => 'EPUP',
-            'esp' => 'ESP',
-            'csp' => 'CSP',
-            'nop' => 'NOP',
-            'cmp' => 'CMP',
-            'emp' => 'EMP',
-            'dmp' => 'DMP',
-            'npl' => 'NPL',
-            'ctpl' => 'CTPL',
-            'etpl' => 'ETPL',
-            'dtpl' => 'DTPL',
+            'po_num' => 'PO# (Purchase Order Number)',
+            'cpup' => 'CPUP (Customer Payment Upon Purchase)',
+            'dpup' => 'DPUP (Distributor Payment Upon purchase)',
+            'dsp' => 'DSP (Distributor System Price)',
+            'csp' => 'CSP (Customer System Price)',
+            'nop' => 'NOP (Number of payments in plan)',
+            'cmp' => 'CMP (Customer Monthly Payment)',
+            'dmp' => 'DMP (Distributor Monthly Payment)',
+            'npl' => 'NPL (Number of payments left)',
+            'ctpl' => 'CTPL (Customer Total Payment Left)',
+            'dtpl' => 'DTPL (Distributor Total Payment Left)',
             'end_user_id' => 'End-User',
             'distributor_id' => 'Distributor',
             'country_id' => 'Country',
@@ -118,7 +115,7 @@ class PurchaseOrder extends \yii\db\ActiveRecord
      */
     public function getCountry()
     {
-        return $this->hasOne(Country::className(), ['id' => 'country_id']);
+        return $this->hasOne(Country::className(), ['id_countries' => 'country_id']);
     }
 
     /**
@@ -145,16 +142,28 @@ class PurchaseOrder extends \yii\db\ActiveRecord
         return $this->hasMany(System::className(), ['po' => 'id']);
     }
 
-    private function calculateValues()
+    private function calculateValues($initial = true)
     {
-        if ($this->nop != 0) {
-            $this->cmp = ($this->csp - $this->cpup) / $this->nop;
-            if ($this->epup >= $this->esp) {
-                $this->emp = 0;
-            } else {
-                $this->emp = ($this->esp - $this->epup) / $this->nop;
+        if ($this->nop >= 0) {
+            if ($initial) {
+                $this->npl = $this->nop;
             }
-            $this->dmp = $this->cmp - $this->emp;
+            $this->cmp = ($this->csp - $this->cpup) / $this->nop;
+            $this->dpup >= $this->dsp ? $this->dmp = 0 : $this->dmp = ($this->dsp - $this->dpup) / $this->nop;
+            $this->ctpl = $this->cmp * $this->npl;
+            $this->dtpl = $this->dmp * $this->npl;
+        } else {
+            throw new InvalidParamException('NOP should be positive value');
+        }
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            $insert ? $this->calculateValues() : $this->calculateValues(false);
+            return true;
+        } else {
+            return false;
         }
     }
 
