@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
-use app\assets\SystemsOrderAsset;
+use app\assets\PoIndexProductionAsset;
 
-SystemsOrderAsset::register($this);
+PoIndexProductionAsset::register($this);
 
 $this->title = Yii::t('app', 'System Orders');
 $this->params['breadcrumbs'][] = $this->title;

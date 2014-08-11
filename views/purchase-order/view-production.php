@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\PurchaseOrder */
 
 $this->title = "System Order #" . $model->po_num . " details";
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Orders'), 'url' => ['list-orders']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="systems-view">

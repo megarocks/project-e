@@ -3,11 +3,14 @@
 namespace app\controllers;
 
 use app\models\PurchaseOrder;
+use app\models\System;
+use app\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * PurchaseOrderController implements the CRUD actions for PurchaseOrder model.
@@ -28,48 +31,104 @@ class PurchaseOrderController extends Controller
 
     /**
      * Renders view with list of PurchaseOrders
+     * @throws \yii\web\UnauthorizedHttpException
      * @return mixed
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+        $view = 'index';
+        if ($user->hasRole('sales')) {
+            $view = 'index-sales';
+        } elseif ($user->hasRole('production')) {
+            $view = 'index-production';
+        } else {
+            throw new UnauthorizedHttpException;
+        }
+        return $this->render($view);
     }
 
     /**
      * Displays a single PurchaseOrder model.
      * @param integer $id
+     * @throws \yii\web\UnauthorizedHttpException
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+        if ($user->hasRole('sales')) {
+            return $this->render('view-sales', [
+                'model' => $this->findModel($id),
+            ]);
+        } elseif ($user->hasRole('production')) {
+            return $this->render('view-production', [
+                'model' => $this->findModel($id),
+            ]);
+        } else {
+            throw new UnauthorizedHttpException;
+        }
+
     }
 
     /**
      * Updates an existing PurchaseOrder model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
+     * @throws \yii\web\UnauthorizedHttpException
      * @return mixed
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         $request = Yii::$app->request->post();
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
 
-        if (!empty($request)) {
-            $model->load($request);
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        //logic for sales users
+        if ($user->hasRole('sales')) {
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    return $this->render('update-sales', [
+                        'model' => $model,
+                    ]);
+                }
             } else {
-                //TODO Handle error while saving
+                return $this->render('update-sales', [
+                    'model' => $model,
+                ]);
+            }
+        } //logic for production users
+        elseif ($user->hasRole('production')) {
+            if (!empty($request)) {
+                $model->load($request);
+                if (($model->system_sn) && ($model->validate())) {
+                    $system = System::findOne(['sn' => $model->system_sn]);
+                    if (is_null($system)) {
+                        $system = new System();
+                    }
+                    $system->sn = $model->system_sn;
+                    $system->save();
+                }
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    return $this->render('update-production', [
+                        'model' => $model,
+                    ]);
+                }
+            } else {
+                return $this->render('update-production', [
+                    'model' => $model,
+                ]);
             }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new UnauthorizedHttpException;
         }
     }
 

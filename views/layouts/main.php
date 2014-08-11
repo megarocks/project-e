@@ -38,14 +38,13 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'PO', 'url' => ['/purchase-order/index']],
             ['label' => 'Distributors', 'url' => ['/distributor/index']],
-            ['label' => 'System Orders', 'url' => ['/system/list-orders']],
+            ['label' => 'Systems', 'url' => ['/system/index']],
             ['label' => 'End Users', 'url' => ['/endusers/index']],
-            /*['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
-                ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                ['label' => 'Logout (' . Yii::$app->user->identity->first_name . ')',
                     'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']],*/
+                    'linkOptions' => ['data-method' => 'post']],
         ],
     ]);
     NavBar::end();
