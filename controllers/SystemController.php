@@ -3,12 +3,14 @@
 namespace app\controllers;
 
 use app\models\PurchaseOrder;
+use app\models\User;
 use Yii;
 use app\models\System;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * SystemsController implements the CRUD actions for Systems model.
@@ -29,11 +31,22 @@ class SystemController extends Controller
 
     /**
      * Lists all Systems models.
+     * @throws \yii\web\UnauthorizedHttpException
      * @return mixed
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+
+        if ($user->hasRole('distributor')) {
+            return $this->render('index-distributor');
+        } elseif ($user->hasRole('enduser')) {
+            return $this->render('index-enduser');
+        } else {
+            throw new UnauthorizedHttpException;
+        }
+
     }
 
     /**
@@ -46,70 +59,6 @@ class SystemController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
-
-    /**
-     * Creates a new Systems model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new System();
-
-        $request = Yii::$app->request->post();
-
-        if (!empty($request)) {
-            $model->load($request);
-            $model->next_lock_date = date('c', strtotime($request['Systems']['next_lock_date']));
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Systems model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        $request = Yii::$app->request->post();
-
-        if (!empty($request)) {
-            $model->load($request);
-            $model->next_lock_date = date('c', strtotime($request['Systems']['next_lock_date']));
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                //TODO Handle error while saving
-            }
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Systems model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**
@@ -126,6 +75,25 @@ class SystemController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionList()
+    {
+        $systems = System::find()->all();
+        $result = [];
+
+        /**@var System $system */
+        foreach ($systems as $system) {
+            $s['id'] = $system->id;
+            $s['sn'] = $system->sn;
+            $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
+            $s['next_lock_date'] = $system->next_lock_date;
+            $s['current_code'] = $system->current_code;
+            $s['npl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->npl : null;
+            $s['ctpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->ctpl : null;
+            $result[] = $s;
+        }
+        echo(Json::encode($result));
     }
 
 }
