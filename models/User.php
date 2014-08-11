@@ -153,4 +153,15 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
+
+    /**
+     * Checks if user have role
+     * @param $role string
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        $userRoles = Yii::$app->authManager->getRolesByUser($this->id);
+        return array_key_exists($role, $userRoles);
+    }
 }
