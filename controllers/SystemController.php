@@ -55,7 +55,7 @@ class SystemController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Systems();
+        $model = new System();
 
         $request = Yii::$app->request->post();
 
