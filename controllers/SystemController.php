@@ -56,9 +56,19 @@ class SystemController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+
+        if ($user->hasRole('distributor')) {
+            return $this->render('view-distributor', [
+                'model' => $this->findModel($id),
+            ]);
+        } elseif ($user->hasRole('enduser')) {
+            return $this->render('view-sales', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+
     }
 
     /**
@@ -79,6 +89,7 @@ class SystemController extends Controller
 
     public function actionList()
     {
+
         $systems = System::find()->all();
         $result = [];
 

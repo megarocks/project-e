@@ -23,7 +23,7 @@
                     "targets": 7,
                     "data": "id",
                     "render": function (id) {
-                        return '<a href="/systems/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-cog"></span></a> '
+                        return '<a href="/system/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-cog"></span></a> '
                     }
                 }
             ]
