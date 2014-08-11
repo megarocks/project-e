@@ -1,13 +1,11 @@
 <?php
 
-use app\assets\PurchaseOrderAsset;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\PurchaseOrder */
 
-PurchaseOrderAsset::register($this);
 
 $this->title = Yii::t('app', 'Purchase Order Details');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];

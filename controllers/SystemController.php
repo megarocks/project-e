@@ -128,46 +128,4 @@ class SystemController extends Controller
         }
     }
 
-    public function actionListOrders()
-    {
-        return $this->render('list-orders');
-    }
-
-    public function actionViewOrder($id)
-    {
-        return $this->render('view-system-order', [
-            'model' => PurchaseOrder::findOne($id),
-        ]);
-    }
-
-    public function actionUpdateOrder($id)
-    {
-        $model = PurchaseOrder::findOne($id);
-
-        $request = Yii::$app->request->post();
-
-        if (!empty($request)) {
-            $model->load($request);
-
-            if (($model->system_sn) && ($model->validate())) {
-                $system = System::findOne(['sn' => $model->system_sn]);
-                if (is_null($system)) {
-                    $system = new System();
-                }
-                $system->sn = $model->system_sn;
-                $system->save();
-            }
-            if ($model->save()) {
-                return $this->redirect(['view-order', 'id' => $model->id]);
-            } else {
-                return $this->render('update-order', [
-                    'model' => $model,
-                ]);
-            }
-        } else {
-            return $this->render('update-order', [
-                'model' => $model,
-            ]);
-        }
-    }
 }

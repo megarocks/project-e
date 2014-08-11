@@ -5,10 +5,10 @@
  * Date: 8/6/14
  * Time: 5:17 PM
  */
-use app\assets\PurchaseOrderAsset;
+use app\assets\PoIndexSalesAsset;
 use yii\helpers\Html;
 
-PurchaseOrderAsset::register($this);
+PoIndexSalesAsset::register($this);
 
 $this->title = Yii::t('app', 'Purchase Orders');
 $this->params['breadcrumbs'][] = $this->title;

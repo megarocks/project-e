@@ -10,7 +10,7 @@ namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class PurchaseOrderAsset extends AssetBundle
+class PoIndexSalesAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
@@ -18,7 +18,7 @@ class PurchaseOrderAsset extends AssetBundle
 
     ];
     public $js = [
-        '/js/purchase-order-list.js'
+        '/js/po-index-sales.js'
     ];
     public $depends = [
         'app\assets\AppAsset',
