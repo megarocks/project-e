@@ -143,4 +143,14 @@ class User extends ActiveRecord implements IdentityInterface
     {
         // TODO: Implement validateAuthKey() method.
     }
+
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
 }
