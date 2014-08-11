@@ -65,7 +65,7 @@ class SystemController extends Controller
      * Finds the Systems model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Systems the loaded model
+     * @return System the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
@@ -86,6 +86,7 @@ class SystemController extends Controller
         foreach ($systems as $system) {
             $s['id'] = $system->id;
             $s['sn'] = $system->sn;
+            $s['status'] = $system->status;
             $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
             $s['next_lock_date'] = $system->next_lock_date;
             $s['current_code'] = $system->current_code;

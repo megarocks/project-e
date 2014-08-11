@@ -6,12 +6,10 @@
  * Time: 12:05 PM
  */
 
-use app\assets\DataTableAsset;
-use app\assets\SystemsAsset;
+use app\assets\SystemsIndexDistributorAsset;
 use yii\helpers\Html;
 
-DataTableAsset::register($this);
-SystemsAsset::register($this);
+SystemsIndexDistributorAsset::register($this);
 
 $this->title = Yii::t('app', 'Systems');
 $this->params['breadcrumbs'][] = $this->title;
@@ -32,11 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr>
             <th>Serial Number</th>
             <th>PO</th>
-            <th>Attached Email</th>
             <th>Status</th>
             <th>Next Locking Date</th>
-            <th>Distributor</th>
-            <th>End-User</th>
+            <th>Current Code</th>
+            <th>Payment Left</th>
+            <th>Number of left payments</th>
             <th>Actions</th>
         </tr>
         </thead>
