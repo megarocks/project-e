@@ -72,15 +72,14 @@ class System extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'sn' => 'Sn',
-            'po' => 'PO#',
-            'status' => 'Status',
-            'current_code' => 'Current Code',
-            'next_lock_date' => 'Next Lock Date',
-            'main_unlock_code' => 'Main Unlock Code',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'purchaseOrder' => 'Purchase Order',
+            'sn' => Yii::t('app', 'System SN'),
+            'po' => Yii::t('app', 'Purchase Order #'),
+            'status' => Yii::t('app', 'Status'),
+            'current_code' => Yii::t('app', 'Current Code'),
+            'next_lock_date' => Yii::t('app', 'Next Locking Date'),
+            'main_unlock_code' => Yii::t('app', 'Main unlock Code'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 

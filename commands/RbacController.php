@@ -33,7 +33,7 @@ class RbacController extends Controller
         $production = $auth->createRole(static::ROLE_PROD);
         $endyMed = $auth->createRole(static::ROLE_ENDY);
         $distributor = $auth->createRole(static::ROLE_DISTR);
-        $endUser = $auth->createRole(static::ROLE_DISTR);
+        $endUser = $auth->createRole(static::ROLE_END_USER);
 
         $auth->add($sales);
         $auth->add($production);
@@ -46,7 +46,5 @@ class RbacController extends Controller
         $auth->assign($endyMed, 3);
         $auth->assign($distributor, 4);
         $auth->assign($endUser, 5);
-
-
     }
 }

@@ -36,12 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => Yii::t('app', 'Email'),
                     'value' => $po->email,
                 ],
-                'created_at'
             ],
         ]) ?>
     </div>
 
-    <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
+    <h3><?= Yii::t('app', 'Monetary details') ?> </h3>
     <?=
     DetailView::widget([
         'model' => $po,
@@ -55,20 +54,4 @@ $this->params['breadcrumbs'][] = $this->title;
             'npl'
         ],
     ]) ?>
-
-    <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
-    <?=
-    DetailView::widget([
-        'model' => $po,
-        'attributes' => [
-            'po_num',
-            'dsp',
-            'dpup',
-            'nop',
-            'dtpl',
-            'dmp',
-            'npl'
-        ],
-    ]) ?>
-
 </div>

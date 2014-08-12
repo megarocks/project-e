@@ -12,4 +12,7 @@ return [
     'distributor' => [
         'type' => 1,
     ],
+    'enduser' => [
+        'type' => 1,
+    ],
 ];

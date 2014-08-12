@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\PurchaseOrder;
 use app\models\User;
 use Yii;
 use app\models\System;
@@ -39,10 +38,10 @@ class SystemController extends Controller
         /**@var User $user */
         $user = Yii::$app->user->identity;
 
-        if ($user->hasRole('distributor')) {
-            return $this->render('index-distributor');
-        } elseif ($user->hasRole('enduser')) {
-            return $this->render('index-enduser');
+        if ($user->hasRole(User::ROLE_DISTR)) {
+            return $this->render('index-' . User::ROLE_DISTR);
+        } elseif ($user->hasRole(User::ROLE_END_USER)) {
+            return $this->render('index-' . User::ROLE_END_USER);
         } else {
             throw new UnauthorizedHttpException;
         }
@@ -52,6 +51,7 @@ class SystemController extends Controller
     /**
      * Displays a single Systems model.
      * @param integer $id
+     * @throws \yii\web\UnauthorizedHttpException
      * @return mixed
      */
     public function actionView($id)
@@ -59,15 +59,19 @@ class SystemController extends Controller
         /**@var User $user */
         $user = Yii::$app->user->identity;
 
-        if ($user->hasRole('distributor')) {
-            return $this->render('view-distributor', [
-                'model' => $this->findModel($id),
-            ]);
-        } elseif ($user->hasRole('enduser')) {
-            return $this->render('view-sales', [
-                'model' => $this->findModel($id),
-            ]);
-        }
+        if ($user->hasRole(User::ROLE_DISTR)) {
+            return $this->render('view-' . User::ROLE_DISTR, [
+                    'model' => $this->findModel($id),
+                    'po' => $this->findModel($id)->purchaseOrder,
+                ]);
+        } elseif ($user->hasRole(User::ROLE_END_USER)) {
+            return $this->render('view-' . User::ROLE_END_USER, [
+                    'model' => $this->findModel($id),
+                    'po' => $this->findModel($id)->purchaseOrder,
+                ]);
+        } else {
+            throw new UnauthorizedHttpException;
+        };
 
     }
 

@@ -59,14 +59,14 @@ class PurchaseOrderController extends Controller
     {
         /**@var User $user */
         $user = Yii::$app->user->identity;
-        if ($user->hasRole('sales')) {
-            return $this->render('view-sales', [
-                'model' => $this->findModel($id),
-            ]);
-        } elseif ($user->hasRole('production')) {
-            return $this->render('view-production', [
-                'model' => $this->findModel($id),
-            ]);
+        if ($user->hasRole(User::ROLE_SALES)) {
+            return $this->render('view-' . User::ROLE_SALES, [
+                    'model' => $this->findModel($id),
+                ]);
+        } elseif ($user->hasRole(User::ROLE_PROD)) {
+            return $this->render('view-' . User::ROLE_PROD, [
+                    'model' => $this->findModel($id),
+                ]);
         } else {
             throw new UnauthorizedHttpException;
         }
@@ -88,23 +88,23 @@ class PurchaseOrderController extends Controller
         $user = Yii::$app->user->identity;
 
         //logic for sales users
-        if ($user->hasRole('sales')) {
+        if ($user->hasRole(User::ROLE_SALES)) {
             if (!empty($request)) {
                 $model->load($request);
                 if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
-                    return $this->render('update-sales', [
-                        'model' => $model,
-                    ]);
+                    return $this->render('update-' . User::ROLE_SALES, [
+                            'model' => $model,
+                        ]);
                 }
             } else {
-                return $this->render('update-sales', [
-                    'model' => $model,
-                ]);
+                return $this->render('update-' . User::ROLE_SALES, [
+                        'model' => $model,
+                    ]);
             }
         } //logic for production users
-        elseif ($user->hasRole('production')) {
+        elseif ($user->hasRole(User::ROLE_PROD)) {
             if (!empty($request)) {
                 $model->load($request);
                 if (($model->system_sn) && ($model->validate())) {
@@ -118,14 +118,14 @@ class PurchaseOrderController extends Controller
                 if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
-                    return $this->render('update-production', [
-                        'model' => $model,
-                    ]);
+                    return $this->render('update-' . User::ROLE_PROD, [
+                            'model' => $model,
+                        ]);
                 }
             } else {
-                return $this->render('update-production', [
-                    'model' => $model,
-                ]);
+                return $this->render('update-' . User::ROLE_PROD, [
+                        'model' => $model,
+                    ]);
             }
         } else {
             throw new UnauthorizedHttpException;

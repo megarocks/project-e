@@ -9,7 +9,7 @@ $this->title = 'My Yii Application';
 
         <p class="lead">Pay Per Date Control Panel</p>
 
-        <p><a class="btn btn-lg btn-success" href="#">Big green button</a></p>
+        <p><a class="btn btn-lg btn-success" href="/site/login">Login</a></p>
     </div>
 
     <div class="body-content">

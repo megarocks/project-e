@@ -23,6 +23,12 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    const ROLE_SALES = 'sales';
+    const ROLE_PROD = 'production';
+    const ROLE_ENDY = 'endymed';
+    const ROLE_DISTR = 'distributor';
+    const ROLE_END_USER = 'enduser';
+
     /**
      * @inheritdoc
      */
