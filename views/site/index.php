@@ -5,16 +5,16 @@
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>EndyMed</h1>
+        <h1><?= Yii::t('app', 'EndyMed') ?></h1>
 
         <p class="lead">Pay Per Date Control Panel</p>
 
         <p>
             <?php
                 if (Yii::$app->user->isGuest):
-                    echo '<a class="btn btn-lg btn-success" href="/site/login">Login</a>';
+                    echo '<a class="btn btn-lg btn-success" href="/site/login">' . Yii::t('app', 'Login') . '</a>';
                 else:
-                    echo '<a class="btn btn-lg btn-primary" href="/site/logout">Logout</a>';
+                    echo '<a class="btn btn-lg btn-primary" href="/site/logout">' . Yii::t('app', 'Logout') . '</a>';
                 endif;
             ?>
         </p>
