@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-$this->title = 'My Yii Application';
+    $this->title = Yii::t('app', 'EndyMed PPD');
 ?>
 <div class="site-index">
 
@@ -9,7 +9,15 @@ $this->title = 'My Yii Application';
 
         <p class="lead">Pay Per Date Control Panel</p>
 
-        <p><a class="btn btn-lg btn-success" href="/site/login">Login</a></p>
+        <p>
+            <?php
+                if (Yii::$app->user->isGuest):
+                    echo '<a class="btn btn-lg btn-success" href="/site/login">Login</a>';
+                else:
+                    echo '<a class="btn btn-lg btn-primary" href="/site/logout">Logout</a>';
+                endif;
+            ?>
+        </p>
     </div>
 
     <div class="body-content">
