@@ -13,6 +13,6 @@ return [
         'distributor',
     ],
     5 => [
-        'distributor',
+        'enduser',
     ],
 ];

@@ -10,7 +10,7 @@ namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class SystemsAsset extends AssetBundle
+class SystemsIndexDistributorAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
@@ -18,9 +18,10 @@ class SystemsAsset extends AssetBundle
 
     ];
     public $js = [
-        '/js/systems-list.js'
+        '/js/systems-index-distributor.js'
     ];
     public $depends = [
         'app\assets\AppAsset',
+        'app\assets\DataTableAsset',
     ];
 }

@@ -1,19 +1,18 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use app\assets\DataTableAsset;
-use app\assets\EndUsersAsset;
+    use yii\helpers\Html;
+    use yii\grid\GridView;
+    use app\assets\DataTableAsset;
+    use app\assets\EndUsersAsset;
 
-DataTableAsset::register($this);
-EndUsersAsset::register($this);
+    DataTableAsset::register($this);
+    EndUsersAsset::register($this);
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\search\EndUsersSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+    /* @var $this yii\web\View */
+    /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'End Users');
-$this->params['breadcrumbs'][] = $this->title;
+    $this->title = Yii::t('app', 'End Users');
+    $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="end-users-index">
 
@@ -21,9 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?=
-        Html::a(Yii::t('app', 'Create {modelClass}', [
-            'modelClass' => 'End Users',
-        ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
+            Html::a(Yii::t('app', 'Create {modelClass}', [
+                'modelClass' => 'End Users',
+            ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
     <table id="end-users-table" class="table-hover">

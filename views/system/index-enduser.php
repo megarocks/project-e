@@ -6,10 +6,10 @@
  * Time: 12:05 PM
  */
 
-use app\assets\SystemsIndexDistributorAsset;
+use app\assets\SystemsIndexEndUserAsset;
 use yii\helpers\Html;
 
-SystemsIndexDistributorAsset::register($this);
+SystemsIndexEndUserAsset::register($this);
 
 $this->title = Yii::t('app', 'Systems');
 $this->params['breadcrumbs'][] = $this->title;
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <th><?= Yii::t('app', 'Next Locking Date') ?></th>
             <th><?= Yii::t('app', 'Current Code') ?></th>
             <th><?= Yii::t('app', 'Payment Left') ?></th>
-            <th><?= Yii::t('app', 'Number Of Payments Left') ?></th>
+            <th><?= Yii::t('app', 'Number of Payments Left') ?></th>
             <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>

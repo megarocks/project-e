@@ -1,12 +1,12 @@
 <?php
 
-use yii\helpers\Html;
-use app\assets\PoIndexProductionAsset;
+    use yii\helpers\Html;
+    use app\assets\PoIndexProductionAsset;
 
-PoIndexProductionAsset::register($this);
+    PoIndexProductionAsset::register($this);
 
-$this->title = Yii::t('app', 'System Orders');
-$this->params['breadcrumbs'][] = $this->title;
+    $this->title = Yii::t('app', 'System Orders');
+    $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="systems-orders-index">
@@ -15,10 +15,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <table id="systems-po-table" class="table-hover">
         <thead>
         <tr>
-            <th>Added at</th>
-            <th>Purchase Order #</th>
-            <th>System SN</th>
-            <th>Actions</th>
+            <th><?= Yii::t('app', 'Added at') ?></th>
+            <th><?= Yii::t('app', 'Purchase Order #') ?></th>
+            <th><?= Yii::t('app', 'System SN') ?></th>
+            <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>
     </table>

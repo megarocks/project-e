@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\PurchaseOrder;
+use app\models\CodeRequestForm;
 use app\models\User;
 use Yii;
 use app\models\System;
@@ -39,10 +39,10 @@ class SystemController extends Controller
         /**@var User $user */
         $user = Yii::$app->user->identity;
 
-        if ($user->hasRole('distributor')) {
-            return $this->render('index-distributor');
-        } elseif ($user->hasRole('enduser')) {
-            return $this->render('index-enduser');
+        if ($user->hasRole(User::ROLE_DISTR)) {
+            return $this->render('index-' . User::ROLE_DISTR);
+        } elseif ($user->hasRole(User::ROLE_END_USER)) {
+            return $this->render('index-' . User::ROLE_END_USER);
         } else {
             throw new UnauthorizedHttpException;
         }
@@ -52,20 +52,35 @@ class SystemController extends Controller
     /**
      * Displays a single Systems model.
      * @param integer $id
+     * @throws \yii\web\UnauthorizedHttpException
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+
+        if ($user->hasRole(User::ROLE_DISTR)) {
+            return $this->render('view-' . User::ROLE_DISTR, [
+                    'model' => $this->findModel($id),
+                    'po' => $this->findModel($id)->purchaseOrder,
+                ]);
+        } elseif ($user->hasRole(User::ROLE_END_USER)) {
+            return $this->render('view-' . User::ROLE_END_USER, [
+                    'model' => $this->findModel($id),
+                    'po' => $this->findModel($id)->purchaseOrder,
+                ]);
+        } else {
+            throw new UnauthorizedHttpException;
+        };
+
     }
 
     /**
      * Finds the Systems model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Systems the loaded model
+     * @return System the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
@@ -79,6 +94,7 @@ class SystemController extends Controller
 
     public function actionList()
     {
+
         $systems = System::find()->all();
         $result = [];
 
@@ -86,6 +102,7 @@ class SystemController extends Controller
         foreach ($systems as $system) {
             $s['id'] = $system->id;
             $s['sn'] = $system->sn;
+            $s['status'] = $system->status;
             $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
             $s['next_lock_date'] = $system->next_lock_date;
             $s['current_code'] = $system->current_code;
@@ -94,6 +111,24 @@ class SystemController extends Controller
             $result[] = $s;
         }
         echo(Json::encode($result));
+    }
+
+    public function actionCodeRequest($id)
+    {
+        $system = $this->findModel($id);
+        $model = new CodeRequestForm();
+        $model->systemSn = $system->sn;
+        $request = Yii::$app->request->post();
+
+        if (!empty($request)) {
+
+
+        } else {
+            return $this->render('code-request-form', [
+                'model' => $model,
+                'system' => $system,
+            ]);
+        }
     }
 
 }
