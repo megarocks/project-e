@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Request Code'), ['request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Generate Code'), ['code-request', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <h3><?= Yii::t('app', 'System Details') ?> </h3>

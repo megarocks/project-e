@@ -6,10 +6,10 @@
  * Time: 12:05 PM
  */
 
-use app\assets\SystemsIndexDistributorAsset;
+use app\assets\SystemsIndexEndUserAsset;
 use yii\helpers\Html;
 
-SystemsIndexDistributorAsset::register($this);
+SystemsIndexEndUserAsset::register($this);
 
 $this->title = Yii::t('app', 'Systems');
 $this->params['breadcrumbs'][] = $this->title;

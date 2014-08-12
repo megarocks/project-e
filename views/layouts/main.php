@@ -1,9 +1,11 @@
 <?php
+use app\models\User;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\helpers\RoleNavHelper;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -32,21 +34,9 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'PO', 'url' => ['/purchase-order/index']],
-            ['label' => 'Distributors', 'url' => ['/distributor/index']],
-            ['label' => 'Systems', 'url' => ['/system/index']],
-            ['label' => 'End Users', 'url' => ['/endusers/index']],
-            Yii::$app->user->isGuest ?
-                ['label' => 'Login', 'url' => ['/site/login']] :
-                ['label' => 'Logout (' . Yii::$app->user->identity->first_name . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']],
-        ],
-    ]);
+
+    echo RoleNavHelper::renderNav(Yii::$app->user->isGuest ? null : Yii::$app->user->identity->role);
+
     NavBar::end();
     ?>
 

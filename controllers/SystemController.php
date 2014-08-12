@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\CodeRequestForm;
 use app\models\User;
 use Yii;
 use app\models\System;
@@ -110,6 +111,24 @@ class SystemController extends Controller
             $result[] = $s;
         }
         echo(Json::encode($result));
+    }
+
+    public function actionCodeRequest($id)
+    {
+        $system = $this->findModel($id);
+        $model = new CodeRequestForm();
+        $model->systemSn = $system->sn;
+        $request = Yii::$app->request->post();
+
+        if (!empty($request)) {
+
+
+        } else {
+            return $this->render('code-request-form', [
+                'model' => $model,
+                'system' => $system,
+            ]);
+        }
     }
 
 }
