@@ -1,16 +1,16 @@
 <?php
-use app\models\User;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
-use app\helpers\RoleNavHelper;
+    use app\models\User;
+    use yii\helpers\Html;
+    use yii\bootstrap\Nav;
+    use yii\bootstrap\NavBar;
+    use yii\widgets\Breadcrumbs;
+    use app\assets\AppAsset;
+    use app\helpers\RoleNavHelper;
 
-/* @var $this \yii\web\View */
-/* @var $content string */
+    /* @var $this \yii\web\View */
+    /* @var $content string */
 
-AppAsset::register($this);
+    AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -27,24 +27,24 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 <div class="wrap">
     <?php
-    NavBar::begin([
-        'brandLabel' => 'Project "E"',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
+        NavBar::begin([
+            'brandLabel' => Yii::t('app', 'EndyMed PPD'),
+            'brandUrl'   => Yii::$app->homeUrl,
+            'options'    => [
+                'class' => 'navbar-inverse navbar-fixed-top',
+            ],
+        ]);
 
-    echo RoleNavHelper::renderNav(Yii::$app->user->isGuest ? null : Yii::$app->user->identity->role);
+        echo RoleNavHelper::renderNav(Yii::$app->user->isGuest ? null : Yii::$app->user->identity->role);
 
-    NavBar::end();
+        NavBar::end();
     ?>
 
     <div class="container">
         <?=
-        Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+            Breadcrumbs::widget([
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
         <?= $content ?>
     </div>
 </div>
@@ -53,7 +53,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; EndyMed <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right">Version: <?= Yii::$app->params['version'] ?></p>
     </div>
 </footer>
 

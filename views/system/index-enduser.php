@@ -21,14 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <table id="systems-table" class="table-hover">
         <thead>
         <tr>
-            <th>Serial Number</th>
-            <th>PO</th>
-            <th>Status</th>
-            <th>Next Locking Date</th>
-            <th>Current Code</th>
-            <th>Payment Left</th>
-            <th>Number of left payments</th>
-            <th>Actions</th>
+            <th><?= Yii::t('app', 'Serial Number') ?></th>
+            <th><?= Yii::t('app', 'PO#') ?></th>
+            <th><?= Yii::t('app', 'Status') ?></th>
+            <th><?= Yii::t('app', 'Next Locking Date') ?></th>
+            <th><?= Yii::t('app', 'Current Code') ?></th>
+            <th><?= Yii::t('app', 'Payment Left') ?></th>
+            <th><?= Yii::t('app', 'Number of Payments Left') ?></th>
+            <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>
     </table>
