@@ -6,9 +6,9 @@
     use yii\base\Model;
 
     /**
-     * LoginForm is the model behind the login form.
+     * CredentialsLoginForm is the model behind the credentials login form.
      */
-    class LoginForm extends Model
+    class CredentialsLoginForm extends Model
     {
         public $email;
         public $password;

@@ -18,6 +18,7 @@
      * @property string $password_reset_token
      * @property string $access_token
      * @property string $auth_key
+     * @property string $login_code
      * @property string $created_at
      * @property string $updated_at
      */
@@ -61,7 +62,7 @@
             return [
                 [['first_name', 'email', 'password_hash'], 'required'],
                 [['created_at', 'updated_at'], 'safe'],
-                [['first_name', 'last_name', 'email'], 'string', 'max' => 45],
+                [['first_name', 'last_name', 'email', 'login_code'], 'string', 'max' => 45],
                 [['password_hash', 'password_reset_token', 'access_token', 'auth_key'], 'string', 'max' => 128]
             ];
         }
@@ -80,6 +81,7 @@
                 'password_reset_token' => Yii::t('app', 'Password Reset Token'),
                 'access_token'         => Yii::t('app', 'Access Token'),
                 'auth_key'             => Yii::t('app', 'Auth Key'),
+                'login_code'           => Yii::t('app', 'Login Code'),
                 'created_at'           => Yii::t('app', 'Created At'),
                 'updated_at'           => Yii::t('app', 'Updated At'),
             ];
@@ -178,4 +180,15 @@
 
             return array_keys($userRoles)[0]; //TODO Unhardcode only one role (when/if will be needed)
         }
+
+        public function validateCode($loginCode)
+        {
+            return $this->login_code == $loginCode;
+        }
+
+        public static function findByLoginCode($loginCode)
+        {
+            return static::findOne(['login_code' => $loginCode]);
+        }
+
     }

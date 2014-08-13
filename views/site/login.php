@@ -1,42 +1,32 @@
 <?php
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+    use yii\bootstrap\Collapse;
+    use yii\helpers\Html;
+    use app\widgets\LoginForm;
 
-/* @var $this yii\web\View */
+    /* @var $this yii\web\View */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $model app\models\LoginForm */
+    /* @var $credentialsLoginForm app\models\CredentialsLoginForm */
+    /* @var $codeLoginForm app\models\CodeLoginForm */
+    /* @var $initForm boolean */
 
-$this->title = 'Login';
+    $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
-
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'options' => ['class' => 'form-horizontal'],
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
-
-    <?= $form->field($model, 'email') ?>
-
-    <?= $form->field($model, 'password')->passwordInput() ?>
-
-    <?= $form->field($model, 'rememberMe', [
-        'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-    ])->checkbox() ?>
-
-    <div class="form-group">
-        <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-        </div>
-    </div>
-
-    <?php ActiveForm::end(); ?>
+    <?=
+        Collapse::widget([
+            'items' => [
+                Yii::t('app', 'Login by code')        => [
+                    'content'        => LoginForm::widget(['model' => $codeLoginForm, 'formType' => 'code']),
+                    'contentOptions' => $initForm == 'code' ? ['class' => 'in'] : [],
+                ],
+                Yii::t('app', 'Login by credentials') => [
+                    'content'        => LoginForm::widget(['model' => $credentialsLoginForm, 'formType' => 'credentials']),
+                    'contentOptions' => $initForm == 'credentials' ? ['class' => 'in'] : [],
+                ]
+            ]
+        ]); ?>
 
 </div>
