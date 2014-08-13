@@ -1,16 +1,16 @@
 <?php
 
-use app\models\PurchaseOrder;
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+    use app\models\PurchaseOrder;
+    use yii\helpers\Html;
+    use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Systems */
-/**@var PurchaseOrder $po */
+    /* @var $this yii\web\View */
+    /* @var $model app\models\Systems */
+    /**@var PurchaseOrder $po */
 
-$this->title = "System #" . $model->sn . " management";
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+    $this->title = "System #" . $model->sn . " management";
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="systems-view">
@@ -25,50 +25,51 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="well">
         <?=
-        DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'sn',
-                'status',
-                'current_code',
-                'next_lock_date',
-                [
-                    'label' => Yii::t('app', 'Email'),
-                    'value' => $po->email,
+            DetailView::widget([
+                'model'      => $model,
+                'attributes' => [
+                    'sn',
+                    'status',
+                    'login_code',
+                    'current_code',
+                    'next_lock_date',
+                    [
+                        'label' => Yii::t('app', 'Email'),
+                        'value' => $po->email,
+                    ],
+                    'created_at'
                 ],
-                'created_at'
-            ],
-        ]) ?>
+            ]) ?>
     </div>
 
     <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
     <?=
-    DetailView::widget([
-        'model' => $po,
-        'attributes' => [
-            'po_num',
-            'csp',
-            'cpup',
-            'nop',
-            'ctpl',
-            'cmp',
-            'npl'
-        ],
-    ]) ?>
+        DetailView::widget([
+            'model'      => $po,
+            'attributes' => [
+                'po_num',
+                'csp',
+                'cpup',
+                'nop',
+                'ctpl',
+                'cmp',
+                'npl'
+            ],
+        ]) ?>
 
     <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
     <?=
-    DetailView::widget([
-        'model' => $po,
-        'attributes' => [
-            'po_num',
-            'dsp',
-            'dpup',
-            'nop',
-            'dtpl',
-            'dmp',
-            'npl'
-        ],
-    ]) ?>
+        DetailView::widget([
+            'model'      => $po,
+            'attributes' => [
+                'po_num',
+                'dsp',
+                'dpup',
+                'nop',
+                'dtpl',
+                'dmp',
+                'npl'
+            ],
+        ]) ?>
 
 </div>

@@ -39,7 +39,7 @@
             if (!$this->hasErrors()) {
                 $user = $this->getUser();
 
-                if (!$user || !$user->validateCode($this->loginCode)) {
+                if (!$user || !$user->validateLoginCode($this->loginCode)) {
                     $this->addError('loginCode', Yii::t('app', 'Incorrect login code'));
                 }
             }
@@ -59,14 +59,14 @@
         }
 
         /**
-         * Finds user by [[username]]
+         * Finds user for code login purposes
          *
          * @return User|null
          */
         public function getUser()
         {
             if ($this->_user === false) {
-                $this->_user = User::findByLoginCode($this->loginCode);
+                $this->_user = User::findForCodeLogin();
             }
 
             return $this->_user;
