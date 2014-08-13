@@ -4,7 +4,7 @@
 
     $form = ActiveForm::begin([
         'id'          => 'code-login-form',
-        'action'      => '/site/login?initForm=code',
+        'action' => '/site/login-by-code?initForm=code',
         'options'     => ['class' => 'form-horizontal'],
         'fieldConfig' => [
             'template'     => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-3\">{error}</div>",

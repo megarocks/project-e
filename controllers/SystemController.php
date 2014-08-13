@@ -41,12 +41,9 @@
 
             if ($user->hasRole(User::ROLE_DISTR)) {
                 return $this->render('index-' . User::ROLE_DISTR);
-            } elseif ($user->hasRole(User::ROLE_END_USER)) {
-                return $this->render('index-' . User::ROLE_END_USER);
             } else {
                 throw new UnauthorizedHttpException;
             }
-
         }
 
         /**
@@ -65,14 +62,9 @@
                         'model' => $this->findModel($id),
                         'po'    => $this->findModel($id)->purchaseOrder,
                     ]);
-            } elseif ($user->hasRole(User::ROLE_END_USER)) {
-                return $this->render('view-' . User::ROLE_END_USER, [
-                        'model' => $this->findModel($id),
-                        'po'    => $this->findModel($id)->purchaseOrder,
-                    ]);
             } else {
                 throw new UnauthorizedHttpException;
-            };
+            }
 
         }
 
@@ -132,4 +124,18 @@
             }
         }
 
+        public function actionViewByCode()
+        {
+            $loginCode = Yii::$app->session->get('loginCode');
+            if (!is_null($loginCode)) {
+                $model = System::getByLoginCode($loginCode);
+
+                return $this->render('view-enduser', [
+                    'model' => $model,
+                    'po'    => $model->purchaseOrder,
+                ]);
+            } else {
+                throw new NotFoundHttpException;
+            }
+        }
     }

@@ -9,7 +9,6 @@ use yii\widgets\DetailView;
 /**@var PurchaseOrder $po */
 
 $this->title = "System #" . $model->sn . " management";
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -30,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attributes' => [
                 'sn',
                 'status',
+                'login_code',
                 'current_code',
                 'next_lock_date',
                 [

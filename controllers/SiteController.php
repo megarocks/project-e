@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\CodeLoginForm;
 use app\models\CredentialsLoginForm;
+use app\models\System;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -62,13 +63,29 @@ class SiteController extends Controller
         $codeLoginForm = new CodeLoginForm();
         $request = Yii::$app->request->post();
 
-        if
-        (
-            ($credentialsLoginForm->load($request) && $credentialsLoginForm->login())
-            ||
-            (($codeLoginForm->load($request) && $codeLoginForm->login()))
-        ) {
+        if ($credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
             return $this->goBack();
+        } else {
+            return $this->render('login', [
+                'credentialsLoginForm' => $credentialsLoginForm,
+                'codeLoginForm'        => $codeLoginForm,
+                'initForm'             => $initForm,
+            ]);
+        }
+    }
+
+    public function actionLoginByCode($initForm = 'code')
+    {
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $codeLoginForm = new CodeLoginForm();
+        $credentialsLoginForm = new CredentialsLoginForm();
+        $request = Yii::$app->request->post();
+        if ($codeLoginForm->load($request) && $codeLoginForm->login()) {
+            Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
+
+            return $this->redirect('/system/view-by-code');
         } else {
             return $this->render('login', [
                 'credentialsLoginForm' => $credentialsLoginForm,

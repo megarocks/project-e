@@ -115,4 +115,9 @@
             }
         }
 
+        public static function getByLoginCode($code)
+        {
+            return static::findOne(['login_code' => $code]);
+        }
+
     }
