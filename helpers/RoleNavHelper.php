@@ -57,7 +57,6 @@
             return Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items'   => [
-                    ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'System'), 'url' => ['/system/view-by-code']],
                     Yii::$app->user->isGuest ?
                         ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
