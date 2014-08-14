@@ -20,6 +20,10 @@
      * @property string $auth_key
      * @property string $created_at
      * @property string $updated_at
+     *
+     * @property string $password
+     * @property string $password_repeat
+     *
      */
     class User extends ActiveRecord implements IdentityInterface
     {
@@ -28,6 +32,10 @@
         const ROLE_ENDY = 'endymed';
         const ROLE_DISTR = 'distributor';
         const ROLE_END_USER = 'enduser';
+
+        public $password;
+        public $password_repeat;
+
 
         /**
          * @inheritdoc
@@ -59,10 +67,13 @@
         public function rules()
         {
             return [
-                [['first_name', 'email', 'password_hash'], 'required'],
-                [['created_at', 'updated_at'], 'safe'],
+                [['first_name', 'email'], 'required'],
+                [['email'], 'unique'],
+                [['email'], 'email'],
+                [['created_at', 'updated_at', 'password', 'password_repeat'], 'safe'],
                 [['first_name', 'last_name', 'email'], 'string', 'max' => 45],
-                [['password_hash', 'password_reset_token', 'access_token', 'auth_key'], 'string', 'max' => 128]
+                [['password_hash', 'password_reset_token', 'access_token', 'auth_key'], 'string', 'max' => 128],
+                [['password'], 'compare', 'compareAttribute' => 'password_repeat', 'skipOnEmpty' => true]
             ];
         }
 
@@ -82,6 +93,8 @@
                 'auth_key'             => Yii::t('app', 'Auth Key'),
                 'created_at'           => Yii::t('app', 'Created At'),
                 'updated_at'           => Yii::t('app', 'Updated At'),
+                'password'        => Yii::t('app', 'Password'),
+                'password_repeat' => Yii::t('app', 'Repeat Password'),
             ];
         }
 
@@ -176,7 +189,16 @@
         {
             $userRoles = Yii::$app->authManager->getRolesByUser($this->id);
 
-            return array_keys($userRoles)[0]; //TODO Unhardcode only one role (when/if will be needed)
+            return isset(array_keys($userRoles)[0]) ? array_keys($userRoles)[0] : null; //TODO Unhardcode only one role (when/if will be needed)
+        }
+
+        public function setRole($value)
+        {
+            $auth = Yii::$app->authManager;
+            $role = $auth->getRole($value);
+            if (!is_null($role)) {
+                $auth->assign($role, $this->id);
+            }
         }
 
         public static function findForCodeLogin()

@@ -5,7 +5,7 @@
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\Systems */
+    /* @var $model app\models\System */
     /**@var PurchaseOrder $po */
 
     $this->title = "System #" . $model->sn . " management";
