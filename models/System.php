@@ -15,6 +15,7 @@
      * @property string $current_code
      * @property string $next_lock_date
      * @property string $main_unlock_code
+     * @property string $login_code
      * @property string $created_at
      * @property string $updated_at
      *
@@ -59,7 +60,7 @@
                 [['sn'], 'required'],
                 [['sn'], 'integer'],
                 [['sn'], 'unique'],
-                [['status'], 'string'],
+                [['status', 'login_code'], 'string'],
                 [['next_lock_date', 'created_at', 'updated_at'], 'safe'],
                 [['current_code', 'main_unlock_code'], 'string', 'max' => 512]
             ];
@@ -78,6 +79,7 @@
                 'current_code'     => Yii::t('app', 'Current Code'),
                 'next_lock_date'   => Yii::t('app', 'Next Locking Date'),
                 'main_unlock_code' => Yii::t('app', 'Main unlock Code'),
+                'login_code'       => Yii::t('app', 'Login Code'),
                 'created_at'       => Yii::t('app', 'Created At'),
                 'updated_at'       => Yii::t('app', 'Updated At'),
             ];
@@ -97,6 +99,7 @@
             $this->next_lock_date = date("Y-m-d", strtotime("+3 months"));
             $this->current_code = Yii::$app->security->generateRandomString(10);
             $this->status = static::STATUS_ACTIVE_PAYMENT;
+            $this->login_code = Yii::$app->security->generateRandomString(6);
         }
 
         public function beforeSave($insert)
@@ -110,6 +113,11 @@
             } else {
                 return false;
             }
+        }
+
+        public static function getByLoginCode($code)
+        {
+            return static::findOne(['login_code' => $code]);
         }
 
     }

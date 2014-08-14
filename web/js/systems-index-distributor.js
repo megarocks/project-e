@@ -15,12 +15,13 @@
                 {data: "status"},
                 {data: "next_lock_date"},
                 {data: "current_code"},
+                {data: "login_code"},
                 {data: "ctpl"},
                 {data: "npl"}
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 8,
                     "data": "id",
                     "render": function (id) {
                         return '<a href="/system/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-cog"></span></a> '

@@ -178,4 +178,22 @@
 
             return array_keys($userRoles)[0]; //TODO Unhardcode only one role (when/if will be needed)
         }
+
+        public static function findForCodeLogin()
+        {
+            return static::findOne(6); //TODO Currently user with id=6 considered as account for code-login purposes
+        }
+
+        /**
+         * Checks if supplied login code is valid
+         *
+         * @param $loginCode
+         * @return boolean
+         */
+        public function validateLoginCode($loginCode)
+        {
+            $system = System::findOne(['login_code' => $loginCode]);
+
+            return !is_null($system) ? true : false;
+        }
     }
