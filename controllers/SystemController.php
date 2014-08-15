@@ -2,6 +2,7 @@
 
     namespace app\controllers;
 
+    use app\helpers\PayPal;
     use app\models\CodeRequestForm;
     use app\models\User;
     use Yii;
@@ -106,21 +107,35 @@
             echo(Json::encode($result));
         }
 
-        public function actionCodeRequest($id)
+        public function actionRequestCode()
         {
-            $system = $this->findModel($id);
-            $model = new CodeRequestForm();
-            $model->systemSn = $system->sn;
             $request = Yii::$app->request->post();
 
-            if (!empty($request)) {
+            $requestParams = array(
+                'RETURNURL' => 'http://localhost:8890/payment/success',
+                'CANCELURL' => 'http://localhost:8890/payment/cancel'
+            );
 
+            $orderParams = array(
+                'PAYMENTREQUEST_0_AMT'          => '500',
+                'PAYMENTREQUEST_0_CURRENCYCODE' => 'USD',
+                'PAYMENTREQUEST_0_ITEMAMT'      => '500'
+            );
 
-            } else {
-                return $this->render('code-request-form', [
-                    'model'  => $model,
-                    'system' => $system,
-                ]);
+            $item = array(
+                'L_PAYMENTREQUEST_0_NAME0' => 'System Unlock Code',
+                'L_PAYMENTREQUEST_0_DESC0' => 'Unlock code for system #100500',
+                'L_PAYMENTREQUEST_0_AMT0'  => '500',
+                'L_PAYMENTREQUEST_0_QTY0'  => '1'
+            );
+
+            $paypal = new PayPal();
+
+            $responce = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $item);
+
+            if (is_array($responce) && $responce['ACK'] == 'Success') {
+                $token = $responce['TOKEN'];
+                header('Location: https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . urlencode($token));
             }
         }
 
