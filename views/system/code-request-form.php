@@ -2,8 +2,9 @@
 
 use app\models\CodeRequestForm;
 use app\models\System;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+    use yii\helpers\ArrayHelper;
+    use yii\helpers\Html;
+    use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model CodeRequestForm */
@@ -21,10 +22,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'code-request-form'
     ]); ?>
 
-    <?= $form->field($model, 'systemSn')->textInput(['readonly' => true]) ?>
+    <?= $form->field($model, 'system_sn')->textInput(['readonly' => true]) ?>
+    <?= $form->field($model, 'order_num')->textInput(['readonly' => true]) ?>
+    <?= $form->field($model, 'periods_qty')->dropDownList(ArrayHelper::map($system->lockingDates, 'periods', 'pretty_date')) ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Request Code'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Buy'), ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

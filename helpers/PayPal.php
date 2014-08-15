@@ -70,4 +70,19 @@
                 return $responceArray;
             }
         }
+
+        public function setExpressCheckout($orderAmount, $currencyCode, $itemName, $itemDesc, $systemCode)
+        {
+            $params = [
+                'RETURNURL'                     => 'http://localhost:8890/payment/success?systemCode=' . $systemCode,
+                'CANCELURL'                     => 'http://localhost:8890/payment/cancel',
+                'PAYMENTREQUEST_0_AMT'          => $orderAmount,
+                'PAYMENTREQUEST_0_CURRENCYCODE' => $currencyCode,
+                'PAYMENTREQUEST_0_ITEMAMT'      => $orderAmount,
+                'L_PAYMENTREQUEST_0_NAME0'      => $itemName,
+                'L_PAYMENTREQUEST_0_DESC0'      => $itemDesc,
+                'L_PAYMENTREQUEST_0_AMT0'       => $orderAmount,
+                'L_PAYMENTREQUEST_0_QTY0'       => '1',
+            ];
+        }
     }

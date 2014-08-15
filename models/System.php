@@ -14,6 +14,8 @@
      * @property string $status
      * @property string $current_code
      * @property string $next_lock_date
+     * @property string $init_lock_date
+     *
      * @property string $main_unlock_code
      * @property string $login_code
      * @property string $created_at
@@ -61,7 +63,7 @@
                 [['sn'], 'integer'],
                 [['sn'], 'unique'],
                 [['status', 'login_code'], 'string'],
-                [['next_lock_date', 'created_at', 'updated_at'], 'safe'],
+                [['next_lock_date', 'init_lock_date', 'created_at', 'updated_at'], 'safe'],
                 [['current_code', 'main_unlock_code'], 'string', 'max' => 512]
             ];
         }
@@ -78,6 +80,7 @@
                 'status'           => Yii::t('app', 'Status'),
                 'current_code'     => Yii::t('app', 'Current Code'),
                 'next_lock_date'   => Yii::t('app', 'Next Locking Date'),
+                'init_lock_date'   => Yii::t('app', 'Initial Locking Date'),
                 'main_unlock_code' => Yii::t('app', 'Main unlock Code'),
                 'login_code'       => Yii::t('app', 'Login Code'),
                 'created_at'       => Yii::t('app', 'Created At'),
@@ -97,6 +100,7 @@
         {
             $this->main_unlock_code = Yii::$app->security->generateRandomString(10); //TODO Code generation logic will be here
             $this->next_lock_date = date("Y-m-d", strtotime("+3 months"));
+            $this->init_lock_date = date("Y-m-d", strtotime("today"));
             $this->current_code = Yii::$app->security->generateRandomString(10);
             $this->status = static::STATUS_ACTIVE_PAYMENT;
             $this->login_code = Yii::$app->security->generateRandomString(6);
@@ -118,6 +122,35 @@
         public static function getByLoginCode($code)
         {
             return static::findOne(['login_code' => $code]);
+        }
+
+        public function getLockingDates()
+        {
+            $lockingDates = [];
+
+            //generating values for all periods staring from initial lock date
+            for ($i = 1; $i <= $this->purchaseOrder->nop; $i++) {
+                $dateVal = strtotime('+' . $i . 'month ' . $this->init_lock_date);
+                $lockingDate['date'] = date('Y-m-d', $dateVal);
+                $lockingDates[] = $lockingDate;
+            }
+            //leaving only periods which are left to pay
+            $lockingDates = array_slice($lockingDates, -$this->purchaseOrder->npl);
+
+            for ($j = 0; $j < count($lockingDates); $j++) {
+                $dateVal = strtotime($lockingDates[$j]['date']);
+                $lockingDates[$j]['periods'] = $j + 1;
+                if ($j == 0) {
+                    $lockingDates[$j]['pretty_date'] = $j + 1 . ' period. Next locking date: ' . date('F j, Y', $dateVal);
+                } elseif ($j == count($lockingDates)) {
+                    $lockingDates[$j]['pretty_date'] = $j + 1 . ' periods. This will unlock system totally';
+                } else {
+                    $lockingDates[$j]['pretty_date'] = $j + 1 . ' periods. Next locking date: ' . date('F j, Y', $dateVal);
+                }
+
+            }
+
+            return $lockingDates;
         }
 
     }
