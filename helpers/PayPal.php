@@ -9,9 +9,11 @@
     namespace app\helpers;
 
 
+    use Exception;
+    use yii\log\Logger;
+
     class PayPal
     {
-
         protected $_errors = [];
 
         protected $_credentials = [
@@ -57,32 +59,98 @@
 
             $responce = curl_exec($ch);
 
+            $logger = \Yii::getLogger();
+
             if (curl_errno($ch)) {
                 $this->_errors = curl_error($ch);
                 curl_close($ch);
+                $logger->log($this->_errors, Logger::LEVEL_ERROR, 'paypal');
 
                 return false;
             } else {
                 curl_close($ch);
                 $responceArray = [];
                 parse_str($responce, $responceArray);
+                $logger->log($responceArray, Logger::LEVEL_INFO, 'paypal');
 
                 return $responceArray;
             }
         }
 
-        public function setExpressCheckout($orderAmount, $currencyCode, $itemName, $itemDesc, $systemCode)
+        /**
+         * Method gets payment details from user and sends to paypal
+         * Paypal prepares to process a payment. When ready returns token
+         *
+         * @param $codeParams
+         * @param $currencyCode
+         * @throws Exception
+         * @return string $token
+         */
+
+        public function getToken($codeParams, $currencyCode)
+        {
+            $callbackUrlParams = [
+                'RETURNURL' => 'http://localhost:8890/payment/success?system_sn=' . $codeParams['system_sn'],
+                'CANCELURL' => 'http://localhost:8890/payment/cancel?system_sn=' . $codeParams['system_sn'],
+            ];
+
+            $orderParams = [
+                'PAYMENTREQUEST_0_AMT' => $codeParams['cost'] * $codeParams['qty'], //total sum
+                'PAYMENTREQUEST_0_CURRENCYCODE' => $currencyCode,
+                'REQCONFIRMSHIPPING'   => 0, //no need to confirm shipping as it is electronic good
+                'NOSHIPPING'           => 1, //no need in shipping
+            ];
+
+            $codeItem = [
+                'L_PAYMENTREQUEST_0_NAME0' => \Yii::t('app', 'System Unlock Code'),
+                'L_PAYMENTREQUEST_0_DESC0' => $codeParams['description'],
+                'L_PAYMENTREQUEST_0_AMT0'  => $codeParams['cost'],
+                'L_PAYMENTREQUEST_0_QTY0'  => $codeParams['qty'],
+            ];
+
+            $response = $this->request('SetExpressCheckout', $callbackUrlParams + $orderParams + $codeItem);
+
+            if (is_array($response) && $response['ACK'] == 'Success') {
+                $token = $response['TOKEN'];
+
+                return $token;
+            } else {
+                throw new Exception('Error while requesting data (token) from PayPal');
+            }
+        }
+
+        public function getPaymentDetails($token)
         {
             $params = [
-                'RETURNURL'                     => 'http://localhost:8890/payment/success?systemCode=' . $systemCode,
-                'CANCELURL'                     => 'http://localhost:8890/payment/cancel',
-                'PAYMENTREQUEST_0_AMT'          => $orderAmount,
-                'PAYMENTREQUEST_0_CURRENCYCODE' => $currencyCode,
-                'PAYMENTREQUEST_0_ITEMAMT'      => $orderAmount,
-                'L_PAYMENTREQUEST_0_NAME0'      => $itemName,
-                'L_PAYMENTREQUEST_0_DESC0'      => $itemDesc,
-                'L_PAYMENTREQUEST_0_AMT0'       => $orderAmount,
-                'L_PAYMENTREQUEST_0_QTY0'       => '1',
+                'TOKEN' => $token,
             ];
+            $response = $this->request('GetExpressCheckoutDetails', $params);
+
+            if (is_array($response) && $response['ACK'] == 'Success') {
+                return $response;
+            } else {
+                throw new Exception('Error while requesting payment details from PayPal');
+            }
+        }
+
+        public function confirmPayment($token, $payerId, $amount, $currencyCode)
+        {
+            $requestParams = [
+                'TOKEN'                          => $token,
+                'PAYERID'                        => $payerId,
+                'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+                'PAYMENTREQUEST_0_CURRENCYCODE'  => $currencyCode,
+                'PAYMENTREQUEST_0_AMT'           => $amount,
+                'IPADDRESS'                      => $_SERVER['SERVER_NAME'],
+            ];
+
+            $response = $this->request('DoExpressCheckoutPayment', $requestParams);
+
+            if (is_array($response) && $response['ACK'] == 'Success') {
+                return $response;
+            } else {
+                throw new Exception('Failed to confirm payment');
+            }
+
         }
     }

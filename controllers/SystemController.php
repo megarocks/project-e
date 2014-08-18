@@ -8,6 +8,7 @@
     use Yii;
     use app\models\System;
     use yii\helpers\Json;
+    use yii\web\BadRequestHttpException;
     use yii\web\Controller;
     use yii\web\NotFoundHttpException;
     use yii\filters\VerbFilter;
@@ -105,53 +106,6 @@
                 $result[] = $s;
             }
             echo(Json::encode($result));
-        }
-
-        public function actionRequestCode()
-        {
-            $loginCode = Yii::$app->session->get('loginCode');
-            if (!is_null($loginCode)) {
-                $system = System::getByLoginCode($loginCode);
-                $po = $system->purchaseOrder;
-                $model = new CodeRequestForm;
-                $model->system_sn = $system->sn;
-                $model->order_num = $po->po_num;
-                $model->periods_qty = 1;
-
-                return $this->render('code-request-form', [
-                    'model'  => $model,
-                    'system' => $system
-                ]);
-            } else {
-                throw new NotFoundHttpException;
-            }
-
-            /*            $requestParams = array(
-                            'RETURNURL' => 'http://localhost:8890/payment/success',
-                            'CANCELURL' => 'http://localhost:8890/payment/cancel'
-                        );
-
-                        $orderParams = array(
-                            'PAYMENTREQUEST_0_AMT'          => '500',
-                            'PAYMENTREQUEST_0_CURRENCYCODE' => 'USD',
-                            'PAYMENTREQUEST_0_ITEMAMT'      => '500'
-                        );
-
-                        $item = array(
-                            'L_PAYMENTREQUEST_0_NAME0' => 'System Unlock Code',
-                            'L_PAYMENTREQUEST_0_DESC0' => 'Unlock code for system #100500',
-                            'L_PAYMENTREQUEST_0_AMT0'  => '500',
-                            'L_PAYMENTREQUEST_0_QTY0'  => '1'
-                        );
-
-                        $paypal = new PayPal();
-
-                        $responce = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $item);
-
-                        if (is_array($responce) && $responce['ACK'] == 'Success') {
-                            $token = $responce['TOKEN'];
-                            header('Location: https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . urlencode($token));
-                        }*/
         }
 
         public function actionViewByCode()

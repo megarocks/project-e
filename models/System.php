@@ -124,6 +124,11 @@
             return static::findOne(['login_code' => $code]);
         }
 
+        public static function findBySN($sn)
+        {
+            return static::findOne(['sn' => $sn]);
+        }
+
         public function getLockingDates()
         {
             $lockingDates = [];
@@ -151,6 +156,14 @@
             }
 
             return $lockingDates;
+        }
+
+        public function updateLockingData()
+        {
+            $lockDates = $this->getLockingDates();
+            $this->next_lock_date = $lockDates[0]['date'];
+            $this->current_code = $lockDates[0]['date'];
+            $this->save();
         }
 
     }
