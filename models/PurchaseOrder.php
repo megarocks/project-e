@@ -35,7 +35,7 @@
      * @property EndUsers $endUser
      * @property Country $country
      * @property Distributor $distributor
-     * @property System[] $systems
+     * @property System $system
      */
     class PurchaseOrder extends \yii\db\ActiveRecord
     {
@@ -170,6 +170,16 @@
             } else {
                 return false;
             }
+        }
+
+        public function processPayment($payment)
+        {
+            /**@var $payment Payment */
+            $this->npl = $this->npl - $payment->periods;
+            $this->save();
+            $this->system->updateLockingData();
+
+            return true;
         }
 
     }

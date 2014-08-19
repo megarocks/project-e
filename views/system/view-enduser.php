@@ -5,11 +5,17 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Systems */
-/**@var PurchaseOrder $po */
+    /* @var $model app\models\System */
+    /**@var PurchaseOrder $po */
 
 $this->title = "System #" . $model->sn . " management";
 $this->params['breadcrumbs'][] = $this->title;
+?>
+
+<?php
+    foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . '</div>';
+    }
 ?>
 
 <div class="systems-view">
@@ -17,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Request Code'), ['request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Request Code'), ['payment/request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <h3><?= Yii::t('app', 'System Details') ?> </h3>
