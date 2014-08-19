@@ -18,7 +18,7 @@
     <?php $form = ActiveForm::begin(); ?>
 
     <?=
-        $form->field($model, 'role')->dropDownList([
+        $form->field($model, 'roleField')->dropDownList([
             User::ROLE_ENDY  => Yii::t('app', 'Administrator'),
             User::ROLE_DISTR => Yii::t('app', 'Distributor'),
             User::ROLE_SALES => Yii::t('app', 'Sales'),

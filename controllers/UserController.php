@@ -86,14 +86,14 @@
             $user = Yii::$app->user->identity;
 
             if ($user->hasRole(User::ROLE_ENDY)) {
-
+                /**@var User $model */
                 $model = new User();
 
                 $request = Yii::$app->request->post();
 
                 if (!empty($request)) {
                     $model->load($request);
-                    if ($model->save()) {
+                    if ($model->registerAccount()) {
                         return $this->redirect(['view', 'id' => $model->id]);
                     } else {
                         return $this->render('create-' . User::ROLE_ENDY, ['model' => $model]);

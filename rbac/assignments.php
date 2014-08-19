@@ -1,21 +1,30 @@
 <?php
     return [
-        1 => [
+        1  => [
             'sales',
         ],
-        2 => [
+        2  => [
             'production',
         ],
-        3 => [
+        3  => [
             'endymed',
         ],
-        4 => [
+        4  => [
             'distributor',
         ],
-        5 => [
+        5  => [
             'enduser',
         ],
-        6 => [
+        6  => [
             'enduser',
+        ],
+        8  => [
+            'production',
+        ],
+        9  => [
+            'sales',
+        ],
+        10 => [
+            'distributor',
         ],
     ];
