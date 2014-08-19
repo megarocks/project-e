@@ -2,7 +2,9 @@
 
     namespace app\models;
 
+    use app\models\behaviors\DateTimeStampBehavior;
     use Yii;
+    use yii\db\ActiveRecord;
 
     /**
      * This is the model class for table "payments".
@@ -16,7 +18,7 @@
      * @property string $payer_id
      * @property string $payer_email
      *
-     * @property Po $poNum
+     * @property PurchaseOrder $po
      */
     class Payment extends \yii\db\ActiveRecord
     {
@@ -26,6 +28,22 @@
         public static function tableName()
         {
             return 'payments';
+        }
+
+        /**
+         * @inheritdoc
+         */
+        public function behaviors()
+        {
+            return [
+                'dateTimeStampBehavior' => [
+                    'class'      => DateTimeStampBehavior::className(),
+                    'attributes' => [
+                        ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                        ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                    ]
+                ]
+            ];
         }
 
         /**
@@ -48,10 +66,10 @@
         public function attributeLabels()
         {
             return [
-                'id'             => Yii::t('app', 'ID'),
-                'po_num'         => Yii::t('app', 'Po Num'),
-                'amount'         => Yii::t('app', 'Amount'),
-                'periods'        => Yii::t('app', 'Periods'),
+                'id'             => Yii::t('app', 'Payment ID'),
+                'po_num'         => Yii::t('app', 'Purchase Order #'),
+                'amount'         => Yii::t('app', 'Payment Amount'),
+                'periods'        => Yii::t('app', 'Payed Periods'),
                 'currency_code'  => Yii::t('app', 'Currency Code'),
                 'transaction_id' => Yii::t('app', 'Transaction ID'),
                 'payer_id'       => Yii::t('app', 'Payer ID'),
@@ -64,7 +82,7 @@
          */
         public function getPoNum()
         {
-            return $this->hasOne(Po::className(), ['po_num' => 'po_num']);
+            return $this->hasOne(PurchaseOrder::className(), ['po_num' => 'po_num']);
         }
 
         public function loadDataFromPayPal($po_num, $paymentDetails, $confirmDetails)

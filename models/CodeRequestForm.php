@@ -40,10 +40,11 @@
          * Method should check capability to generate code wo payment
          * If it's possible to generate code without should return false
          *
+         * @param $system
          * @return boolean
          */
 
-        public function checkIfPaymentNeeded()
+        public function checkIfPaymentNeeded($system)
         {
             return true;
         }

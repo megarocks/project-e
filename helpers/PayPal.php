@@ -11,6 +11,7 @@
 
     use Exception;
     use yii\log\Logger;
+    use Yii;
 
     class PayPal
     {
@@ -59,7 +60,7 @@
 
             $responce = curl_exec($ch);
 
-            $logger = \Yii::getLogger();
+            $logger = Yii::getLogger();
 
             if (curl_errno($ch)) {
                 $this->_errors = curl_error($ch);
@@ -86,7 +87,6 @@
          * @throws Exception
          * @return string $token
          */
-
         public function getToken($codeParams, $currencyCode)
         {
             $callbackUrlParams = [
@@ -110,7 +110,12 @@
 
             $response = $this->request('SetExpressCheckout', $callbackUrlParams + $orderParams + $codeItem);
 
-            if (is_array($response) && $response['ACK'] == 'Success') {
+            $ack = $response['ACK'];
+
+            if (is_array($response) && (($ack == 'Success') || ($ack == 'SUCCESSWITHWARNING'))) {
+                if ($ack == 'SUCCESSWITHWARNING') {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning')); //TODO Add warning message here
+                }
                 $token = $response['TOKEN'];
 
                 return $token;
@@ -126,7 +131,12 @@
             ];
             $response = $this->request('GetExpressCheckoutDetails', $params);
 
-            if (is_array($response) && $response['ACK'] == 'Success') {
+            $ack = $response['ACK'];
+            if (is_array($response) && (($ack == 'Success') || ($ack == 'SUCCESSWITHWARNING'))) {
+                if ($ack == 'SUCCESSWITHWARNING') {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning')); //TODO Add warning message here
+                }
+
                 return $response;
             } else {
                 throw new Exception('Error while requesting payment details from PayPal');
@@ -146,7 +156,12 @@
 
             $response = $this->request('DoExpressCheckoutPayment', $requestParams);
 
-            if (is_array($response) && $response['ACK'] == 'Success') {
+            $ack = $response['ACK'];
+            if (is_array($response) && (($ack == 'Success') || ($ack == 'SUCCESSWITHWARNING'))) {
+                if ($ack == 'SUCCESSWITHWARNING') {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning')); //TODO Add warning message here
+                }
+
                 return $response;
             } else {
                 throw new Exception('Failed to confirm payment');

@@ -7,11 +7,10 @@
     use app\models\Payment;
     use Yii;
     use app\models\System;
+    use yii\log\Logger;
     use yii\web\BadRequestHttpException;
     use yii\web\Controller;
     use yii\web\NotFoundHttpException;
-    use yii\filters\VerbFilter;
-    use yii\web\UnauthorizedHttpException;
 
     /**
      * PaymentController implements the actions related to payment operations.
@@ -36,11 +35,10 @@
 
                     //get system by the code
                     $system = System::getByLoginCode($loginCode);
-                    $po = $system->purchaseOrder;
 
                     //initialize code request form
                     $model->system_sn = $system->sn;
-                    $model->order_num = $po->po_num;
+                    $model->order_num = $system->purchaseOrder->po_num;
                     $model->periods_qty = 1;
 
                     return $this->render('code-request-form', [
@@ -57,15 +55,15 @@
                 $system = System::findBySN($model->system_sn);
 
                 //if payment is needed for generation of code
-                if ($model->checkIfPaymentNeeded()) {
+                if ($model->checkIfPaymentNeeded($system)) {
                     $pp = new PayPal();
 
                     //send request to pp with initial payment data.
                     $token = $pp->getToken([
-                        'system_sn'   => $system->sn,
-                        'cost'        => $system->purchaseOrder->cmp,
-                        'qty'         => $model->periods_qty,
-                        'description' => Yii::t('app', 'Code for system #') . $system->sn,
+                        'system_sn'   => $system->sn, //sn of system
+                        'cost'        => $system->purchaseOrder->cmp, //cost of single period
+                        'qty'         => $model->periods_qty, //qty of periods to pay
+                        'description' => Yii::t('app', 'Code for system #') . $system->sn, //code description
                     ], 'USD'); //TODO Currency is hardcoded
                     //if pp is ready to process payment it returns token
                     if (!is_null($token)) {
@@ -117,8 +115,11 @@
                     //update system locking params accordingly to payment
                     $system->purchaseOrder->processPayment($payment);
 
-                    //navigate to view to notice user about results
-                    $this->redirect('system/view-by-code');
+                    //navigate to view with payment details
+                    return $this->render('payment-details',
+                        [
+                            'model' => $payment,
+                        ]);
 
                 } else {
                     throw new BadRequestHttpException('Transaction token is missing');
@@ -132,6 +133,7 @@
         public function actionCancel()
         {
             Yii::$app->session->setFlash('notice', Yii::t('app', 'Payment was canceled'));
+            Yii::getLogger()->log('Payment canceled by user', Logger::LEVEL_WARNING, 'paypal');
             $this->redirect('system/view-by-code');
         }
     }

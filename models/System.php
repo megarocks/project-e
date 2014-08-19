@@ -28,6 +28,7 @@
         const STATUS_UNLOCKED = "unlocked";
         const STATUS_ACTIVE = "active";
         const STATUS_ACTIVE_PAYMENT = "active_payment";
+        const STATUS_LOCKED = "locked";
 
         /**
          * @inheritdoc
