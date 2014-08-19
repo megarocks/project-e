@@ -35,8 +35,17 @@
                 'traceLevel' => YII_DEBUG ? 3 : 0,
                 'targets'    => [
                     [
-                        'class'  => 'yii\log\FileTarget',
-                        'levels' => ['error', 'warning'],
+                        'class'       => 'yii\log\FileTarget',
+                        'levels'      => ['error', 'warning'],
+                        'maxFileSize' => '10240',
+                    ],
+                    [
+                        'class'       => 'yii\log\FileTarget',
+                        'categories'  => ['paypal'],
+                        'logVars'     => [],
+                        'levels'      => ['info', 'error', 'warning'],
+                        'logFile'     => '@runtime/logs/paypal.log',
+                        'maxFileSize' => '10240',
                     ],
                 ],
             ],
