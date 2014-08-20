@@ -7,6 +7,7 @@
     use app\models\Payment;
     use Yii;
     use app\models\System;
+    use yii\filters\AccessControl;
     use yii\log\Logger;
     use yii\web\BadRequestHttpException;
     use yii\web\Controller;
@@ -17,6 +18,22 @@
      */
     class PaymentController extends Controller
     {
+        public function behaviors()
+        {
+            return [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'allow'   => true,
+                            'actions' => ['request-code', 'success', 'cancel'],
+                            'roles'   => ['@'],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         /**
          *  Action gets data from code request form and initiates payment process
          *

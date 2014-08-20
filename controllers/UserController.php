@@ -3,6 +3,7 @@
     namespace app\controllers;
 
     use app\models\User;
+    use yii\filters\AccessControl;
     use yii\filters\VerbFilter;
     use yii\helpers\Json;
     use yii\web\Controller;
@@ -22,6 +23,16 @@
                     'class'   => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['post'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'allow'   => true,
+                            'actions' => ['index', 'list', 'view', 'create', 'update'],
+                            'roles'   => ['@'],
+                        ],
                     ],
                 ],
             ];
