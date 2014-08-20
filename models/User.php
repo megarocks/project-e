@@ -75,9 +75,31 @@
                 [['email'], 'unique'],
                 [['email'], 'email'],
                 [['created_at', 'updated_at', 'password', 'password_repeat', 'roleField'], 'safe'],
-                [['first_name', 'last_name', 'email'], 'string', 'max' => 45],
-                [['password_hash', 'password_reset_token', 'access_token', 'auth_key'], 'string', 'max' => 128],
-                [['password'], 'compare', 'compareAttribute' => 'password_repeat', 'skipOnEmpty' => true]
+                [['first_name', 'last_name', 'email'],
+                    'string', 'max' => 45
+                ],
+                [['password_hash', 'password_reset_token', 'access_token', 'auth_key'],
+                    'string', 'max' => 128
+                ],
+                [['password'],
+                    'compare',
+                    'compareAttribute' => 'password_repeat',
+                ],
+                [['password', 'password_repeat'],
+                    'string',
+                    'min' => 3,
+                    'on'  => ['create'],
+                ],
+                [['password', 'password_repeat'],
+                    'required',
+                    'on' => ['create'],
+                ],
+                [['password', 'password_repeat'],
+                    'string',
+                    'min'         => 3,
+                    'on'          => ['update'],
+                    'skipOnEmpty' => true,
+                ],
             ];
         }
 
@@ -259,7 +281,7 @@
             if ($this->validate()) {
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 $this->auth_key = Yii::$app->security->generateRandomKey();
-                $this->password_reset_token = Yii::$app->security->generateRandomKey();
+                $this->password_reset_token = Yii::$app->security->generateRandomString();
                 $this->access_token = Yii::$app->security->generateRandomString();
 
                 return $this->save();
@@ -275,7 +297,7 @@
         public function updateAccount()
         {
             if ($this->validate()) {
-                if (!is_null($this->password)) {
+                if (!is_null($this->password) && !empty($this->password)) {
                     $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 }
 
@@ -285,7 +307,7 @@
 
         public function afterSave($insert, $changedAttributes)
         {
+            $this->setRole($this->roleField); //TODO Need to assign role after saving of account but on view it updates only after few refreshes
             parent::afterSave($insert, $changedAttributes);
-            $this->setRole($this->roleField);
         }
     }

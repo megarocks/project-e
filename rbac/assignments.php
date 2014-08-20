@@ -27,4 +27,19 @@
         10 => [
             'distributor',
         ],
+        11 => [
+            'sales',
+        ],
+        12 => [
+            'distributor',
+        ],
+        13 => [
+            'endymed',
+        ],
+        14 => [
+            'endymed',
+        ],
+        15 => [
+            'endymed',
+        ],
     ];

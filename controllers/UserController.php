@@ -88,7 +88,7 @@
             if ($user->hasRole(User::ROLE_ENDY)) {
                 /**@var User $model */
                 $model = new User();
-
+                $model->scenario = 'create';
                 $request = Yii::$app->request->post();
 
                 if (!empty($request)) {
@@ -100,6 +100,34 @@
                     }
                 } else {
                     return $this->render('create-' . User::ROLE_ENDY, ['model' => $model]);
+                }
+            } else {
+                throw new UnauthorizedHttpException;
+            }
+        }
+
+        public function actionUpdate($id)
+        {
+            /**@var User $user */
+            $user = Yii::$app->user->identity;
+
+            if ($user->hasRole(User::ROLE_ENDY)) {
+                /**@var User $model */
+                $model = $this->findModel($id);
+                $model->scenario = 'update';
+                $model->roleField = $model->role;
+
+                $request = Yii::$app->request->post();
+
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->updateAccount()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        return $this->render('update-' . User::ROLE_ENDY, ['model' => $model]);
+                    }
+                } else {
+                    return $this->render('update-' . User::ROLE_ENDY, ['model' => $model]);
                 }
             } else {
                 throw new UnauthorizedHttpException;

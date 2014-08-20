@@ -36,10 +36,7 @@
         DetailView::widget([
             'model'      => $model,
             'attributes' => [
-                [
-                    'label' => Yii::t('app', 'User Role'),
-                    'value' => $model->getRole(),
-                ],
+                'role',
                 'first_name',
                 'last_name',
                 'email:email',
