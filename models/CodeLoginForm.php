@@ -4,6 +4,7 @@
 
     use Yii;
     use yii\base\Model;
+    use yii\log\Logger;
 
     /**
      * CredentialsLoginForm is the model behind the credentials login form.
@@ -52,7 +53,17 @@
         public function login()
         {
             if ($this->validate()) {
-                return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+                $loginResult = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+                Yii::getLogger()->log([
+                    'Action'       => 'Attempt to login using system code',
+                    'Code'         => $this->loginCode,
+                    'RememberMe'   => $this->rememberMe,
+                    'Remote IP'    => $_SERVER['REMOTE_ADDR'],
+                    'Behind Proxy' => isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : 'No proxy',
+                    'Login Result' => $loginResult
+                ], Logger::LEVEL_INFO, 'login');
+
+                return $loginResult;
             } else {
                 return false;
             }
