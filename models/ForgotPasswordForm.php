@@ -3,6 +3,7 @@
     namespace app\models;
 
     use Yii;
+    use yii\base\Exception;
     use yii\base\Model;
     use yii\log\Logger;
 
@@ -57,8 +58,20 @@
                     'Remote IP'    => $_SERVER['REMOTE_ADDR'],
                     'Behind Proxy' => isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : 'No proxy',
                 ], Logger::LEVEL_WARNING, 'login');
+                $user = User::findByEmail($this->email);
 
-                return true;
+                if
+                (
+                Yii::$app->mailer->compose('site/forgot-password', ['user' => $user])
+                    ->setFrom('noreply@projecte.com')
+                    ->setTo($user->email)
+                    ->setSubject(Yii::t('app', 'EndyMed PPD password remind'))
+                    ->send()
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }

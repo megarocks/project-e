@@ -6,10 +6,12 @@
     use app\models\CredentialsLoginForm;
     use app\models\ForgotPasswordForm;
     use app\models\System;
+    use app\models\User;
     use Yii;
     use yii\filters\AccessControl;
     use yii\web\Controller;
     use yii\filters\VerbFilter;
+    use yii\web\NotFoundHttpException;
 
     class SiteController extends Controller
     {
@@ -20,12 +22,12 @@
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['index', 'logout'],
+                            'actions' => ['index', 'logout', 'password-reset'],
                             'allow'   => true,
                             'roles'   => ['@'],
                         ],
                         [
-                            'actions' => ['login', 'login-by-code', 'forgot-password'],
+                            'actions' => ['login', 'login-by-code', 'forgot-password', 'password-reset'],
                             'allow'   => true,
                             'roles'   => ['?']
                         ]
@@ -129,6 +131,17 @@
                 return $this->render('forgot-password-form', [
                     'model' => $model,
                 ]);
+            }
+        }
+
+        public function actionPasswordReset($password_reset_token)
+        {
+            $user = User::findByPasswordResetToken($password_reset_token);
+            if ($user && Yii::$app->user->login($user)) {
+                $user->regeneratePasswordResetToken();
+                $this->redirect('user/profile');
+            } else {
+                throw new NotFoundHttpException;
             }
         }
     }

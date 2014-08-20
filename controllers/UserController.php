@@ -30,7 +30,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'list', 'view', 'create', 'update'],
+                            'actions' => ['index', 'list', 'view', 'create', 'update', 'profile'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -143,5 +143,10 @@
             } else {
                 throw new UnauthorizedHttpException;
             }
+        }
+
+        public function actionProfile()
+        {
+            echo "User own profile management soon will be here";
         }
     }

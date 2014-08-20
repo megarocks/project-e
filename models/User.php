@@ -307,7 +307,19 @@
 
         public function afterSave($insert, $changedAttributes)
         {
+            //TODO Set role only if it is present in changed attributes
             $this->setRole($this->roleField); //TODO Need to assign role after saving of account but on view it updates only after few refreshes
             parent::afterSave($insert, $changedAttributes);
+        }
+
+        public static function findByPasswordResetToken($token)
+        {
+            return $user = static::findOne(['password_reset_token' => $token]);
+        }
+
+        public function regeneratePasswordResetToken()
+        {
+            $this->password_reset_token = Yii::$app->security->generateRandomString();
+            $this->save();
         }
     }
