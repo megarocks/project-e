@@ -12,17 +12,22 @@
         ],
     ]); ?>
 
-    <?= $form->field($model, 'email')->textInput(['type' => 'email', 'placeholder' => Yii::t('app', 'Enter Email')]) ?>
+<?= $form->field($model, 'email')->textInput(['type' => 'email', 'placeholder' => Yii::t('app', 'Enter Email')]) ?>
 
-    <?= $form->field($model, 'password')->passwordInput(['placeholder' => Yii::t('app', 'Enter Password')]) ?>
+<?= $form->field($model, 'password')->passwordInput(['placeholder' => Yii::t('app', 'Enter Password')]) ?>
 
-    <div class="col-lg-offset-6">
-        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+
+<div class="col-lg-offset-6">
+    <?= Html::a(Yii::t('app', 'Forgot Password') . '?', 'site/forgot-password') ?>
+    <?= $form->field($model, 'rememberMe')->checkbox() ?>
+</div>
+<div class="form-group">
+    <div class="col-lg-offset-6 col-lg-2">
+        <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
     </div>
-    <div class="form-group">
-        <div class="col-lg-offset-6 col-lg-2">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-        </div>
-    </div>
+</div>
 
 <?php ActiveForm::end(); ?>
+<div class="col-lg-offset-5 col-sm-2">
+
+</div>

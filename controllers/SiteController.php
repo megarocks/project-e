@@ -1,109 +1,134 @@
 <?php
 
-namespace app\controllers;
+    namespace app\controllers;
 
-use app\models\CodeLoginForm;
-use app\models\CredentialsLoginForm;
-use app\models\System;
-use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
+    use app\models\CodeLoginForm;
+    use app\models\CredentialsLoginForm;
+    use app\models\ForgotPasswordForm;
+    use app\models\System;
+    use Yii;
+    use yii\filters\AccessControl;
+    use yii\web\Controller;
+    use yii\filters\VerbFilter;
 
-class SiteController extends Controller
-{
-    public function behaviors()
+    class SiteController extends Controller
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['index', 'logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
+        public function behaviors()
+        {
+            return [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'logout'],
+                            'allow'   => true,
+                            'roles'   => ['@'],
+                        ],
+                        [
+                            'actions' => ['login', 'login-by-code', 'forgot-password'],
+                            'allow'   => true,
+                            'roles'   => ['?']
+                        ]
                     ],
-                    [
-                        'actions' => ['login', 'login-by-code'],
-                        'allow'   => true,
-                        'roles'   => ['?']
-                    ]
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post', 'get'],
+                'verbs'  => [
+                    'class'   => VerbFilter::className(),
+                    'actions' => [
+                        'logout' => ['post', 'get'],
+                    ],
                 ],
-            ],
-        ];
-    }
+            ];
+        }
 
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
+        public function actions()
+        {
+            return [
+                'error'   => [
+                    'class' => 'yii\web\ErrorAction',
+                ],
+                'captcha' => [
+                    'class'           => 'yii\captcha\CaptchaAction',
+                    'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                ],
+            ];
+        }
 
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
+        public function actionIndex()
+        {
+            return $this->render('index');
+        }
 
-    public function actionLogin($initForm = 'code')
-    {
-        if (!\Yii::$app->user->isGuest) {
+        public function actionLogin($initForm = 'code')
+        {
+            if (!\Yii::$app->user->isGuest) {
+                return $this->goHome();
+            }
+
+            $credentialsLoginForm = new CredentialsLoginForm();
+            $codeLoginForm = new CodeLoginForm();
+            $request = Yii::$app->request->post();
+
+            if ($credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
+                return $this->goBack();
+            } else {
+                return $this->render('login', [
+                    'credentialsLoginForm' => $credentialsLoginForm,
+                    'codeLoginForm'        => $codeLoginForm,
+                    'initForm'             => $initForm,
+                ]);
+            }
+        }
+
+        public function actionLoginByCode($initForm = 'code')
+        {
+            if (!\Yii::$app->user->isGuest) {
+                return $this->goHome();
+            }
+            $codeLoginForm = new CodeLoginForm();
+            $credentialsLoginForm = new CredentialsLoginForm();
+            $request = Yii::$app->request->post();
+            if ($codeLoginForm->load($request) && $codeLoginForm->login()) {
+                Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
+
+                return $this->redirect('/system/view-by-code');
+            } else {
+                return $this->render('login', [
+                    'credentialsLoginForm' => $credentialsLoginForm,
+                    'codeLoginForm'        => $codeLoginForm,
+                    'initForm'             => $initForm,
+                ]);
+            }
+        }
+
+        public function actionLogout()
+        {
+            Yii::$app->user->logout();
+
             return $this->goHome();
         }
 
-        $credentialsLoginForm = new CredentialsLoginForm();
-        $codeLoginForm = new CodeLoginForm();
-        $request = Yii::$app->request->post();
+        public function actionForgotPassword()
+        {
+            /**@var $model ForgotPasswordForm */
+            $model = new ForgotPasswordForm();
 
-        if ($credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'credentialsLoginForm' => $credentialsLoginForm,
-                'codeLoginForm'        => $codeLoginForm,
-                'initForm'             => $initForm,
-            ]);
+            $request = Yii::$app->request->post();
+
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->validate() && $model->sendMailWithLink()) {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Check your email to move ahead with password restoring'));
+
+                    return $this->redirect('site/login');
+                } else {
+                    return $this->render('forgot-password-form', [
+                        'model' => $model,
+                    ]);
+                }
+            } else {
+                return $this->render('forgot-password-form', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
-
-    public function actionLoginByCode($initForm = 'code')
-    {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-        $codeLoginForm = new CodeLoginForm();
-        $credentialsLoginForm = new CredentialsLoginForm();
-        $request = Yii::$app->request->post();
-        if ($codeLoginForm->load($request) && $codeLoginForm->login()) {
-            Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
-
-            return $this->redirect('/system/view-by-code');
-        } else {
-            return $this->render('login', [
-                'credentialsLoginForm' => $credentialsLoginForm,
-                'codeLoginForm'        => $codeLoginForm,
-                'initForm'             => $initForm,
-            ]);
-        }
-    }
-
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-}
