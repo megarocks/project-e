@@ -188,7 +188,7 @@
          */
         public function validateAuthKey($authKey)
         {
-            // TODO: Implement validateAuthKey() method.
+            return $this->auth_key == $authKey;
         }
 
         /**
@@ -280,7 +280,7 @@
         {
             if ($this->validate()) {
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
-                $this->auth_key = Yii::$app->security->generateRandomKey();
+                $this->auth_key = Yii::$app->security->generateRandomString();
                 $this->password_reset_token = Yii::$app->security->generateRandomString();
                 $this->access_token = Yii::$app->security->generateRandomString();
 
