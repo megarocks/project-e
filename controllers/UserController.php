@@ -147,6 +147,23 @@
 
         public function actionProfile()
         {
-            echo "User own profile management soon will be here";
+            $model = $this->findModel(Yii::$app->user->id);
+            $model->scenario = 'update';
+            $request = Yii::$app->request->post();
+
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->updateAccount()) {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Profile data has been saved'));
+                    $this->refresh();
+                } else {
+                    return $this->render('own-profile', ['model' => $model]);
+                }
+
+            } else {
+                return $this->render('own-profile', ['model' => $model]);
+            }
+
+
         }
     }

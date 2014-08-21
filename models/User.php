@@ -288,6 +288,7 @@
          */
         public function registerAccount()
         {
+            $this->scenario = 'create';
             if ($this->validate()) {
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 $this->auth_key = Yii::$app->security->generateRandomString();
@@ -314,6 +315,7 @@
          */
         public function updateAccount()
         {
+            $this->scenario = 'update';
             if ($this->validate()) {
                 if (!is_null($this->password) && !empty($this->password)) {
                     $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
