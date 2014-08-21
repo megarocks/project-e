@@ -29,7 +29,15 @@
                 // send all mails to a file by default. You have to set
                 // 'useFileTransport' to false and configure a transport
                 // for the mailer to send real emails.
-                'useFileTransport' => true,
+                //'useFileTransport' => true,
+                'transport' => [
+                    'class'      => 'Swift_SmtpTransport',
+                    'host'       => 'smtp.gmail.com',
+                    'username'   => 'bdevelopers.key@gmail.com',
+                    'password'   => 'bohbohboh',
+                    'port'       => '465',
+                    'encryption' => 'ssl',
+                ],
             ],
             'log'          => [
                 'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -47,6 +55,14 @@
                         'logFile'     => '@runtime/logs/paypal.log',
                         'maxFileSize' => '10240',
                     ],
+                    [
+                        'class'       => 'yii\log\FileTarget',
+                        'categories'  => ['login', 'logout'],
+                        'logVars'     => [],
+                        'levels'      => ['info', 'error', 'warning'],
+                        'logFile'     => '@runtime/logs/login.log',
+                        'maxFileSize' => '10240',
+                    ],
                 ],
             ],
             'db'           => require(__DIR__ . '/db.php'),
@@ -60,7 +76,7 @@
                 ],
             ],
             'authManager'  => [
-                'class' => 'yii\rbac\PhpManager'
+                'class' => 'yii\rbac\DbManager'
             ],
         ],
         'params'     => $params,

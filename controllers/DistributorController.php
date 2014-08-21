@@ -6,6 +6,7 @@ use app\models\Country;
 use app\models\DistributorCountry;
 use Yii;
 use app\models\Distributor;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -23,6 +24,16 @@ class DistributorController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow'   => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'list', 'dynamic'],
+                        'roles'   => ['@'],
+                    ],
                 ],
             ],
         ];

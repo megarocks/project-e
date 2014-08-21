@@ -7,6 +7,7 @@
     use app\models\User;
     use Yii;
     use app\models\System;
+    use yii\filters\AccessControl;
     use yii\helpers\Json;
     use yii\web\BadRequestHttpException;
     use yii\web\Controller;
@@ -26,6 +27,16 @@
                     'class'   => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['post'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'allow'   => true,
+                            'actions' => ['index', 'view', 'list', 'view-by-code'],
+                            'roles'   => ['@'],
+                        ],
                     ],
                 ],
             ];

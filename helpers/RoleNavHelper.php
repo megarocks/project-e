@@ -25,8 +25,8 @@
                 case User::ROLE_ENDY:
                     return static::renderEndyMedNav();
                     break;
-                case User::ROLE_PROD:
-                    return static::renderProdNav();
+                case User::ROLE_MAN:
+                    return static::renderManufacturerNav();
                     break;
                 case User::ROLE_SALES:
                     return static::renderSalesNav();
@@ -76,7 +76,7 @@
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
-                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/endusers/index']],
+                    ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
                     Yii::$app->user->isGuest ?
                         ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
                         ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
@@ -86,7 +86,7 @@
             ]);
         }
 
-        private static function renderProdNav()
+        private static function renderManufacturerNav()
         {
             return Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
@@ -110,7 +110,6 @@
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
-                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/endusers/index']],
                     Yii::$app->user->isGuest ?
                         ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
                         ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',

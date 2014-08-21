@@ -12,7 +12,7 @@
 
     $this->title = "Payment #" . $model->id . " details";
 
-    $system = $model->po->system;
+    $system = $model->purchaseOrder->system;
 ?>
 
 <div class="payment-details">

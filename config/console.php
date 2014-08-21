@@ -24,7 +24,7 @@ return [
         ],
         'db' => $db,
         'authManager' => [
-            'class' => 'yii\rbac\PhpManager',
+            'class' => 'yii\rbac\DbManager',
         ],
     ],
     'params' => $params,
