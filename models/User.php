@@ -119,9 +119,9 @@
                 'auth_key'             => Yii::t('app', 'Auth Key'),
                 'created_at'           => Yii::t('app', 'Created At'),
                 'updated_at'           => Yii::t('app', 'Updated At'),
-                'password'        => Yii::t('app', 'Password'),
-                'password_repeat' => Yii::t('app', 'Repeat Password'),
-                'roleField' => Yii::t('app', 'Role'),
+                'password'             => Yii::t('app', 'Password'),
+                'password_repeat'      => Yii::t('app', 'Repeat Password'),
+                'roleField'            => Yii::t('app', 'Role'),
 
             ];
         }
@@ -297,6 +297,12 @@
 
                 if ($this->save()) {
                     $this->role = $this->_roleField;
+
+                    Yii::$app->mailer->compose('user/user-account-created', ['user' => $this])
+                        ->setFrom('noreply@projecte.com')
+                        ->setTo($this->email)
+                        ->setSubject(Yii::t('app', 'EndyMed PPD account'))
+                        ->send();
 
                     return true;
                 } else {
