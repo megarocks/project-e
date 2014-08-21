@@ -25,8 +25,8 @@
                 case User::ROLE_ENDY:
                     return static::renderEndyMedNav();
                     break;
-                case User::ROLE_PROD:
-                    return static::renderProdNav();
+                case User::ROLE_MAN:
+                    return static::renderManufacturerNav();
                     break;
                 case User::ROLE_SALES:
                     return static::renderSalesNav();
@@ -86,7 +86,7 @@
             ]);
         }
 
-        private static function renderProdNav()
+        private static function renderManufacturerNav()
         {
             return Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],

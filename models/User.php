@@ -31,7 +31,7 @@
     class User extends ActiveRecord implements IdentityInterface
     {
         const ROLE_SALES = 'sales';
-        const ROLE_PROD = 'production';
+        const ROLE_MAN = 'manufacturer';
         const ROLE_ENDY = 'endymed';
         const ROLE_DISTR = 'distributor';
         const ROLE_END_USER = 'enduser';
