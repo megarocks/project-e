@@ -1,15 +1,15 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+    use yii\helpers\Html;
+    use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\PurchaseOrder */
+    /* @var $this yii\web\View */
+    /* @var $model app\models\PurchaseOrder */
 
-$this->title = Yii::t('app', 'Edit system order');
+    $this->title = Yii::t('app', 'Edit system order');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'System Orders'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = ['label' => $model->po_num, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Edit');
+    $this->params['breadcrumbs'][] = Yii::t('app', 'Edit');
 ?>
 <div class="systems-update">
 

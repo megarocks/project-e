@@ -50,10 +50,10 @@ class PurchaseOrderController extends Controller
         /**@var User $user */
         $user = Yii::$app->user->identity;
         $view = 'index';
-        if ($user->hasRole('sales')) {
-            $view = 'index-sales';
-        } elseif ($user->hasRole('production')) {
-            $view = 'index-production';
+        if ($user->hasRole(User::ROLE_SALES)) {
+            $view = 'index-' . User::ROLE_SALES;
+        } elseif ($user->hasRole(User::ROLE_MAN)) {
+            $view = 'index-' . User::ROLE_MAN;
         } else {
             throw new UnauthorizedHttpException;
         }
@@ -74,8 +74,8 @@ class PurchaseOrderController extends Controller
             return $this->render('view-' . User::ROLE_SALES, [
                     'model' => $this->findModel($id),
                 ]);
-        } elseif ($user->hasRole(User::ROLE_PROD)) {
-            return $this->render('view-' . User::ROLE_PROD, [
+        } elseif ($user->hasRole(User::ROLE_MAN)) {
+            return $this->render('view-' . User::ROLE_MAN, [
                     'model' => $this->findModel($id),
                 ]);
         } else {
@@ -115,7 +115,7 @@ class PurchaseOrderController extends Controller
                     ]);
             }
         } //logic for production users
-        elseif ($user->hasRole(User::ROLE_PROD)) {
+        elseif ($user->hasRole(User::ROLE_MAN)) {
             if (!empty($request)) {
                 $model->load($request);
                 if (($model->system_sn) && ($model->validate())) {
@@ -129,12 +129,12 @@ class PurchaseOrderController extends Controller
                 if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
-                    return $this->render('update-' . User::ROLE_PROD, [
+                    return $this->render('update-' . User::ROLE_MAN, [
                             'model' => $model,
                         ]);
                 }
             } else {
-                return $this->render('update-' . User::ROLE_PROD, [
+                return $this->render('update-' . User::ROLE_MAN, [
                         'model' => $model,
                     ]);
             }

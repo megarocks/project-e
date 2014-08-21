@@ -80,7 +80,7 @@
         /**
          * @return \yii\db\ActiveQuery
          */
-        public function getPoNum()
+        public function getPurchaseOrder()
         {
             return $this->hasOne(PurchaseOrder::className(), ['po_num' => 'po_num']);
         }

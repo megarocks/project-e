@@ -22,7 +22,7 @@
             User::ROLE_ENDY  => Yii::t('app', 'Administrator'),
             User::ROLE_DISTR => Yii::t('app', 'Distributor'),
             User::ROLE_SALES => Yii::t('app', 'Sales'),
-            User::ROLE_PROD  => Yii::t('app', 'Production'),
+            User::ROLE_MAN => Yii::t('app', 'Manufacturer'),
         ]) ?>
     <?= $form->field($model, 'first_name')->textInput(['placeholder' => Yii::t('app', 'User first name')]) ?>
     <?= $form->field($model, 'last_name')->textInput(['placeholder' => Yii::t('app', 'User last name')]) ?>
