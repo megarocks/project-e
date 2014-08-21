@@ -126,7 +126,7 @@
                 /**@var User $model */
                 $model = $this->findModel($id);
                 $model->scenario = 'update';
-                $model->roleField = $model->role;
+                //$model->roleField = $model->role;
 
                 $request = Yii::$app->request->post();
 

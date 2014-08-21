@@ -20,8 +20,8 @@
      * @property string $auth_key
      * @property string $created_at
      * @property string $updated_at
-     * @property string $roleField
      * @property string $role
+     * @property string $roleField
      *
      *
      * @property string $password
@@ -38,7 +38,7 @@
 
         public $password;
         public $password_repeat;
-        public $roleField;
+        private $_roleField;
 
 
         /**
@@ -121,7 +121,7 @@
                 'updated_at'           => Yii::t('app', 'Updated At'),
                 'password'        => Yii::t('app', 'Password'),
                 'password_repeat' => Yii::t('app', 'Repeat Password'),
-                'role'            => Yii::t('app', 'Role'),
+                'roleField' => Yii::t('app', 'Role'),
 
             ];
         }
@@ -251,10 +251,20 @@
         {
             $auth = Yii::$app->authManager;
             $role = $auth->getRole($value);
-            if (!is_null($role)) {
+            if (!is_null($role) && $this->id) {
                 $auth->revokeAll($this->id);
                 $auth->assign($role, $this->id);
             }
+        }
+
+        public function getRoleField()
+        {
+            return $this->role;
+        }
+
+        public function setRoleField($value)
+        {
+            $this->_roleField = $value;
         }
 
         /**
@@ -284,7 +294,15 @@
                 $this->password_reset_token = Yii::$app->security->generateRandomString();
                 $this->access_token = Yii::$app->security->generateRandomString();
 
-                return $this->save();
+                if ($this->save()) {
+                    $this->role = $this->_roleField;
+
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
         }
 
@@ -300,6 +318,7 @@
                 if (!is_null($this->password) && !empty($this->password)) {
                     $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 }
+                $this->role = $this->_roleField;
 
                 return $this->save();
             }
@@ -307,8 +326,6 @@
 
         public function afterSave($insert, $changedAttributes)
         {
-            //TODO Set role only if it is present in changed attributes
-            $this->setRole($this->roleField); //TODO Need to assign role after saving of account but on view it updates only after few refreshes
             parent::afterSave($insert, $changedAttributes);
         }
 
