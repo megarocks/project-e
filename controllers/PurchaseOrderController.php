@@ -215,8 +215,8 @@ class PurchaseOrderController extends Controller
                 $o['dsp'] = $order->dsp;
                 $o['csp'] = $order->csp;
                 $o['nop'] = $order->nop;
-                $o['distributor'] = $order->distributor->title;
-                $o['country'] = $order->country->name;
+                $o['distributor'] = isset($order->distributor->title) ? $order->distributor->title : null;
+                $o['country'] = isset($order->country->name) ? $order->country->name : null;
                 $result[] = $o;
             }
         }
