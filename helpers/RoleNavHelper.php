@@ -76,6 +76,7 @@
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
+                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
                     ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
                     Yii::$app->user->isGuest ?
                         ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :

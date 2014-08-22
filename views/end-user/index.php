@@ -20,16 +20,16 @@
 
     <p>
         <?=
-            Html::a(Yii::t('app', 'Create {modelClass}', [
-                'modelClass' => 'End Users',
-            ]), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
+            Html::a(Yii::t('app', 'Create end-user'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
     <table id="end-users-table" class="table-hover">
         <thead>
         <tr>
+            <th>Registered At</th>
             <th>Title</th>
             <th>Email</th>
+            <th>Country</th>
             <th>Actions</th>
         </tr>
         </thead>
