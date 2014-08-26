@@ -2,6 +2,7 @@
 
     namespace app\controllers;
 
+    use app\models\Country;
     use Yii;
     use app\models\EndUser;
     use yii\filters\AccessControl;
@@ -29,7 +30,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'create', 'update', 'list'],
+                            'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -160,5 +161,32 @@
                 $result[] = $eu;
             }
             echo(Json::encode($result));
+        }
+
+        /**
+         * Returns json string with endUsers filtered by country
+         * used for dependent dropdowns
+         */
+        public function actionDynamic()
+        {
+            if (isset($_POST['depdrop_parents'])) {
+                $parents = $_POST['depdrop_parents'];
+                if ($parents != null) {
+                    $countryId = $parents[0];
+                    $country = Country::findOne(['id_countries' => $countryId]);
+                    $endUsers = $country->endUsers;
+                    $out = [];
+                    $res = [];
+                    foreach ($endUsers as $eu) {
+                        $res['id'] = $eu->id;
+                        $res['name'] = $eu->title;
+                        $out[] = $res;
+                    }
+                    echo Json::encode(['output' => $out, 'selected' => '']);
+
+                    return;
+                }
+            }
+            echo Json::encode(['output' => '', 'selected' => '']);
         }
     }

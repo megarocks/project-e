@@ -50,7 +50,9 @@ class PurchaseOrderController extends Controller
         /**@var User $user */
         $user = Yii::$app->user->identity;
         $view = 'index';
-        if ($user->hasRole(User::ROLE_SALES)) {
+        if ($user->hasRole(User::ROLE_ENDY)) {
+            $view = 'index-' . User::ROLE_ENDY;
+        } elseif ($user->hasRole(User::ROLE_SALES)) {
             $view = 'index-' . User::ROLE_SALES;
         } elseif ($user->hasRole(User::ROLE_MAN)) {
             $view = 'index-' . User::ROLE_MAN;
@@ -70,7 +72,11 @@ class PurchaseOrderController extends Controller
     {
         /**@var User $user */
         $user = Yii::$app->user->identity;
-        if ($user->hasRole(User::ROLE_SALES)) {
+        if ($user->hasRole(User::ROLE_ENDY)) {
+            return $this->render('view-' . User::ROLE_ENDY, [
+                    'model' => $this->findModel($id),
+                ]);
+        } elseif ($user->hasRole(User::ROLE_SALES)) {
             return $this->render('view-' . User::ROLE_SALES, [
                     'model' => $this->findModel($id),
                 ]);
@@ -99,7 +105,22 @@ class PurchaseOrderController extends Controller
         $user = Yii::$app->user->identity;
 
         //logic for sales users
-        if ($user->hasRole(User::ROLE_SALES)) {
+        if ($user->hasRole(User::ROLE_ENDY)) {
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    return $this->render('update-' . User::ROLE_ENDY, [
+                            'model' => $model,
+                        ]);
+                }
+            } else {
+                return $this->render('update-' . User::ROLE_ENDY, [
+                        'model' => $model,
+                    ]);
+            }
+        } elseif ($user->hasRole(User::ROLE_SALES)) {
             if (!empty($request)) {
                 $model->load($request);
                 if ($model->save()) {

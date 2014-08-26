@@ -111,6 +111,7 @@
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
+                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
                     Yii::$app->user->isGuest ?
                         ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
                         ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
