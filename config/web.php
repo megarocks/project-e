@@ -7,6 +7,15 @@
         'basePath'   => dirname(__DIR__),
         'bootstrap'  => ['log'],
         'components' => [
+            /*            'view'         => [
+                            'theme' => [
+                                'pathMap' => [
+                                    '@app/views'   => '@app/themes/ace',
+                                    '@app/modules' => '@app/themes/ace/modules',
+                                    '@app/widgets' => '@app/themes/ace/widgets',
+                                ],
+                            ],
+                        ],*/
             'request'      => [
                 // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
                 'cookieValidationKey' => '95NBmEDcQfBHMua9RNRTSnuvQYkV2h7w',
@@ -25,7 +34,7 @@
                 'errorAction' => 'site/error',
             ],
             'mailer'       => [
-                'class'            => 'yii\swiftmailer\Mailer',
+                'class' => 'yii\swiftmailer\Mailer',
                 // send all mails to a file by default. You have to set
                 // 'useFileTransport' to false and configure a transport
                 // for the mailer to send real emails.

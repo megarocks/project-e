@@ -19,7 +19,7 @@
         public function behaviors()
         {
             return [
-                'verbs' => [
+                'verbs'  => [
                     'class'   => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['post'],
@@ -163,7 +163,6 @@
             } else {
                 return $this->render('own-profile', ['model' => $model]);
             }
-
 
         }
     }

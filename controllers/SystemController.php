@@ -4,6 +4,7 @@
 
     use app\helpers\PayPal;
     use app\models\CodeRequestForm;
+    use app\models\PoSystemModel;
     use app\models\User;
     use Yii;
     use app\models\System;
@@ -34,7 +35,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'list', 'view-by-code'],
+                            'actions' => ['index', 'view', 'list', 'view-by-code', 'create', 'assign'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -52,7 +53,9 @@
             /**@var User $user */
             $user = Yii::$app->user->identity;
 
-            if ($user->hasRole(User::ROLE_DISTR)) {
+            if ($user->hasRole(User::ROLE_ENDY)) {
+                return $this->render('index-' . User::ROLE_ENDY);
+            } elseif ($user->hasRole(User::ROLE_DISTR)) {
                 return $this->render('index-' . User::ROLE_DISTR);
             } else {
                 throw new UnauthorizedHttpException;
@@ -70,7 +73,12 @@
             /**@var User $user */
             $user = Yii::$app->user->identity;
 
-            if ($user->hasRole(User::ROLE_DISTR)) {
+            if ($user->hasRole(User::ROLE_ENDY)) {
+                return $this->render('view-' . User::ROLE_ENDY, [
+                        'model' => $this->findModel($id),
+                        'po'    => $this->findModel($id)->purchaseOrder,
+                    ]);
+            } elseif ($user->hasRole(User::ROLE_DISTR)) {
                 return $this->render('view-' . User::ROLE_DISTR, [
                         'model' => $this->findModel($id),
                         'po'    => $this->findModel($id)->purchaseOrder,
@@ -97,25 +105,35 @@
             }
         }
 
-        public function actionList()
+        public function actionList($fields = null)
         {
 
             $systems = System::find()->all();
             $result = [];
 
-            /**@var System $system */
-            foreach ($systems as $system) {
-                $s['id'] = $system->id;
-                $s['sn'] = $system->sn;
-                $s['status'] = $system->status;
-                $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
-                $s['next_lock_date'] = $system->next_lock_date;
-                $s['current_code'] = $system->current_code;
-                $s['login_code'] = $system->login_code;
-                $s['npl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->npl : null;
-                $s['ctpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->ctpl : null;
-                $result[] = $s;
+            if ($fields) {
+                //TODO return custom fields
+            } else {
+                /**@var System $system */
+                foreach ($systems as $system) {
+                    $s['id'] = $system->id;
+                    $s['sn'] = $system->sn;
+                    $s['status'] = $system->status;
+                    $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
+                    $s['next_lock_date'] = $system->next_lock_date;
+                    $s['current_code'] = $system->current_code;
+                    $s['login_code'] = $system->login_code;
+                    $s['npl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->npl : null;
+                    $s['ctpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->ctpl : null;
+                    $s['created_at'] = $system->created_at;
+                    $s['updated_at'] = $system->updated_at;
+                    $s['country'] = isset($system->purchaseOrder) ? $system->purchaseOrder->country : null;
+                    $s['distributor'] = isset($system->purchaseOrder) ? $system->purchaseOrder->distributor : null;
+                    $s['endUser'] = isset($system->purchaseOrder) ? $system->purchaseOrder->endUser : null;
+                    $result[] = $s;
+                }
             }
+
             echo(Json::encode($result));
         }
 
@@ -132,6 +150,43 @@
                 ]);
             } else {
                 throw new NotFoundHttpException;
+            }
+        }
+
+        public function actionCreate()
+        {
+            $request = Yii::$app->request->post();
+            $userRole = Yii::$app->user->identity->role;
+
+            /**@var $model System */
+            $model = new System();
+
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->registerSystem()) {
+                    return $this->redirect('/system/' . $model->id);
+                } else {
+                    return $this->render('create-' . $userRole, ['model' => $model]);
+                }
+            } else {
+                return $this->render('create-' . $userRole, ['model' => $model]);
+            }
+        }
+
+        public function actionAssign($system_sn)
+        {
+            $request = Yii::$app->request->post();
+            $model = new PoSystemModel();
+            $model->system_sn = $system_sn;
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->assign()) {
+                    $this->redirect(['view', 'id' => $model->system->id]);
+                } else {
+                    return $this->render('assign-form', ['model' => $model]);
+                }
+            } else {
+                return $this->render('assign-form', ['model' => $model]);
             }
         }
 

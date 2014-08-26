@@ -22,12 +22,7 @@
             $auth->add($distributor);
             $auth->add($endUser);
 
-            $auth->assign($sales, 1);
-            $auth->assign($manufacturer, 2);
-            $auth->assign($endyMed, 3);
-            $auth->assign($distributor, 4);
-            $auth->assign($endUser, 5);
-            $auth->assign($endUser, 6);
+            $auth->assign($endyMed, 1);
         }
 
         public function down()

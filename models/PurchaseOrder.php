@@ -32,7 +32,7 @@
      * @property integer $system_sn
      *
      *
-     * @property EndUsers $endUser
+     * @property EndUser $endUser
      * @property Country $country
      * @property Distributor $distributor
      * @property System $system
@@ -111,7 +111,7 @@
          */
         public function getEndUser()
         {
-            return $this->hasOne(EndUsers::className(), ['id' => 'end_user_id']);
+            return $this->hasOne(EndUser::className(), ['id' => 'end_user_id']);
         }
 
         /**
