@@ -1,22 +1,21 @@
+/**
+ * Created by rocks on 7/30/14.
+ */
 (function () {
-    var ctrlName = "purchase-order"; //define controller name here
     $(document).ready(function () {
-        $('#po-table').dataTable({
+        $('#systems-table').dataTable({
             "deferRender": true,
             "ajax": {
-                "url": '/' + ctrlName + '/list?fields=id,created_at,po_num,system_sn,ctpl,dtpl,nop,npl,country,distributor,endUser',
+                "url": '/system/list',
                 "dataSrc": ""
             },
             "columns": [
                 {data: "created_at"},
+                {data: "sn"},
                 {data: "po_num"},
-                {data: "system_sn"},
-                {data: "ctpl"},
-                {data: "dtpl"},
-                {data: "nop"},
-                {data: "npl"},
+                {data: "status"},
                 {
-                    data: "country",
+                    "data": "country",
                     "render": function (country) {
                         return (country) ? country.name : null;
                     }
@@ -37,12 +36,10 @@
                     "data": "id",
                     "orderable": false,
                     "render": function (id) {
-                        return '<a href="/' + ctrlName + '/view/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
-                            '<a href="/' + ctrlName + '/update?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>' +
-                            '<a href="/' + ctrlName + '/delete?id=' + id + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-remove"></span></a>';
+                        return '<a href="/system/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-cog"></span></a> '
                     }
-
                 }
+
             ]
         });
     });

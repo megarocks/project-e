@@ -108,7 +108,7 @@
                     //TODO Handle error while saving
                 }
             } else {
-                $model->countryId = $model->getCountryId();
+                $model->country_id = $model->getCountryId();
 
                 return $this->render('update', [
                     'model' => $model,

@@ -64,7 +64,7 @@
                 [['sn'], 'integer'],
                 [['sn'], 'unique'],
                 [['status', 'login_code'], 'string'],
-                [['next_lock_date', 'init_lock_date', 'created_at', 'updated_at'], 'safe'],
+                [['next_lock_date', 'init_lock_date', 'created_at', 'updated_at', 'sn'], 'safe'],
                 [['current_code', 'main_unlock_code'], 'string', 'max' => 512]
             ];
         }
@@ -165,6 +165,15 @@
             $this->next_lock_date = $lockDates[0]['date'];
             $this->current_code = $lockDates[0]['date'];
             $this->save();
+        }
+
+        public function registerSystem()
+        {
+            if ($this->validate()) {
+                return $this->save();
+            } else {
+                return false;
+            }
         }
 
     }
