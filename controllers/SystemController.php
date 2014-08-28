@@ -24,7 +24,7 @@
         public function behaviors()
         {
             return [
-                'verbs' => [
+                'verbs'  => [
                     'class'   => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['post'],
@@ -35,7 +35,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'list', 'view-by-code', 'create', 'assign'],
+                            'actions' => ['index', 'view', 'list', 'view-by-code', 'create', 'assign', 'unassign'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -188,6 +188,20 @@
             } else {
                 return $this->render('assign-form', ['model' => $model]);
             }
+        }
+
+        public function actionUnassign($system_sn)
+        {
+            $request = Yii::$app->request->post();
+            $model = System::findBySN($system_sn);
+
+            $po = $model->purchaseOrder;
+
+            $po->system_sn = null;
+
+            $po->save();
+
+            return $this->redirect('/system/' . $model->id);
         }
 
     }

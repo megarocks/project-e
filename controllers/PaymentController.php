@@ -5,6 +5,7 @@
     use app\helpers\PayPal;
     use app\models\CodeRequestForm;
     use app\models\Payment;
+    use app\models\User;
     use Yii;
     use app\models\System;
     use yii\filters\AccessControl;
@@ -26,7 +27,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['request-code', 'success', 'cancel'],
+                            'actions' => ['request-code', 'success', 'cancel', 'create', 'view'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -37,31 +38,44 @@
         /**
          *  Action gets data from code request form and initiates payment process
          *
+         * @param null|integer $id
          * @throws \yii\web\NotFoundHttpException
          * @return mixed
          */
-        public function actionRequestCode()
+        public function actionRequestCode($id = null)
         {
+            //Get post request body
             $request = Yii::$app->request->post();
+            //prepare model for form
             $model = new CodeRequestForm;
 
+            //if nothing is posted
             if (empty($request)) {
-                //get system code from session
-                $loginCode = Yii::$app->session->get('loginCode');
-                if (!is_null($loginCode)) {
+                //get system
+                $system = $this->getSystem($id);
 
-                    //get system by the code
-                    $system = System::getByLoginCode($loginCode);
+                //if system has been found
+                if ($system) {
 
                     //initialize code request form
                     $model->system_sn = $system->sn;
                     $model->order_num = $system->purchaseOrder->po_num;
                     $model->periods_qty = 1;
 
-                    return $this->render('code-request-form', [
-                        'model'  => $model,
-                        'system' => $system
-                    ]);
+                    //if it`s an endymed user
+                    if (Yii::$app->user->identity->hasRole(User::ROLE_ENDY)) {
+                        //show code generation form
+                        return $this->render('code-generate-form', [
+                            'model'  => $model,
+                            'system' => $system
+                        ]);
+                    } else {
+                        //if any other user - show code request form
+                        return $this->render('code-request-form', [
+                            'model'  => $model,
+                            'system' => $system
+                        ]);
+                    }
                 } else {
                     throw new NotFoundHttpException;
                 }
@@ -88,6 +102,7 @@
                         $this->redirect('https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . urlencode($token));
                     }
                 } else {
+                    echo "Generating code...";
                     //if payment is not needed we can trigger system locking params update somewhere here
                 }
             }
@@ -144,7 +159,6 @@
             } else {
                 throw new NotFoundHttpException('System with SN:' . $system_sn . ' not found');
             }
-
         }
 
         public function actionCancel()
@@ -153,4 +167,79 @@
             Yii::getLogger()->log('Payment canceled by user', Logger::LEVEL_WARNING, 'paypal');
             $this->redirect('system/view-by-code');
         }
+
+        /**
+         * Method check if login code is set to the session
+         * If not set will try to get system by id specified in request
+         *
+         * @param null|integer $id
+         *
+         * @return System|null
+         */
+        private function getSystem($id = null)
+        {
+            $system = null;
+            if ($id) {
+                $system = System::findOne($id);
+            } else {
+                $loginCode = Yii::$app->session->get('loginCode');
+                if ($loginCode) {
+                    $system = System::getByLoginCode($loginCode);
+                }
+            }
+
+            return $system;
+        }
+
+        public function actionCreate($system_id)
+        {
+            $request = Yii::$app->request->post();
+
+            $system = $this->getSystem($system_id);
+
+            $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
+
+            if (!empty($request)) {
+                $payment->load($request);
+                if ($payment->save()) {
+                    //update system locking params accordingly to payment
+                    $system->purchaseOrder->processPayment($payment);
+
+                    //navigate to view with payment details
+                    return $this->redirect('view/' . $payment->id);
+                } else {
+                    return $this->render('create',
+                        [
+                            'model'  => $payment,
+                            'system' => $system
+                        ]);
+                }
+            } else {
+                return $this->render('create',
+                    [
+                        'model'  => $payment,
+                        'system' => $system
+                    ]);
+            }
+        }
+
+        public function actionView($id)
+        {
+            $payment = $this->findModel($id);
+
+            return $this->render('payment-details',
+                [
+                    'model' => $payment,
+                ]);
+        }
+
+        protected function findModel($id)
+        {
+            if (($model = Payment::findOne($id)) !== null) {
+                return $model;
+            } else {
+                throw new NotFoundHttpException('The requested page does not exist.');
+            }
+        }
+
     }

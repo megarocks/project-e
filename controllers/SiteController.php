@@ -22,7 +22,7 @@
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['index', 'logout', 'password-reset'],
+                            'actions' => ['index', 'logout', 'password-reset', 'error'],
                             'allow'   => true,
                             'roles'   => ['@'],
                         ],

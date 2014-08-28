@@ -7,6 +7,12 @@
 
     /**
      * CodeRequestForm is the model behind the code requesting form.
+     *
+     * @property integer $system_sn
+     * @property integer $order_num
+     * @property integer $periods_qty
+     * @property string $next_lock_date
+     * @property boolean $require_payment
      */
     class CodeRequestForm extends Model
     {
@@ -14,6 +20,7 @@
         public $order_num;
         public $periods_qty;
         public $next_lock_date;
+        public $require_payment = true;
 
         /**
          * @return array the validation rules.
@@ -22,7 +29,8 @@
         {
             return [
                 [['system_sn', 'order_num', 'periods_qty'], 'required'],
-                [['periods_qty'], 'integer']
+                [['periods_qty'], 'integer'],
+                [['system_sn', 'order_num', 'periods_qty', 'require_payment'], 'safe']
             ];
         }
 
@@ -46,7 +54,6 @@
 
         public function checkIfPaymentNeeded($system)
         {
-            return true;
+            return $this->require_payment == 'true';
         }
-
     }

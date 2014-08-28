@@ -205,11 +205,20 @@
          * Method returns user identity which can be used as common for viewing system by it's code
          * Currently it always returns user with id=6
          *
+         * @param string $loginCode
          * @return User
          */
-        public static function findForCodeLogin()
+        public static function findForCodeLogin($loginCode)
         {
-            return static::findOne(6); //TODO Currently user with id=6 considered as account for code-login purposes
+            $system = System::getByLoginCode($loginCode);
+            if ($system) {
+                $endUser = $system->purchaseOrder->endUser;
+                $user = $endUser->user;
+
+                return $user;
+            } else {
+                return null;
+            }
         }
 
         /**

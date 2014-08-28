@@ -6,6 +6,7 @@
 
     /* @var $this yii\web\View */
     /* @var $model app\models\System */
+    /* @var $po app\models\PurchaseOrder */
 
     $this->title = "System #" . $model->sn . " management";
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
@@ -20,7 +21,12 @@
         <?php if (!isset($po)) : ?>
             <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'system_sn' => $model->sn], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
-        <?= Html::a(Yii::t('app', 'Generate Code'), ['code-request', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php if (isset($po)) : ?>
+            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'system_sn' => $model->sn], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Edit PO details'), ['purchase-order/update', 'id' => $po->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php endif; ?>
     </p>
 
     <h3><?= Yii::t('app', 'System Details') ?> </h3>

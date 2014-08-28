@@ -38,7 +38,7 @@
         public function validateCode()
         {
             if (!$this->hasErrors()) {
-                $user = $this->getUser();
+                $user = $this->getUser($this->loginCode);
 
                 if (!$user || !$user->validateLoginCode($this->loginCode)) {
                     $this->addError('loginCode', Yii::t('app', 'Incorrect login code'));
@@ -53,7 +53,7 @@
         public function login()
         {
             if ($this->validate()) {
-                $loginResult = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+                $loginResult = Yii::$app->user->login($this->getUser($this->loginCode), $this->rememberMe ? 3600 * 24 * 30 : 0);
                 Yii::getLogger()->log([
                     'Action'       => 'Attempt to login using system code',
                     'Code'         => $this->loginCode,
@@ -72,12 +72,13 @@
         /**
          * Finds user for code login purposes
          *
+         * @param $loginCode
          * @return User|null
          */
-        public function getUser()
+        public function getUser($loginCode)
         {
             if ($this->_user === false) {
-                $this->_user = User::findForCodeLogin();
+                $this->_user = User::findForCodeLogin($loginCode);
             }
 
             return $this->_user;
