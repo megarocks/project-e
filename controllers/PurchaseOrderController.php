@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Country;
 use app\models\PurchaseOrder;
 use app\models\System;
 use app\models\User;
@@ -32,7 +33,7 @@ class PurchaseOrderController extends Controller
                 'rules' => [
                     [
                         'allow'   => true,
-                        'actions' => ['index', 'view', 'create', 'update', 'list'],
+                        'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic-currency'],
                         'roles'   => ['@'],
                     ],
                 ],
@@ -242,6 +243,38 @@ class PurchaseOrderController extends Controller
             }
         }
         echo(Json::encode($result));
+    }
+
+    /**
+     * Returns json string with currencies filtered by country
+     * used for dependent dropdowns
+     */
+    public function actionDynamicCurrency()
+    {
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $countryId = $parents[0];
+                $country = Country::findOne(['id_countries' => $countryId]);
+
+                $out = [];
+
+                $countryCurrency['id'] = $country->currency_code;
+                $countryCurrency['name'] = $country->currency_code;
+                $out[] = $countryCurrency;
+                //if country currency is not USD - add it just in case
+                if ($countryCurrency['id'] != 'USD') {
+                    $out[] = [
+                        'id'   => 'USD',
+                        'name' => 'USD',
+                    ];
+                }
+                echo Json::encode(['output' => $out, 'selected' => 'USD']);
+
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected' => 'USD']);
     }
 
 }

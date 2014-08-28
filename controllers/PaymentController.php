@@ -62,20 +62,12 @@
                     $model->order_num = $system->purchaseOrder->po_num;
                     $model->periods_qty = 1;
 
-                    //if it`s an endymed user
-                    if (Yii::$app->user->identity->hasRole(User::ROLE_ENDY)) {
-                        //show code generation form
-                        return $this->render('code-generate-form', [
-                            'model'  => $model,
-                            'system' => $system
-                        ]);
-                    } else {
-                        //if any other user - show code request form
-                        return $this->render('code-request-form', [
-                            'model'  => $model,
-                            'system' => $system
-                        ]);
-                    }
+
+                    return $this->render('code-request-form', [
+                        'model'  => $model,
+                        'system' => $system
+                    ]);
+
                 } else {
                     throw new NotFoundHttpException;
                 }
@@ -136,23 +128,20 @@
                     );
 
                     //save payment to DB after confirmation
-                    $payment = new Payment();
+                    $payment = new Payment(['scenario' => Payment::METHOD_PAYPAL]);
                     $payment->loadDataFromPayPal(
                         $system->purchaseOrder->po_num,
                         $paymentDetails,
                         $confirmPayment
                     );
-                    $payment->save();
 
-                    //update system locking params accordingly to payment
-                    $system->purchaseOrder->processPayment($payment);
+                    if ($payment->save()) {
+                        //update system locking params accordingly to payment
+                        $system->purchaseOrder->processPayment($payment);
 
-                    //navigate to view with payment details
-                    return $this->render('payment-details',
-                        [
-                            'model' => $payment,
-                        ]);
-
+                        //navigate to view with payment details
+                        return $this->redirect('payment/' . $payment->id);
+                    }
                 } else {
                     throw new BadRequestHttpException('Transaction token is missing');
                 }
@@ -166,29 +155,6 @@
             Yii::$app->session->setFlash('notice', Yii::t('app', 'Payment was canceled'));
             Yii::getLogger()->log('Payment canceled by user', Logger::LEVEL_WARNING, 'paypal');
             $this->redirect('system/view-by-code');
-        }
-
-        /**
-         * Method check if login code is set to the session
-         * If not set will try to get system by id specified in request
-         *
-         * @param null|integer $id
-         *
-         * @return System|null
-         */
-        private function getSystem($id = null)
-        {
-            $system = null;
-            if ($id) {
-                $system = System::findOne($id);
-            } else {
-                $loginCode = Yii::$app->session->get('loginCode');
-                if ($loginCode) {
-                    $system = System::getByLoginCode($loginCode);
-                }
-            }
-
-            return $system;
         }
 
         public function actionCreate($system_id)
@@ -206,7 +172,7 @@
                     $system->purchaseOrder->processPayment($payment);
 
                     //navigate to view with payment details
-                    return $this->redirect('view/' . $payment->id);
+                    return $this->redirect('payment/' . $payment->id);
                 } else {
                     return $this->render('create',
                         [
@@ -240,6 +206,29 @@
             } else {
                 throw new NotFoundHttpException('The requested page does not exist.');
             }
+        }
+
+        /**
+         * Method check if login code is set to the session
+         * If not set will try to get system by id specified in request
+         *
+         * @param null|integer $id
+         *
+         * @return System|null
+         */
+        private function getSystem($id = null)
+        {
+            $system = null;
+            if ($id) {
+                $system = System::findOne($id);
+            } else {
+                $loginCode = Yii::$app->session->get('loginCode');
+                if ($loginCode) {
+                    $system = System::getByLoginCode($loginCode);
+                }
+            }
+
+            return $system;
         }
 
     }

@@ -26,6 +26,7 @@
      * @property integer $end_user_id
      * @property integer $distributor_id
      * @property integer $country_id
+     * @property integer $currency_code
      * @property string $email
      * @property string $created_at
      * @property string $updated_at
@@ -72,7 +73,7 @@
                 [['po_num'], 'required'],
                 [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number'],
                 [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
-                [['created_at', 'updated_at'], 'safe'],
+                [['created_at', 'updated_at', 'currency_code'], 'safe'],
                 [['email'], 'string', 'max' => 64],
                 [['system_sn'], 'unique'],
             ];
@@ -99,6 +100,7 @@
                 'end_user_id'    => Yii::t('app', 'End-User'),
                 'distributor_id' => Yii::t('app', 'Distributor'),
                 'country_id'     => Yii::t('app', 'Country'),
+                'currency_code' => Yii::t('app', 'Currency'),
                 'email'          => Yii::t('app', 'Email'),
                 'system_sn'      => Yii::t('app', 'System SN'),
                 'created_at'     => Yii::t('app', 'Created At'),

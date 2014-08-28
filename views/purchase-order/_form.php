@@ -17,14 +17,27 @@ use kartik\widgets\DepDrop;
 <div class="po-form">
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'country_id')->dropDownList(ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'country-id']) ?>
     <?= $form->field($model, 'po_num')->textInput() ?>
     <?= $form->field($model, 'email')->textInput() ?>
+
+    <?=
+        $form->field($model, 'currency_code')->widget(DepDrop::className(), [
+            'options'       => ['id' => 'currency-code'],
+            'pluginOptions' => [
+                'depends'     => ['country-id'],
+                'placeholder' => Yii::t('app', 'Select currency...'),
+                'url'         => \yii\helpers\Url::to(['dynamic-currency'])
+            ],
+            'data'          => ArrayHelper::map(Country::find()->all(), 'currency_code', 'currency_code'),
+
+        ]);
+    ?>
     <?= $form->field($model, 'cpup')->textInput() ?>
     <?= $form->field($model, 'dpup')->textInput() ?>
     <?= $form->field($model, 'dsp')->textInput() ?>
     <?= $form->field($model, 'csp')->textInput() ?>
     <?= $form->field($model, 'nop')->textInput() ?>
-    <?= $form->field($model, 'country_id')->dropDownList(ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'country-id']) ?>
     <?=
     $form->field($model, 'distributor_id')->widget(DepDrop::className(), [
         'options' => ['id' => 'distributor-id'],

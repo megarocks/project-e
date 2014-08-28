@@ -62,7 +62,7 @@
         public function rules()
         {
             return [
-                [['po_num', 'amount', 'periods', 'currency_code', 'payer_email', 'from'], 'required'],
+                [['po_num', 'amount', 'periods', 'currency_code', 'payer_email'], 'required'],
                 [['po_num', 'amount', 'periods', 'currency_code', 'transaction_id', 'payer_id', 'payer_email', 'from', 'method'], 'safe'],
                 [['po_num', 'periods'], 'integer'],
                 [['amount'], 'number'],
@@ -83,12 +83,12 @@
                 'po_num'         => Yii::t('app', 'Purchase Order #'),
                 'amount'         => Yii::t('app', 'Payment Amount'),
                 'periods'        => Yii::t('app', 'Payed Periods'),
-                'currency_code' => Yii::t('app', 'Currency'),
+                'currency_code'  => Yii::t('app', 'Currency'),
                 'transaction_id' => Yii::t('app', 'Transaction ID'),
                 'payer_id'       => Yii::t('app', 'Payer ID'),
                 'payer_email'    => Yii::t('app', 'Payer Email'),
-                'from'          => Yii::t('app', 'Payment From'),
-                'method'        => Yii::t('app', 'Payment Method'),
+                'from'           => Yii::t('app', 'Payment From'),
+                'method'         => Yii::t('app', 'Payment Method'),
             ];
         }
 
@@ -102,6 +102,8 @@
 
         public function loadDataFromPayPal($po_num, $paymentDetails, $confirmDetails)
         {
+            $this->method = static::METHOD_PAYPAL;
+
             $this->po_num = $po_num;
             $this->amount = $confirmDetails['PAYMENTINFO_0_AMT'];
             $this->periods = $paymentDetails['L_QTY0'];
@@ -109,7 +111,6 @@
             $this->transaction_id = $confirmDetails['PAYMENTINFO_0_TRANSACTIONID'];
             $this->payer_id = $paymentDetails['PAYERID'];
             $this->payer_email = $paymentDetails['EMAIL'];
-            $this->source = static::METHOD_PAYPAL;
 
             return true;
         }
