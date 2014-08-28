@@ -22,7 +22,7 @@
             <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'system_sn' => $model->sn], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
         <?php if (isset($po)) : ?>
-            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'system_sn' => $model->sn], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'system_sn' => $model->sn], ['class' => 'btn btn-danger']) ?>
             <?= Html::a(Yii::t('app', 'Edit PO details'), ['purchase-order/update', 'id' => $po->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>

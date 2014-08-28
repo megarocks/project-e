@@ -38,8 +38,7 @@
         $form->field($model, 'periods')
             ->dropDownList(ArrayHelper::map($system->lockingDates, 'periods', 'pretty_date'))
             ->label(Yii::t('app', 'Periods to unlock')) ?>
-    <?= $form->field($model, 'amount')->textInput() ?>
-    <?= $form->field($model, 'currency_code')->dropDownList([$system->purchaseOrder->country->currency_code => $system->purchaseOrder->country->currency_name]) ?>
+    <?= $form->field($model, 'amount')->textInput()->label(Yii::t('app', 'Amount') . ' (' . $system->purchaseOrder->currency_code . ')') ?>
     <?=
         $form->field($model, 'from')->radioList(
             [
@@ -47,6 +46,7 @@
                 Payment::FROM_USER  => Yii::t('app', 'End-User'),
             ]) ?>
     <?= Html::activeHiddenInput($model, 'method', ['value' => Payment::METHOD_MANUAL]) ?>
+    <?= Html::activeHiddenInput($model, 'currency_code', ['value' => $system->purchaseOrder->currency_code]) ?>
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Add Payment'), ['class' => 'btn btn-primary']) ?>
     </div>

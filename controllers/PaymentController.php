@@ -87,7 +87,7 @@
                         'cost'        => $system->purchaseOrder->cmp, //cost of single period
                         'qty'         => $model->periods_qty, //qty of periods to pay
                         'description' => Yii::t('app', 'Code for system #') . $system->sn, //code description
-                    ], 'USD'); //TODO Currency is hardcoded
+                    ], $system->purchaseOrder->currency_code);
                     //if pp is ready to process payment it returns token
                     if (!is_null($token)) {
                         // navigate user to pp to authorize it
