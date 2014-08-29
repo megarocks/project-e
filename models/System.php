@@ -97,23 +97,36 @@
             return $this->hasOne(PurchaseOrder::className(), ['system_sn' => 'sn']);
         }
 
-        private function generateLockingParams()
+        /**
+         * Generates and sets initial system/po values
+         * This method is called on assigning of PO to system
+         */
+        public function generateLockingParams()
         {
+            $this->status = static::STATUS_ACTIVE_PAYMENT;
             $this->main_unlock_code = Yii::$app->security->generateRandomString(10); //TODO Code generation logic will be here
-            $this->next_lock_date = date("Y-m-d", strtotime("+3 months"));
+            $this->next_lock_date = date("Y-m-d", strtotime("+1 month"));
             $this->init_lock_date = date("Y-m-d", strtotime("today"));
             $this->current_code = Yii::$app->security->generateRandomString(10);
-            $this->status = static::STATUS_ACTIVE_PAYMENT;
             $this->login_code = Yii::$app->security->generateRandomString(6);
+        }
+
+        public function resetLockingParams()
+        {
+            $this->status = static::STATUS_UNLOCKED;
+            $this->main_unlock_code = null; //TODO Code generation logic will be here
+            $this->next_lock_date = null;
+            $this->init_lock_date = null;
+            $this->current_code = null;
+            $this->login_code = null;
         }
 
         public function beforeSave($insert)
         {
             if (parent::beforeSave($insert)) {
                 if ($insert) {
-                    $this->generateLockingParams();
+                    //$this->generateLockingParams();
                 }
-
                 return true;
             } else {
                 return false;
@@ -170,6 +183,8 @@
         public function registerSystem()
         {
             if ($this->validate()) {
+                $this->status = static::STATUS_UNLOCKED;
+
                 return $this->save();
             } else {
                 return false;
