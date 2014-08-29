@@ -42,153 +42,6 @@ class PurchaseOrderController extends Controller
     }
 
     /**
-     * Renders view with list of PurchaseOrders
-     * @throws \yii\web\UnauthorizedHttpException
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        /**@var User $user */
-        $user = Yii::$app->user->identity;
-        $view = 'index';
-        if ($user->hasRole(User::ROLE_ENDY)) {
-            $view = 'index-' . User::ROLE_ENDY;
-        } elseif ($user->hasRole(User::ROLE_SALES)) {
-            $view = 'index-' . User::ROLE_SALES;
-        } elseif ($user->hasRole(User::ROLE_MAN)) {
-            $view = 'index-' . User::ROLE_MAN;
-        } else {
-            throw new UnauthorizedHttpException;
-        }
-        return $this->render($view);
-    }
-
-    /**
-     * Displays a single PurchaseOrder model.
-     * @param integer $id
-     * @throws \yii\web\UnauthorizedHttpException
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        /**@var User $user */
-        $user = Yii::$app->user->identity;
-        if ($user->hasRole(User::ROLE_ENDY)) {
-            return $this->render('view-' . User::ROLE_ENDY, [
-                    'model' => $this->findModel($id),
-                ]);
-        } elseif ($user->hasRole(User::ROLE_SALES)) {
-            return $this->render('view-' . User::ROLE_SALES, [
-                    'model' => $this->findModel($id),
-                ]);
-        } elseif ($user->hasRole(User::ROLE_MAN)) {
-            return $this->render('view-' . User::ROLE_MAN, [
-                    'model' => $this->findModel($id),
-                ]);
-        } else {
-            throw new UnauthorizedHttpException;
-        }
-
-    }
-
-    /**
-     * Updates an existing PurchaseOrder model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @throws \yii\web\UnauthorizedHttpException
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        $request = Yii::$app->request->post();
-        /**@var User $user */
-        $user = Yii::$app->user->identity;
-
-        //logic for sales users
-        if ($user->hasRole(User::ROLE_ENDY)) {
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    return $this->render('update-' . User::ROLE_ENDY, [
-                            'model' => $model,
-                        ]);
-                }
-            } else {
-                return $this->render('update-' . User::ROLE_ENDY, [
-                        'model' => $model,
-                    ]);
-            }
-        } elseif ($user->hasRole(User::ROLE_SALES)) {
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    return $this->render('update-' . User::ROLE_SALES, [
-                            'model' => $model,
-                        ]);
-                }
-            } else {
-                return $this->render('update-' . User::ROLE_SALES, [
-                        'model' => $model,
-                    ]);
-            }
-        } //logic for production users
-        elseif ($user->hasRole(User::ROLE_MAN)) {
-            if (!empty($request)) {
-                $model->load($request);
-                if (($model->system_sn) && ($model->validate())) {
-                    $system = System::findOne(['sn' => $model->system_sn]);
-                    if (is_null($system)) {
-                        $system = new System();
-                    }
-                    $system->sn = $model->system_sn;
-                    $system->save();
-                }
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    return $this->render('update-' . User::ROLE_MAN, [
-                            'model' => $model,
-                        ]);
-                }
-            } else {
-                return $this->render('update-' . User::ROLE_MAN, [
-                        'model' => $model,
-                    ]);
-            }
-        } else {
-            throw new UnauthorizedHttpException;
-        }
-    }
-
-    /**
-     * Creates a new PurchaseOrder model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new PurchaseOrder();
-
-        $request = Yii::$app->request->post();
-
-        if (!empty($request)) {
-            $model->load($request);
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
      * Finds the PurchaseOrder model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -205,14 +58,98 @@ class PurchaseOrderController extends Controller
     }
 
     /**
+     * Renders view with list of PurchaseOrders
+     * @throws \yii\web\UnauthorizedHttpException
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+
+        return $this->render('index-' . $user->role);
+
+    }
+
+    /**
+     * Displays a single PurchaseOrder model.
+     * @param integer $id
+     * @throws \yii\web\UnauthorizedHttpException
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+        $model = $this->findModel($id);
+
+        return $this->render('view-' . $user->role, ['model' => $model]);
+
+    }
+
+    /**
+     * Creates a new PurchaseOrder model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+
+        /**@var PurchaseOrder $model */
+        $model = new PurchaseOrder();
+
+        $request = Yii::$app->request->post();
+        if (!empty($request)) {
+            $model->load($request);
+            if ($model->createPurchaseOrder()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create-' . $user->role, ['model' => $model]);
+            }
+        } else {
+            return $this->render('create-' . $user->role, ['model' => $model]);
+        }
+    }
+
+    /**
+     * Updates an existing PurchaseOrder model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @throws \yii\web\UnauthorizedHttpException
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        /**@var User $user */
+        $user = Yii::$app->user->identity;
+
+        /**@var PurchaseOrder $model */
+        $model = $this->findModel($id);
+
+        $request = Yii::$app->request->post();
+        if (!empty($request)) {
+            $model->load($request);
+            if ($model->updatePurchaseOrder()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update-' . $user->role, ['model' => $model]);
+            }
+        } else {
+            return $this->render('update-' . $user->role, ['model' => $model]);
+        }
+    }
+
+    /**
      * Return list of PurchaseOrders in json format
      */
-    public function actionList($fields = [])
+    public function actionList($fields = null)
     {
         $orders = PurchaseOrder::find()->all();
         $result = [];
         //if fields are defined in request
-        if (count($fields) > 0) {
+        if (!is_null($fields)) {
             $specField = explode(",", $fields);
             /** @var $order PurchaseOrder */
             foreach ($orders as $order) {
@@ -222,7 +159,7 @@ class PurchaseOrderController extends Controller
                         $o[$field] = $order[$field];
                     }
                 }
-                if (isset($o)) {
+                if (!is_null($o)) {
                     $result[] = $o;
                 }
             }

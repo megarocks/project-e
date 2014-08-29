@@ -100,7 +100,7 @@
                 'end_user_id'    => Yii::t('app', 'End-User'),
                 'distributor_id' => Yii::t('app', 'Distributor'),
                 'country_id'     => Yii::t('app', 'Country'),
-                'currency_code' => Yii::t('app', 'Currency'),
+                'currency_code'  => Yii::t('app', 'Currency'),
                 'email'          => Yii::t('app', 'Email'),
                 'system_sn'      => Yii::t('app', 'System SN'),
                 'created_at'     => Yii::t('app', 'Created At'),
@@ -163,17 +163,6 @@
             }
         }
 
-        public function beforeSave($insert)
-        {
-            if (parent::beforeSave($insert)) {
-                $insert ? $this->calculateValues() : $this->calculateValues(false);
-
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         public function processPayment($payment)
         {
             /**@var $payment Payment */
@@ -182,6 +171,20 @@
             $this->system->updateLockingData();
 
             return true;
+        }
+
+        public function createPurchaseOrder()
+        {
+            $this->calculateValues(true);
+
+            return $this->save();
+        }
+
+        public function updatePurchaseOrder()
+        {
+            $this->calculateValues(false);
+
+            return $this->save();
         }
 
     }
