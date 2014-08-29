@@ -70,12 +70,15 @@
         public function rules()
         {
             return [
-                [['po_num'], 'required'],
-                [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number'],
-                [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
+                [['po_num', 'country_id', 'email', 'currency_code', 'distributor_id', 'end_user_id', 'nop'], 'required'],
+                [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number', 'min' => 0],
+                [['po_num', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
                 [['created_at', 'updated_at', 'currency_code'], 'safe'],
                 [['email'], 'string', 'max' => 64],
+                [['email'], 'email'],
                 [['system_sn'], 'unique'],
+                [['nop'], 'integer', 'min' => 1],
+                [['npl'], 'integer', 'min' => 0],
             ];
         }
 
