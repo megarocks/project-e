@@ -54,9 +54,10 @@
         public function rules()
         {
             return [
-                [['user_id'], 'required'],
+                [['user_id', 'title', 'country_id', 'email'], 'required'],
                 [['title'], 'string', 'max' => 128],
                 [['email'], 'email'],
+                [['email'], 'unique'],
                 [['country_id', 'created_at', 'updated_at', 'user_id', 'title'], 'safe']
             ];
         }
@@ -72,7 +73,7 @@
                 'email'       => Yii::t('app', 'Email'),
                 'created_at'  => Yii::t('app', 'Created At'),
                 'updated_at'  => Yii::t('app', 'Updated At'),
-                'country_id' => Yii::t('app', 'Country Id'),
+                'country_id' => Yii::t('app', 'Country'),
                 'countryName' => Yii::t('app', 'Country'),
             ];
         }
@@ -155,7 +156,6 @@
                 $this->user_id = $user->id;
                 if ($this->save()) {
                     $this->saveCountry();
-
                     return true;
                 }
             } else {
@@ -164,7 +164,6 @@
                         $this->addError($attribute, $error[0]);
                     }
                 }
-
                 return false;
             }
         }
