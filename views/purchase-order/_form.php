@@ -17,7 +17,7 @@ use kartik\widgets\DepDrop;
 <div class="po-form">
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'country_id')->dropDownList(ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'country-id']) ?>
+    <?= $form->field($model, 'country_id')->dropDownList(['' => Yii::t('app', 'Select Country...')] + ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'country-id']) ?>
     <?= $form->field($model, 'po_num')->textInput() ?>
     <?= $form->field($model, 'email')->textInput() ?>
 
@@ -29,7 +29,7 @@ use kartik\widgets\DepDrop;
                 'placeholder' => Yii::t('app', 'Select currency...'),
                 'url'         => \yii\helpers\Url::to(['dynamic-currency'])
             ],
-            'data'          => ArrayHelper::map(Country::find()->all(), 'currency_code', 'currency_code'),
+            'data' => ['' => Yii::t('app', 'Select Currency...')] + ArrayHelper::map(Country::find()->all(), 'currency_code', 'currency_code'),
 
         ]);
     ?>
@@ -46,7 +46,7 @@ use kartik\widgets\DepDrop;
             'placeholder' => Yii::t('app', 'Select distributor...'),
             'url' => \yii\helpers\Url::to(['/distributor/dynamic'])
         ],
-        'data' => ArrayHelper::map(Distributor::find()->all(), 'id', 'title'),
+        'data' => ['' => Yii::t('app', 'Select Distributor...')] + ArrayHelper::map(Distributor::find()->all(), 'id', 'title'),
     ]);
     ?>
 
@@ -58,7 +58,7 @@ use kartik\widgets\DepDrop;
                 'placeholder' => Yii::t('app', 'Select end-user...'),
                 'url'         => \yii\helpers\Url::to(['/end-user/dynamic'])
             ],
-            'data'          => ArrayHelper::map(EndUser::find()->all(), 'id', 'title'),
+            'data' => ['' => Yii::t('app', 'Select End-User...')] + ArrayHelper::map(EndUser::find()->all(), 'id', 'title'),
         ]);
     ?>
 
