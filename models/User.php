@@ -268,7 +268,12 @@
 
         public function getRoleField()
         {
-            return $this->role;
+            if (!is_null($this->role)) {
+                return $this->role;
+            } else {
+                return $this->_roleField;
+            }
+
         }
 
         public function setRoleField($value)
