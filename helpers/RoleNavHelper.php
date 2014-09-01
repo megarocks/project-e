@@ -74,6 +74,7 @@
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
+                    ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
                     ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],

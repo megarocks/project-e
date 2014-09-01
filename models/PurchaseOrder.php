@@ -13,16 +13,16 @@
      *
      * @property integer $id
      * @property integer $po_num
-     * @property string $cpup
-     * @property string $dpup
-     * @property string $dsp
-     * @property string $csp
+     * @property number $cpup
+     * @property number $dpup
+     * @property number $dsp
+     * @property number $csp
      * @property integer $nop
      * @property integer $npl
-     * @property string $cmp
-     * @property string $dmp
-     * @property string $ctpl
-     * @property string $dtpl
+     * @property number $cmp
+     * @property number $dmp
+     * @property number $ctpl
+     * @property number $dtpl
      * @property integer $end_user_id
      * @property integer $distributor_id
      * @property integer $country_id
@@ -166,10 +166,55 @@
             }
         }
 
+        /**
+         * Updates purchase order params accordingly to payment
+         *
+         * @param $payment
+         * @return bool
+         */
         public function processPayment($payment)
         {
             /**@var $payment Payment */
             $this->npl = $this->npl - $payment->periods;
+
+            switch ($payment->from) {
+                case Payment::FROM_DISTR:
+                    $this->dtpl = $this->dtpl - $payment->amount;
+                    break;
+                case Payment::FROM_USER:
+                    $this->ctpl = $this->ctpl - $payment->amount;
+                    break;
+                default:
+                    break;
+            }
+
+            $this->save();
+            $this->system->updateLockingData();
+
+            return true;
+        }
+
+        /**
+         * Revokes changes made to purchase order by payment
+         *
+         * @param $payment
+         * @return bool
+         */
+        public function revokePayment($payment)
+        {
+            /**@var $payment Payment */
+            $this->npl = $this->npl + $payment->periods;
+
+            switch ($payment->from) {
+                case Payment::FROM_DISTR:
+                    $this->dtpl = $this->dtpl + $payment->amount;
+                    break;
+                case Payment::FROM_USER:
+                    $this->ctpl = $this->ctpl + $payment->amount;
+                    break;
+                default:
+                    break;
+            }
             $this->save();
             $this->system->updateLockingData();
 

@@ -24,8 +24,6 @@
         <?php endif; ?>
         <?php if (isset($po)) : ?>
             <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
-            <?= Html::a(Yii::t('app', 'Edit PO details'), ['purchase-order/update', 'id' => $po->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
     </p>

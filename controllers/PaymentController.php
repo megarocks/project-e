@@ -5,10 +5,13 @@
     use app\helpers\PayPal;
     use app\models\CodeRequestForm;
     use app\models\Payment;
+    use app\models\PurchaseOrder;
     use app\models\User;
     use Yii;
     use app\models\System;
     use yii\filters\AccessControl;
+    use yii\filters\VerbFilter;
+    use yii\helpers\Json;
     use yii\log\Logger;
     use yii\web\BadRequestHttpException;
     use yii\web\Controller;
@@ -27,12 +30,108 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['request-code', 'success', 'cancel', 'create', 'view'],
+                            'actions' => ['request-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment'],
                             'roles'   => ['@'],
                         ],
                     ],
                 ],
             ];
+        }
+
+        protected function findModel($id)
+        {
+            if (($model = Payment::findOne($id)) !== null) {
+                return $model;
+            } else {
+                throw new NotFoundHttpException('The requested page does not exist.');
+            }
+        }
+
+        public function actionIndex()
+        {
+            /**@var User $user */
+            $user = Yii::$app->user->identity;
+
+            return $this->render('index-' . $user->role);
+        }
+
+        public function actionView($id)
+        {
+            /**@var $user User */
+            $user = Yii::$app->user->identity;
+            /**@var $payment Payment */
+            $payment = $this->findModel($id);
+
+            return $this->render('view-' . $user->role, ['model' => $payment]);
+        }
+
+        public function actionCreate($system_id)
+        {
+            $request = Yii::$app->request->post();
+
+            $system = $this->getSystem($system_id);
+
+            $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
+
+            if (!empty($request)) {
+                $payment->load($request);
+                if ($payment->save()) {
+                    //update system locking params accordingly to payment
+                    $system->purchaseOrder->processPayment($payment);
+
+                    //navigate to view with payment details
+                    return $this->redirect('payment/' . $payment->id);
+                } else {
+                    return $this->render('create',
+                        [
+                            'model'  => $payment,
+                            'system' => $system
+                        ]);
+                }
+            } else {
+                return $this->render('create',
+                    [
+                        'model'  => $payment,
+                        'system' => $system
+                    ]);
+            }
+        }
+
+        public function actionAddPayment()
+        {
+            /**@var $user User */
+            $user = Yii::$app->user->identity;
+
+            /**@var $payment Payment */
+            $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
+
+            $request = Yii::$app->request->post();
+            if (!empty($request)) {
+                $payment->load($request);
+                if ($payment->save()) {
+                    /**@var $order PurchaseOrder */
+                    $order = $payment->purchaseOrder;
+                    $order->processPayment($payment);
+
+                    return $this->redirect('payment/' . $payment->id);
+                } else {
+                    return $this->render('add-payment-' . $user->role, ['model' => $payment]);
+                }
+            } else {
+                return $this->render('add-payment-' . $user->role, ['model' => $payment]);
+            }
+        }
+
+        public function actionDelete()
+        {
+            $request = Yii::$app->request->post();
+
+            if (!empty($request)) {
+                $payment = $this->findModel($request['payment_id']);
+                if ($payment->purchaseOrder->revokePayment($payment)) {
+                    $payment->delete();
+                }
+            }
         }
 
         /**
@@ -157,57 +256,6 @@
             $this->redirect('system/view-by-code');
         }
 
-        public function actionCreate($system_id)
-        {
-            $request = Yii::$app->request->post();
-
-            $system = $this->getSystem($system_id);
-
-            $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
-
-            if (!empty($request)) {
-                $payment->load($request);
-                if ($payment->save()) {
-                    //update system locking params accordingly to payment
-                    $system->purchaseOrder->processPayment($payment);
-
-                    //navigate to view with payment details
-                    return $this->redirect('payment/' . $payment->id);
-                } else {
-                    return $this->render('create',
-                        [
-                            'model'  => $payment,
-                            'system' => $system
-                        ]);
-                }
-            } else {
-                return $this->render('create',
-                    [
-                        'model'  => $payment,
-                        'system' => $system
-                    ]);
-            }
-        }
-
-        public function actionView($id)
-        {
-            $payment = $this->findModel($id);
-
-            return $this->render('payment-details',
-                [
-                    'model' => $payment,
-                ]);
-        }
-
-        protected function findModel($id)
-        {
-            if (($model = Payment::findOne($id)) !== null) {
-                return $model;
-            } else {
-                throw new NotFoundHttpException('The requested page does not exist.');
-            }
-        }
-
         /**
          * Method check if login code is set to the session
          * If not set will try to get system by id specified in request
@@ -229,6 +277,48 @@
             }
 
             return $system;
+        }
+
+        /**
+         * Returns json array with list of payments
+         *
+         * @param null $fields
+         * @return string
+         */
+        public function actionList($fields = null)
+        {
+            $payments = Payment::find()->all();
+            $result = [];
+
+            if ($fields) {
+                $specifiedFields = explode(",", $fields);
+                /**@var $payment Payment */
+                foreach ($payments as $payment) {
+                    $p = null;
+                    foreach ($specifiedFields as $field) {
+                        if ($field != '') {
+                            $p[$field] = $payment[$field];
+                        }
+                    }
+                    if (!is_null($p)) {
+                        $result[] = $p;
+                    }
+                }
+            } else {
+                /**@var $payment Payment */
+                foreach ($payments as $payment) {
+                    $eu['id'] = $payment->id;
+                    $eu['po_num'] = $payment->po_num;
+                    $eu['amount'] = $payment->amount;
+                    $eu['periods'] = $payment->periods;
+                    $eu['currency'] = $payment->currency_code;
+                    $eu['payer_email'] = $payment->payer_email;
+                    $eu['method'] = $payment->method;
+                    $eu['created_at'] = date('M d, Y h:i A', strtotime($payment->created_at));
+                    $result[] = $eu;
+                }
+            }
+            echo(Json::encode($result));
         }
 
     }
