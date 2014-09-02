@@ -33,7 +33,8 @@
             <th><?= Yii::t('app', 'CTPL') ?></th>
             <th><?= Yii::t('app', 'DTPL') ?></th>
             <th><?= Yii::t('app', 'NOP') ?></th>
-            <th><?= Yii::t('app', 'NPL') ?></th>
+            <th><?= Yii::t('app', 'CNPL') ?></th>
+            <th><?= Yii::t('app', 'DNPL') ?></th>
             <th><?= Yii::t('app', 'Country') ?></th>
             <th><?= Yii::t('app', 'Distributor') ?></th>
             <th><?= Yii::t('app', 'End-User') ?></th>

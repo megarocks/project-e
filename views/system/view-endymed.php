@@ -60,9 +60,9 @@
             'csp',
             'cpup',
             'nop',
+            'cnpl',
             'ctpl',
             'cmp',
-            'npl'
         ],
     ]) ?>
 
@@ -75,9 +75,9 @@
                 'dsp',
                 'dpup',
                 'nop',
+                'dnpl',
                 'dtpl',
                 'dmp',
-                'npl'
             ],
         ]) ?>
     <?php endif; ?>

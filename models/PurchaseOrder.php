@@ -19,6 +19,8 @@
      * @property number $csp
      * @property integer $nop
      * @property integer $npl
+     * @property integer $dnpl
+     * @property integer $cnpl
      * @property number $cmp
      * @property number $dmp
      * @property number $ctpl
@@ -78,7 +80,7 @@
                 [['email'], 'email'],
                 [['system_sn'], 'unique'],
                 [['nop'], 'integer', 'min' => 1],
-                [['npl'], 'integer', 'min' => 0],
+                [['npl', 'dnpl', 'cnpl'], 'integer', 'min' => 0],
             ];
         }
 
@@ -98,6 +100,8 @@
                 'cmp'            => Yii::t('app', 'CMP (Customer Monthly Payment)'),
                 'dmp'            => Yii::t('app', 'DMP (Distributor Monthly Payment)'),
                 'npl'            => Yii::t('app', 'NPL (Number of payments left)'),
+                'dnpl' => Yii::t('app', 'DNPL (Distributor Number of payments left)'),
+                'cnpl' => Yii::t('app', 'CNPL (Customer Number of payments left)'),
                 'ctpl'           => Yii::t('app', 'CTPL (Customer Total Payment Left)'),
                 'dtpl'           => Yii::t('app', 'DTPL (Distributor Total Payment Left)'),
                 'end_user_id'    => Yii::t('app', 'End-User'),
@@ -153,17 +157,20 @@
 
         private function calculateValues($initial = true)
         {
-            if ($this->nop >= 0) {
-                if ($initial) {
-                    $this->npl = $this->nop;
-                }
+            if ($initial) {
+                //initialize npl for customer and distributor
+                $this->cpup >= $this->csp ? $this->cnpl = 0 : $this->cnpl = $this->nop;
+                $this->dpup >= $this->dsp ? $this->dnpl = 0 : $this->dnpl = $this->nop;
+
+                //calculate monthly payment value
                 $this->cmp = ($this->csp - $this->cpup) / $this->nop;
-                $this->dpup >= $this->dsp ? $this->dmp = 0 : $this->dmp = ($this->dsp - $this->dpup) / $this->nop;
-                $this->ctpl = $this->cmp * $this->npl;
-                $this->dtpl = $this->dmp * $this->npl;
-            } else {
-                throw new InvalidParamException('NOP should be positive value');
+                $this->dmp = ($this->dsp - $this->dpup) / $this->nop;
+
             }
+            //calculate rest amount to pay
+            $this->ctpl = $this->cmp * $this->cnpl;
+            $this->dtpl = $this->dmp * $this->dnpl;
+
         }
 
         /**
@@ -175,19 +182,19 @@
         public function processPayment($payment)
         {
             /**@var $payment Payment */
-            $this->npl = $this->npl - $payment->periods;
 
             switch ($payment->from) {
                 case Payment::FROM_DISTR:
-                    $this->dtpl = $this->dtpl - $payment->amount;
+                    $this->dnpl = $this->dnpl - $payment->periods;
                     break;
                 case Payment::FROM_USER:
-                    $this->ctpl = $this->ctpl - $payment->amount;
+                    $this->cnpl = $this->cnpl - $payment->periods;
                     break;
                 default:
                     break;
             }
 
+            $this->calculateValues(false);
             $this->save();
             $this->system->updateLockingData();
 
@@ -203,18 +210,19 @@
         public function revokePayment($payment)
         {
             /**@var $payment Payment */
-            $this->npl = $this->npl + $payment->periods;
 
             switch ($payment->from) {
                 case Payment::FROM_DISTR:
-                    $this->dtpl = $this->dtpl + $payment->amount;
+                    $this->dnpl = $this->dnpl + $payment->periods;
                     break;
                 case Payment::FROM_USER:
-                    $this->ctpl = $this->ctpl + $payment->amount;
+                    $this->cnpl = $this->cnpl + $payment->periods;
                     break;
                 default:
                     break;
             }
+
+            $this->calculateValues(false);
             $this->save();
             $this->system->updateLockingData();
 

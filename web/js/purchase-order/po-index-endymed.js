@@ -4,7 +4,7 @@
         $('#po-table').dataTable({
             "deferRender": true,
             "ajax": {
-                "url": '/' + ctrlName + '/list?fields=id,created_at,po_num,system_sn,ctpl,dtpl,nop,npl,country,distributor,endUser',
+                "url": '/' + ctrlName + '/list?fields=id,created_at,po_num,system_sn,ctpl,dtpl,nop,cnpl,dnpl,country,distributor,endUser',
                 "dataSrc": ""
             },
             "columns": [
@@ -14,7 +14,8 @@
                 {data: "ctpl"},
                 {data: "dtpl"},
                 {data: "nop"},
-                {data: "npl"},
+                {data: "cnpl"},
+                {data: "dnpl"},
                 {
                     data: "country",
                     "render": function (country) {
