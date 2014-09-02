@@ -47,104 +47,97 @@
             }
         }
 
+        /**
+         * Renders view with list of users
+         *
+         * @return mixed
+         */
         public function actionIndex()
         {
             /**@var User $user */
             $user = Yii::$app->user->identity;
 
-            if ($user->hasRole(User::ROLE_ENDY)) {
-                return $this->render('index-' . User::ROLE_ENDY);
-            } else {
-                throw new UnauthorizedHttpException;
-            }
+            return $this->render('index-' . $user->role);
+
         }
 
-        public function actionList()
-        {
-            $users = User::find()->all();
-            $result = [];
-
-            /** @var User $user */
-            foreach ($users as $user) {
-                $u['id'] = $user->id;
-                $u['first_name'] = $user->first_name;
-                $u['last_name'] = $user->last_name;
-                $u['email'] = $user->email;
-                $u['role'] = $user->getRole();
-                $u['created_at'] = date('M j Y', strtotime($user->created_at));
-                $result[] = $u;
-            }
-            echo(Json::encode($result));
-        }
-
+        /**
+         * Displays single User model view
+         *
+         * @param $id
+         * @return mixed
+         */
         public function actionView($id)
         {
             /**@var User $user */
             $user = Yii::$app->user->identity;
+            $model = $this->findModel($id);
 
-            if ($user->hasRole(User::ROLE_ENDY)) {
-                return $this->render('view-' . User::ROLE_ENDY, [
-                        'model' => $this->findModel($id),
-                    ]);
-            } else {
-                throw new UnauthorizedHttpException;
-            }
+            return $this->render('view-' . $user->role, ['model' => $model]);
+
         }
 
+        /**
+         * Displays user creation form
+         *
+         * @return string|\yii\web\Response
+         */
         public function actionCreate()
         {
             /**@var User $user */
             $user = Yii::$app->user->identity;
+            /**@var User $model */
+            $model = new User();
 
-            if ($user->hasRole(User::ROLE_ENDY)) {
-                /**@var User $model */
-                $model = new User();
-                $model->scenario = 'create';
-                $request = Yii::$app->request->post();
+            $model->scenario = 'create';
 
-                if (!empty($request)) {
-                    $model->load($request);
-                    if ($model->registerAccount()) {
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    } else {
-                        return $this->render('create-' . User::ROLE_ENDY, ['model' => $model]);
-                    }
+            $request = Yii::$app->request->post();
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->registerAccount()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
                 } else {
-                    return $this->render('create-' . User::ROLE_ENDY, ['model' => $model]);
+                    return $this->render('create-' . $user->role, ['model' => $model]);
                 }
             } else {
-                throw new UnauthorizedHttpException;
+                return $this->render('create-' . $user->role, ['model' => $model]);
             }
         }
 
+        /**
+         * Displays user account update form
+         *
+         * @param $id
+         * @return mixed
+         */
         public function actionUpdate($id)
         {
             /**@var User $user */
             $user = Yii::$app->user->identity;
 
-            if ($user->hasRole(User::ROLE_ENDY)) {
-                /**@var User $model */
-                $model = $this->findModel($id);
-                $model->scenario = 'update';
-                //$model->roleField = $model->role;
+            /**@var User $model */
+            $model = $this->findModel($id);
+            $model->scenario = 'update';
 
-                $request = Yii::$app->request->post();
+            $request = Yii::$app->request->post();
 
-                if (!empty($request)) {
-                    $model->load($request);
-                    if ($model->updateAccount()) {
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    } else {
-                        return $this->render('update-' . User::ROLE_ENDY, ['model' => $model]);
-                    }
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->updateAccount()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
                 } else {
-                    return $this->render('update-' . User::ROLE_ENDY, ['model' => $model]);
+                    return $this->render('update-' . $user->role, ['model' => $model]);
                 }
             } else {
-                throw new UnauthorizedHttpException;
+                return $this->render('update-' . $user->role, ['model' => $model]);
             }
         }
 
+        /**
+         * Displays own profile update form
+         *
+         * @return mixed
+         */
         public function actionProfile()
         {
             $model = $this->findModel(Yii::$app->user->id);
@@ -164,5 +157,44 @@
                 return $this->render('own-profile', ['model' => $model]);
             }
 
+        }
+
+        /**
+         * Returns json array of user accounts
+         *
+         * return string
+         */
+        public function actionList($fields = null)
+        {
+            $users = User::find()->all();
+            $result = [];
+
+            if ($fields) {
+                $specifiedFields = explode(",", $fields);
+                /**@var $user User */
+                foreach ($users as $user) {
+                    $u = null;
+                    foreach ($specifiedFields as $field) {
+                        if ($field != '') {
+                            $u[$field] = $user[$field];
+                        }
+                    }
+                    if (!is_null($u)) {
+                        $result[] = $u;
+                    }
+                }
+            } else {
+                /** @var User $user */
+                foreach ($users as $user) {
+                    $u['id'] = $user->id;
+                    $u['first_name'] = $user->first_name;
+                    $u['last_name'] = $user->last_name;
+                    $u['email'] = $user->email;
+                    $u['role'] = $user->getRole();
+                    $u['created_at'] = date('M j Y', strtotime($user->created_at));
+                    $result[] = $u;
+                }
+            }
+            echo(Json::encode($result));
         }
     }

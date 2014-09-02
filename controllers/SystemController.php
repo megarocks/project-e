@@ -44,52 +44,6 @@
         }
 
         /**
-         * Lists all Systems models.
-         * @throws \yii\web\UnauthorizedHttpException
-         * @return mixed
-         */
-        public function actionIndex()
-        {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-
-            if ($user->hasRole(User::ROLE_ENDY)) {
-                return $this->render('index-' . User::ROLE_ENDY);
-            } elseif ($user->hasRole(User::ROLE_DISTR)) {
-                return $this->render('index-' . User::ROLE_DISTR);
-            } else {
-                throw new UnauthorizedHttpException;
-            }
-        }
-
-        /**
-         * Displays a single Systems model.
-         * @param integer $id
-         * @throws \yii\web\UnauthorizedHttpException
-         * @return mixed
-         */
-        public function actionView($id)
-        {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-
-            if ($user->hasRole(User::ROLE_ENDY)) {
-                return $this->render('view-' . User::ROLE_ENDY, [
-                        'model' => $this->findModel($id),
-                        'po'    => $this->findModel($id)->purchaseOrder,
-                    ]);
-            } elseif ($user->hasRole(User::ROLE_DISTR)) {
-                return $this->render('view-' . User::ROLE_DISTR, [
-                        'model' => $this->findModel($id),
-                        'po'    => $this->findModel($id)->purchaseOrder,
-                    ]);
-            } else {
-                throw new UnauthorizedHttpException;
-            }
-
-        }
-
-        /**
          * Finds the Systems model based on its primary key value.
          * If the model is not found, a 404 HTTP exception will be thrown.
          * @param integer $id
@@ -105,14 +59,129 @@
             }
         }
 
+        /**
+         * Lists all Systems models.
+         * @return mixed
+         */
+        public function actionIndex()
+        {
+            /**@var User $user */
+            $user = Yii::$app->user->identity;
+
+            return $this->render('index-' . $user->role);
+
+        }
+
+        /**
+         * Displays a single Systems model.
+         * @param integer $id
+         * @return mixed
+         */
+        public function actionView($id)
+        {
+            /**@var User $user */
+            $user = Yii::$app->user->identity;
+
+            return $this->render('view-' . $user->role, [
+                    'model' => $this->findModel($id),
+                ]);
+        }
+
+        /**
+         * Creates new system
+         *
+         * @return string|\yii\web\Response
+         */
+        public function actionCreate()
+        {
+            $request = Yii::$app->request->post();
+            $userRole = Yii::$app->user->identity->role;
+
+            /**@var $model System */
+            $model = new System();
+
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->registerSystem()) {
+                    return $this->redirect('/system/' . $model->id);
+                } else {
+                    return $this->render('create-' . $userRole, ['model' => $model]);
+                }
+            } else {
+                return $this->render('create-' . $userRole, ['model' => $model]);
+            }
+        }
+
+        /**
+         * Assigns System to Purchase Order
+         *
+         * @param $id
+         * @return string|\yii\web\Response
+         */
+        public function actionAssign($id)
+        {
+            $request = Yii::$app->request->post();
+            $model = new PoSystemModel();
+            $system = $this->findModel($id);
+            $model->system_sn = $system->sn;
+            if (!empty($request)) {
+                $model->load($request);
+                if ($model->assign()) {
+                    $this->redirect(['view', 'id' => $model->system->id]);
+                } else {
+                    return $this->render('assign-form', ['model' => $model]);
+                }
+            } else {
+                return $this->render('assign-form', ['model' => $model]);
+            }
+        }
+
+        /**
+         * Un-assigns system from purchase order
+         *
+         * @param $id
+         * @return \yii\web\Response
+         */
+        public function actionUnassign($id)
+        {
+            /*@var $model System*/
+            $model = $this->findModel($id);
+
+            $model->purchaseOrder->system_sn = null;
+            if ($model->purchaseOrder->save()) {
+                $model->resetLockingParams();
+                $model->save();
+            }
+
+            return $this->redirect('/system/' . $model->id);
+        }
+
+        /**
+         * Returns json array with list of systems
+         *
+         * @param string|null $fields
+         */
         public function actionList($fields = null)
         {
 
             $systems = System::find()->all();
+
             $result = [];
 
             if ($fields) {
-                //TODO return custom fields
+                $specifiedFields = explode(",", $fields);
+                /**@var $system System */
+                foreach ($systems as $system) {
+                    $s = null;
+                    foreach ($specifiedFields as $field) {
+                        if ($field != '') {
+                            $s[$field] = $system[$field];
+                        }
+                    }
+                    if (!is_null($s)) {
+                        $result[] = $s;
+                    }
+                }
             } else {
                 /**@var System $system */
                 foreach ($systems as $system) {
@@ -151,57 +220,6 @@
             } else {
                 throw new NotFoundHttpException;
             }
-        }
-
-        public function actionCreate()
-        {
-            $request = Yii::$app->request->post();
-            $userRole = Yii::$app->user->identity->role;
-
-            /**@var $model System */
-            $model = new System();
-
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->registerSystem()) {
-                    return $this->redirect('/system/' . $model->id);
-                } else {
-                    return $this->render('create-' . $userRole, ['model' => $model]);
-                }
-            } else {
-                return $this->render('create-' . $userRole, ['model' => $model]);
-            }
-        }
-
-        public function actionAssign($system_sn)
-        {
-            $request = Yii::$app->request->post();
-            $model = new PoSystemModel();
-            $model->system_sn = $system_sn;
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->assign()) {
-                    $this->redirect(['view', 'id' => $model->system->id]);
-                } else {
-                    return $this->render('assign-form', ['model' => $model]);
-                }
-            } else {
-                return $this->render('assign-form', ['model' => $model]);
-            }
-        }
-
-        public function actionUnassign($system_sn)
-        {
-            $request = Yii::$app->request->post();
-            $model = System::findBySN($system_sn);
-
-            $po = $model->purchaseOrder;
-
-            $po->system_sn = null;
-
-            $po->save();
-
-            return $this->redirect('/system/' . $model->id);
         }
 
     }

@@ -10,7 +10,7 @@
 
     use yii\web\AssetBundle;
 
-    class DistributorAsset extends AssetBundle
+    class PaymentEndymedAsset extends AssetBundle
     {
         public $basePath = '@webroot';
         public $baseUrl = '@web';
@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/distributor/distributors-index-endymed.js'
+            '/js/payment/payment-index-endymed.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

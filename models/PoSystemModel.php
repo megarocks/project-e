@@ -40,7 +40,14 @@
                 $po = $this->purchaseOrder;
                 $po->system_sn = $this->system_sn;
 
-                return $po->save();
+                if ($po->save()) {
+                    /*@var System $system */
+                    $system = $po->system;
+                    $system->generateLockingParams();
+                    $system->save();
+
+                    return true;
+                }
             } else {
                 return false;
             }

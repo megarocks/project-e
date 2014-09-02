@@ -4,7 +4,7 @@
         $('#po-table').dataTable({
             "deferRender": true,
             "ajax": {
-                "url": '/' + ctrlName + '/list?fields=id,created_at,po_num,system_sn,ctpl,dtpl,nop,npl,country,distributor,endUser',
+                "url": '/' + ctrlName + '/list?fields=id,created_at,po_num,system_sn,ctpl,dtpl,nop,cnpl,dnpl,country,distributor,endUser',
                 "dataSrc": ""
             },
             "columns": [
@@ -14,7 +14,8 @@
                 {data: "ctpl"},
                 {data: "dtpl"},
                 {data: "nop"},
-                {data: "npl"},
+                {data: "cnpl"},
+                {data: "dnpl"},
                 {
                     data: "country",
                     "render": function (country) {
@@ -38,8 +39,7 @@
                     "orderable": false,
                     "render": function (id) {
                         return '<a href="/' + ctrlName + '/view/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
-                            '<a href="/' + ctrlName + '/update?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>' +
-                            '<a href="/' + ctrlName + '/delete?id=' + id + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-remove"></span></a>';
+                            '<a href="/' + ctrlName + '/update?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>';
                     }
 
                 }

@@ -38,7 +38,7 @@
         public function rules()
         {
             return [
-                [['title', 'email'], 'required'],
+                [['title', 'email', 'country_id'], 'required'],
                 [['title', 'email'], 'string', 'max' => 45],
                 [['user_id', 'country_id'], 'integer'],
                 [['email'], 'email'],
@@ -152,12 +152,4 @@
             return $this->save();
         }
 
-        /**
-         * Deletes end user and related data
-         * @return bool
-         */
-        public function deleteEndUser()
-        {
-            return true;
-        }
     }

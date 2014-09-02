@@ -71,7 +71,7 @@
         public function rules()
         {
             return [
-                [['first_name', 'email'], 'required'],
+                [['first_name', 'email', 'roleField'], 'required'],
                 [['email'], 'unique'],
                 [['email'], 'email'],
                 [['created_at', 'updated_at', 'password', 'password_repeat', 'roleField'], 'safe'],
@@ -268,7 +268,12 @@
 
         public function getRoleField()
         {
-            return $this->role;
+            if (!is_null($this->role)) {
+                return $this->role;
+            } else {
+                return $this->_roleField;
+            }
+
         }
 
         public function setRoleField($value)
@@ -299,12 +304,14 @@
         {
             $this->scenario = 'create';
             if ($this->validate()) {
+
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 $this->auth_key = Yii::$app->security->generateRandomString();
                 $this->password_reset_token = Yii::$app->security->generateRandomString();
                 $this->access_token = Yii::$app->security->generateRandomString();
 
                 if ($this->save()) {
+
                     $this->role = $this->_roleField;
 
                     Yii::$app->mailer->compose('user/user-account-created', ['user' => $this])
@@ -314,6 +321,7 @@
                         ->send();
 
                     return true;
+
                 } else {
                     return false;
                 }

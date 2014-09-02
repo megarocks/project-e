@@ -7,6 +7,7 @@
     /* @var $this yii\web\View */
     /* @var $model app\models\System */
     /* @var $po app\models\PurchaseOrder */
+    $po = $model->purchaseOrder;
 
     $this->title = "System #" . $model->sn . " management";
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
@@ -19,12 +20,10 @@
 
     <p>
         <?php if (!isset($po)) : ?>
-            <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'system_sn' => $model->sn], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
         <?php if (isset($po)) : ?>
-            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'system_sn' => $model->sn], ['class' => 'btn btn-danger']) ?>
-            <?= Html::a(Yii::t('app', 'Edit PO details'), ['purchase-order/update', 'id' => $po->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
             <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
     </p>
@@ -40,6 +39,7 @@
                     'status',
                     'login_code',
                     'current_code',
+                    'init_lock_date',
                     'next_lock_date',
                     [
                         'label' => Yii::t('app', 'Email'),
@@ -60,9 +60,9 @@
             'csp',
             'cpup',
             'nop',
+            'cnpl',
             'ctpl',
             'cmp',
-            'npl'
         ],
     ]) ?>
 
@@ -75,9 +75,9 @@
                 'dsp',
                 'dpup',
                 'nop',
+                'dnpl',
                 'dtpl',
                 'dmp',
-                'npl'
             ],
         ]) ?>
     <?php endif; ?>

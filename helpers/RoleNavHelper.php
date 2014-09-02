@@ -43,11 +43,7 @@
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
-                        ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
-                         'url'         => ['/site/logout'],
-                         'linkOptions' => ['data-method' => 'post']],
+                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -58,11 +54,7 @@
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items'   => [
                     ['label' => Yii::t('app', 'System'), 'url' => ['/system/view-by-code']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
-                        ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
-                         'url'         => ['/site/logout'],
-                         'linkOptions' => ['data-method' => 'post']],
+                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -74,15 +66,12 @@
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
+                    ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
                     ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
                     ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
-                        ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
-                         'url'         => ['/site/logout'],
-                         'linkOptions' => ['data-method' => 'post']],
+                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -94,11 +83,7 @@
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
-                        ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
-                         'url'         => ['/site/logout'],
-                         'linkOptions' => ['data-method' => 'post']],
+                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -112,11 +97,7 @@
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
                     ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
-                        ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
-                         'url'         => ['/site/logout'],
-                         'linkOptions' => ['data-method' => 'post']],
+                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -127,12 +108,38 @@
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']] :
-                        ['label'       => Yii::t('app', 'Logout') . '(' . Yii::$app->user->identity->first_name . ')',
-                         'url'         => ['/site/logout'],
-                         'linkOptions' => ['data-method' => 'post']],
+                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
+        }
+
+        /**
+         * Method returns array with menu items for profile area: login, logout, view/edit profile
+         *
+         * @param $isGuest
+         * @return array
+         */
+        private static function profileMenu($isGuest)
+        {
+            if (!$isGuest) {
+                $menuItems = [
+                    'label' => Yii::t('app', 'Logged as: ') . Yii::$app->user->identity->first_name,
+                    'items' => [
+                        [
+                            'label' => Yii::t('app', 'View/Edit Profile'),
+                            'url'   => ['user/profile']
+                        ],
+                        [
+                            'label'       => Yii::t('app', 'Logout'),
+                            'url'         => ['site/logout'],
+                            'linkOptions' => ['data-method' => 'post'],
+                        ]
+                    ]
+                ];
+            } else {
+                $menuItems = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
+            }
+
+            return $menuItems;
         }
     }

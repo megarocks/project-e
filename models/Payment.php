@@ -11,7 +11,7 @@
      *
      * @property integer $id
      * @property integer $po_num
-     * @property string $amount
+     * @property number $amount
      * @property integer $periods
      * @property string $currency_code
      * @property string $transaction_id
@@ -20,7 +20,7 @@
      * @property string $method
      * @property string $from
      *
-     * @property PurchaseOrder $po
+     * @property PurchaseOrder $purchaseOrder
      */
     class Payment extends \yii\db\ActiveRecord
     {
@@ -64,8 +64,9 @@
             return [
                 [['po_num', 'amount', 'periods', 'currency_code', 'payer_email'], 'required'],
                 [['po_num', 'amount', 'periods', 'currency_code', 'transaction_id', 'payer_id', 'payer_email', 'from', 'method'], 'safe'],
-                [['po_num', 'periods'], 'integer'],
-                [['amount'], 'number'],
+                [['po_num'], 'integer'],
+                [['amount'], 'number', 'min' => 1],
+                [['periods'], 'integer', 'min' => 1],
                 [['currency_code'], 'string', 'max' => 3],
                 [['transaction_id', 'payer_id', 'payer_email'], 'string', 'max' => 45],
                 [['transaction_id', 'payer_id'], 'required', 'on' => ['paypal']],
@@ -89,6 +90,7 @@
                 'payer_email'    => Yii::t('app', 'Payer Email'),
                 'from'           => Yii::t('app', 'Payment From'),
                 'method'         => Yii::t('app', 'Payment Method'),
+                'created_at' => Yii::t('app', 'Payment Date/Time'),
             ];
         }
 

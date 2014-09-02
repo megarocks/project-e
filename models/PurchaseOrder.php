@@ -13,16 +13,18 @@
      *
      * @property integer $id
      * @property integer $po_num
-     * @property string $cpup
-     * @property string $dpup
-     * @property string $dsp
-     * @property string $csp
+     * @property number $cpup
+     * @property number $dpup
+     * @property number $dsp
+     * @property number $csp
      * @property integer $nop
      * @property integer $npl
-     * @property string $cmp
-     * @property string $dmp
-     * @property string $ctpl
-     * @property string $dtpl
+     * @property integer $dnpl
+     * @property integer $cnpl
+     * @property number $cmp
+     * @property number $dmp
+     * @property number $ctpl
+     * @property number $dtpl
      * @property integer $end_user_id
      * @property integer $distributor_id
      * @property integer $country_id
@@ -70,12 +72,15 @@
         public function rules()
         {
             return [
-                [['po_num'], 'required'],
-                [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number'],
-                [['po_num', 'nop', 'npl', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
+                [['po_num', 'country_id', 'email', 'currency_code', 'distributor_id', 'end_user_id', 'nop'], 'required'],
+                [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number', 'min' => 0],
+                [['po_num', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
                 [['created_at', 'updated_at', 'currency_code'], 'safe'],
                 [['email'], 'string', 'max' => 64],
+                [['email'], 'email'],
                 [['system_sn'], 'unique'],
+                [['nop'], 'integer', 'min' => 1],
+                [['npl', 'dnpl', 'cnpl'], 'integer', 'min' => 0],
             ];
         }
 
@@ -95,12 +100,14 @@
                 'cmp'            => Yii::t('app', 'CMP (Customer Monthly Payment)'),
                 'dmp'            => Yii::t('app', 'DMP (Distributor Monthly Payment)'),
                 'npl'            => Yii::t('app', 'NPL (Number of payments left)'),
+                'dnpl' => Yii::t('app', 'DNPL (Distributor Number of payments left)'),
+                'cnpl' => Yii::t('app', 'CNPL (Customer Number of payments left)'),
                 'ctpl'           => Yii::t('app', 'CTPL (Customer Total Payment Left)'),
                 'dtpl'           => Yii::t('app', 'DTPL (Distributor Total Payment Left)'),
                 'end_user_id'    => Yii::t('app', 'End-User'),
                 'distributor_id' => Yii::t('app', 'Distributor'),
                 'country_id'     => Yii::t('app', 'Country'),
-                'currency_code' => Yii::t('app', 'Currency'),
+                'currency_code'  => Yii::t('app', 'Currency'),
                 'email'          => Yii::t('app', 'Email'),
                 'system_sn'      => Yii::t('app', 'System SN'),
                 'created_at'     => Yii::t('app', 'Created At'),
@@ -150,38 +157,90 @@
 
         private function calculateValues($initial = true)
         {
-            if ($this->nop >= 0) {
-                if ($initial) {
-                    $this->npl = $this->nop;
-                }
+            if ($initial) {
+                //initialize npl for customer and distributor
+                $this->cpup >= $this->csp ? $this->cnpl = 0 : $this->cnpl = $this->nop;
+                $this->dpup >= $this->dsp ? $this->dnpl = 0 : $this->dnpl = $this->nop;
+
+                //calculate monthly payment value
                 $this->cmp = ($this->csp - $this->cpup) / $this->nop;
-                $this->dpup >= $this->dsp ? $this->dmp = 0 : $this->dmp = ($this->dsp - $this->dpup) / $this->nop;
-                $this->ctpl = $this->cmp * $this->npl;
-                $this->dtpl = $this->dmp * $this->npl;
-            } else {
-                throw new InvalidParamException('NOP should be positive value');
+                $this->dmp = ($this->dsp - $this->dpup) / $this->nop;
+
             }
+            //calculate rest amount to pay
+            $this->ctpl = $this->cmp * $this->cnpl;
+            $this->dtpl = $this->dmp * $this->dnpl;
+
         }
 
-        public function beforeSave($insert)
-        {
-            if (parent::beforeSave($insert)) {
-                $insert ? $this->calculateValues() : $this->calculateValues(false);
-
-                return true;
-            } else {
-                return false;
-            }
-        }
-
+        /**
+         * Updates purchase order params accordingly to payment
+         *
+         * @param $payment
+         * @return bool
+         */
         public function processPayment($payment)
         {
             /**@var $payment Payment */
-            $this->npl = $this->npl - $payment->periods;
+
+            switch ($payment->from) {
+                case Payment::FROM_DISTR:
+                    $this->dnpl = $this->dnpl - $payment->periods;
+                    break;
+                case Payment::FROM_USER:
+                    $this->cnpl = $this->cnpl - $payment->periods;
+                    break;
+                default:
+                    break;
+            }
+
+            $this->calculateValues(false);
             $this->save();
             $this->system->updateLockingData();
 
             return true;
+        }
+
+        /**
+         * Revokes changes made to purchase order by payment
+         *
+         * @param $payment
+         * @return bool
+         */
+        public function revokePayment($payment)
+        {
+            /**@var $payment Payment */
+
+            switch ($payment->from) {
+                case Payment::FROM_DISTR:
+                    $this->dnpl = $this->dnpl + $payment->periods;
+                    break;
+                case Payment::FROM_USER:
+                    $this->cnpl = $this->cnpl + $payment->periods;
+                    break;
+                default:
+                    break;
+            }
+
+            $this->calculateValues(false);
+            $this->save();
+            $this->system->updateLockingData();
+
+            return true;
+        }
+
+        public function createPurchaseOrder()
+        {
+            $this->calculateValues(true);
+
+            return $this->save();
+        }
+
+        public function updatePurchaseOrder()
+        {
+            $this->calculateValues(false);
+
+            return $this->save();
         }
 
     }

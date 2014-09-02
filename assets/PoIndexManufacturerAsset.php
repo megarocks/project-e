@@ -3,14 +3,14 @@
      * Created by PhpStorm.
      * User: rocks
      * Date: 7/30/14
-     * Time: 4:17 PM
+     * Time: 11:55 AM
      */
 
     namespace app\assets;
 
     use yii\web\AssetBundle;
 
-    class DistributorAsset extends AssetBundle
+    class PoIndexManufacturerAsset extends AssetBundle
     {
         public $basePath = '@webroot';
         public $baseUrl = '@web';
@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/distributor/distributors-index-endymed.js'
+            '/js/purchase-order/po-index-manufacturer.js'
         ];
         public $depends = [
             'app\assets\AppAsset',
