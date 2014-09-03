@@ -1,6 +1,7 @@
 html,
 body {
-    height: 100%;
+    /*height: 100%;*/
+    /*conflict with ace theme */
 }
 
 .wrap {
@@ -92,5 +93,9 @@ a.desc:after {
 
 div.required label:after {
     content: " *";
-    color: orangered;
+    color: #d16e6c;
+}
+
+#credentials-box > div > div.toolbar.clearfix > div {
+    width: 100%;
 }

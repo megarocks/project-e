@@ -15,9 +15,6 @@
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="systems-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <table id="systems-table" class="table-hover">
         <thead>
         <tr>

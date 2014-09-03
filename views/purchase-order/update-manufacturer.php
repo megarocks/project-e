@@ -12,9 +12,6 @@
     $this->params['breadcrumbs'][] = Yii::t('app', 'Edit');
 ?>
 <div class="systems-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <div class="systems-orders-form">
         <?php $form = ActiveForm::begin(); ?>
 

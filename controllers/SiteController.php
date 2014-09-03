@@ -60,7 +60,7 @@
             return $this->render('index');
         }
 
-        public function actionLogin($initForm = 'code')
+        public function actionLogin($visibleForm = 'credentials')
         {
             if (!\Yii::$app->user->isGuest) {
                 return $this->goHome();
@@ -68,36 +68,26 @@
 
             $credentialsLoginForm = new CredentialsLoginForm();
             $codeLoginForm = new CodeLoginForm();
-            $request = Yii::$app->request->post();
+            $forgotPasswordForm = new ForgotPasswordForm();
 
-            if ($credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
+            $request = Yii::$app->request->post();
+            if ($visibleForm == 'credentials' && $credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
                 return $this->goBack();
-            } else {
-                return $this->render('login', [
-                    'credentialsLoginForm' => $credentialsLoginForm,
-                    'codeLoginForm'        => $codeLoginForm,
-                    'initForm'             => $initForm,
-                ]);
-            }
-        }
-
-        public function actionLoginByCode($initForm = 'code')
-        {
-            if (!\Yii::$app->user->isGuest) {
-                return $this->goHome();
-            }
-            $codeLoginForm = new CodeLoginForm();
-            $credentialsLoginForm = new CredentialsLoginForm();
-            $request = Yii::$app->request->post();
-            if ($codeLoginForm->load($request) && $codeLoginForm->login()) {
+            } elseif ($visibleForm == 'code' && $codeLoginForm->load($request) && $codeLoginForm->login()) {
                 Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
 
                 return $this->redirect('/system/view-by-code');
+            } elseif ($visibleForm == 'forgot' && $forgotPasswordForm->load($request) && $forgotPasswordForm->validate()) {
+                $forgotPasswordForm->sendMailWithLink();
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Check your mailbox for instructions'));
+
+                return $this->refresh();
             } else {
-                return $this->render('login', [
+                return $this->renderPartial('login', [
                     'credentialsLoginForm' => $credentialsLoginForm,
                     'codeLoginForm'        => $codeLoginForm,
-                    'initForm'             => $initForm,
+                    'forgotPasswordForm'   => $forgotPasswordForm,
+                    'visibleForm'          => $visibleForm,
                 ]);
             }
         }
@@ -107,31 +97,6 @@
             Yii::$app->user->logout();
 
             return $this->goHome();
-        }
-
-        public function actionForgotPassword()
-        {
-            /**@var $model ForgotPasswordForm */
-            $model = new ForgotPasswordForm();
-
-            $request = Yii::$app->request->post();
-
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->validate() && $model->sendMailWithLink()) {
-                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Check your email to move ahead with password restoring'));
-
-                    return $this->redirect('site/login');
-                } else {
-                    return $this->render('forgot-password-form', [
-                        'model' => $model,
-                    ]);
-                }
-            } else {
-                return $this->render('forgot-password-form', [
-                    'model' => $model,
-                ]);
-            }
         }
 
         public function actionPasswordReset($password_reset_token)

@@ -39,11 +39,13 @@
         private static function renderDistributorNav()
         {
             return Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
+                'options' => [
+                    'class' => 'nav nav-list',
+                    'style' => 'top: 0px;',
+                ],
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
-                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -51,10 +53,12 @@
         private static function renderEndUserNav()
         {
             return Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
+                'options' => [
+                    'class' => 'nav nav-list',
+                    'style' => 'top: 0px;',
+                ],
                 'items'   => [
                     ['label' => Yii::t('app', 'System'), 'url' => ['/system/view-by-code']],
-                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -62,7 +66,10 @@
         private static function renderEndyMedNav()
         {
             return Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
+                'options' => [
+                    'class' => 'nav nav-list',
+                    'style' => 'top: 0px;',
+                ],
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
@@ -71,19 +78,21 @@
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
                     ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
                     ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
-                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
+
             ]);
         }
 
         private static function renderManufacturerNav()
         {
             return Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
+                'options' => [
+                    'class' => 'nav nav-list',
+                    'style' => 'top: 0px;',
+                ],
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
-                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
@@ -91,25 +100,40 @@
         private static function renderSalesNav()
         {
             return Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
+                'options' => [
+                    'class' => 'nav nav-list',
+                    'style' => 'top: 0px;',
+                ],
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
                     ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
                     ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
-                    static::profileMenu(Yii::$app->user->isGuest),
                 ],
             ]);
         }
 
         private static function renderDefaultNav()
         {
+            /*            return Nav::widget([
+                            'options' => ['class' => 'navbar-nav navbar-right'],
+                            'items'   => [
+                                ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
+                            ],
+                        ]);*/
+        }
+
+
+        public static function profileMenu($isGuest)
+        {
             return Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items'   => [
-                    ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    static::profileMenu(Yii::$app->user->isGuest),
+                'options' => [
+                    'class' => 'navbar-nav navbar-right',
+                    'role'  => 'navigation',
                 ],
+                'items'   => [
+                    static::getProfileMenuItems($isGuest)
+                ]
             ]);
         }
 
@@ -119,7 +143,7 @@
          * @param $isGuest
          * @return array
          */
-        private static function profileMenu($isGuest)
+        private static function getProfileMenuItems($isGuest)
         {
             if (!$isGuest) {
                 $menuItems = [

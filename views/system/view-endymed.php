@@ -15,9 +15,6 @@
 ?>
 
 <div class="systems-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?php if (!isset($po)) : ?>
             <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

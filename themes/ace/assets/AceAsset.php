@@ -23,11 +23,15 @@
             ];
 
         public $css = [
-            'css/ace.min.css',
-            'css/ace-extra.min.css',
-            'css/ace-fonts.min.css',
+            'css/uncompressed/ace.css',
+            'css/ace-fonts.css',
+            'css/font-awesome.min.css',
+            'css/ace-skins.min.css',
         ];
         public $js = [
+            'js/ace/ace.js',
+            'js/ace-elements.min.js',
+            'js/ace-extra.min.js',
         ];
         public $depends = [
             'yii\web\YiiAsset',
