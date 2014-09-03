@@ -18,8 +18,6 @@
 ?>
 
 <div class="payment-details">
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a(Yii::t('app', 'View System Details'), 'system/' . $system->id, ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'View Order Details'), 'purchase-order/' . $model->purchaseOrder->id, ['class' => 'btn btn-primary']) ?>

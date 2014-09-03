@@ -14,9 +14,6 @@
 ?>
 
 <div class="systems-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a(Yii::t('app', 'Generate Code'), ['code-request', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>

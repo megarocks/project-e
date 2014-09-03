@@ -72,10 +72,6 @@
 
             $request = Yii::$app->request->post();
             if ($visibleForm == 'credentials' && $credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Congrats! You`re logged in successfully'), false);
-                Yii::$app->session->setFlash('warning', Yii::t('app', 'Congrats! You`re logged in successfully'), false);
-                Yii::$app->session->setFlash('info', Yii::t('app', 'Congrats! You`re logged in successfully'), false);
-
                 return $this->goBack();
             } elseif ($visibleForm == 'code' && $codeLoginForm->load($request) && $codeLoginForm->login()) {
                 Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
@@ -90,8 +86,8 @@
                 return $this->renderPartial('login', [
                     'credentialsLoginForm' => $credentialsLoginForm,
                     'codeLoginForm'        => $codeLoginForm,
-                    'forgotPasswordForm' => $forgotPasswordForm,
-                    'visibleForm'        => $visibleForm,
+                    'forgotPasswordForm'   => $forgotPasswordForm,
+                    'visibleForm'          => $visibleForm,
                 ]);
             }
         }

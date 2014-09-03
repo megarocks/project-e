@@ -13,9 +13,6 @@
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="distributors-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?=
             Html::a(Yii::t('app', 'Add new payment'), ['add-payment'], ['class' => 'btn btn-success btn-sm']) ?>

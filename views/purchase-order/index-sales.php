@@ -14,8 +14,6 @@
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="purchase-orders-index">
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?=
             Html::a(Yii::t('app', 'Add new purchase order', [

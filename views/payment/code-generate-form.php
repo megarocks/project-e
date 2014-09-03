@@ -14,8 +14,6 @@
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div>
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>Please fill out the following fields to generate code:</p>
 
     <?php $form = ActiveForm::begin([

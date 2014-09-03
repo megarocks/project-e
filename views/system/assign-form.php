@@ -16,9 +16,6 @@
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="system-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <div class="system-form">
         <?php $form = ActiveForm::begin(); ?>
 

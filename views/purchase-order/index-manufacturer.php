@@ -10,8 +10,6 @@
 
 ?>
 <div class="systems-orders-index">
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <table id="systems-po-table" class="table-hover">
         <thead>
         <tr>

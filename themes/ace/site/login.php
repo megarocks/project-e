@@ -15,6 +15,8 @@
     /* @var $codeLoginForm app\models\CodeLoginForm */
     /* @var $forgotPasswordForm app\models\ForgotPasswordForm */
     /* @var $visibleForm boolean */
+
+    $this->title = Yii::t('app', 'EndyMed PPD Control Panel');
 ?>
 
 <?php $this->beginPage() ?>
