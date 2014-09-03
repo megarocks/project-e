@@ -27,13 +27,15 @@
         <tr>
             <th><?= Yii::t('app', 'Added at') ?></th>
             <th><?= Yii::t('app', 'PO#') ?></th>
-            <th><?= Yii::t('app', 'CPUP') ?></th>
-            <th><?= Yii::t('app', 'DPUP') ?></th>
-            <th><?= Yii::t('app', 'DSP') ?></th>
-            <th><?= Yii::t('app', 'CSP') ?></th>
+            <th><?= Yii::t('app', 'System SN') ?></th>
+            <th><?= Yii::t('app', 'CTPL') ?></th>
+            <th><?= Yii::t('app', 'DTPL') ?></th>
             <th><?= Yii::t('app', 'NOP') ?></th>
-            <th><?= Yii::t('app', 'Distributer') ?></th>
+            <th><?= Yii::t('app', 'CNPL') ?></th>
+            <th><?= Yii::t('app', 'DNPL') ?></th>
             <th><?= Yii::t('app', 'Country') ?></th>
+            <th><?= Yii::t('app', 'Distributor') ?></th>
+            <th><?= Yii::t('app', 'End-User') ?></th>
             <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>

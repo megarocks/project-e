@@ -15,14 +15,6 @@
 <div class="po-view">
     <p>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?=
-            Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data'  => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                    'method'  => 'post',
-                ],
-            ]) ?>
     </p>
 
     <?=
@@ -35,18 +27,23 @@
                 'dsp',
                 'csp',
                 'nop',
-                'npl',
+                'dnpl',
+                'cnpl',
                 'cmp',
                 'dmp',
                 'ctpl',
                 'dtpl',
                 [
                     'label' => Yii::t('app', 'Country'),
-                    'value' => $model->country->name,
+                    'value' => isset($model->country) ? $model->country->name : Yii::t('app', 'Country is not defined'),
                 ],
                 [
                     'label' => Yii::t('app', 'Distributor'),
-                    'value' => $model->distributor->title,
+                    'value' => isset($model->distributor) ? $model->distributor->title : Yii::t('app', 'Distributor not assigned'),
+                ],
+                [
+                    'label' => Yii::t('app', 'End-User'),
+                    'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
                 'email:email',
                 'created_at',
