@@ -95,3 +95,7 @@ div.required label:after {
     content: " *";
     color: #d16e6c;
 }
+
+#login-box > div > div.toolbar.clearfix > div.forgot-password {
+    width: 100%;
+}

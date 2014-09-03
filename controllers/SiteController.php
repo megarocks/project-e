@@ -68,14 +68,16 @@
 
             $credentialsLoginForm = new CredentialsLoginForm();
             $codeLoginForm = new CodeLoginForm();
+            $forgotPasswordForm = new ForgotPasswordForm();
             $request = Yii::$app->request->post();
 
             if ($credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
                 return $this->goBack();
             } else {
-                return $this->render('login', [
+                return $this->renderPartial('login', [
                     'credentialsLoginForm' => $credentialsLoginForm,
                     'codeLoginForm'        => $codeLoginForm,
+                    'forgotPasswordForm' => $forgotPasswordForm,
                     'initForm'             => $initForm,
                 ]);
             }

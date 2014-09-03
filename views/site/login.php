@@ -4,13 +4,13 @@
     use app\widgets\LoginForm;
 
     /* @var $this yii\web\View */
-/* @var $form yii\widgets\ActiveForm */
+    /* @var $form yii\widgets\ActiveForm */
     /* @var $credentialsLoginForm app\models\CredentialsLoginForm */
     /* @var $codeLoginForm app\models\CodeLoginForm */
     /* @var $initForm boolean */
 
     $this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+    $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
