@@ -72,6 +72,10 @@
 
             $request = Yii::$app->request->post();
             if ($visibleForm == 'credentials' && $credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Congrats! You`re logged in successfully'), false);
+                Yii::$app->session->setFlash('warning', Yii::t('app', 'Congrats! You`re logged in successfully'), false);
+                Yii::$app->session->setFlash('info', Yii::t('app', 'Congrats! You`re logged in successfully'), false);
+
                 return $this->goBack();
             } elseif ($visibleForm == 'code' && $codeLoginForm->load($request) && $codeLoginForm->login()) {
                 Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
@@ -79,7 +83,7 @@
                 return $this->redirect('/system/view-by-code');
             } elseif ($visibleForm == 'forgot' && $forgotPasswordForm->load($request) && $forgotPasswordForm->validate()) {
                 $forgotPasswordForm->sendMailWithLink();
-                Yii::$app->session->setFlash('notice', Yii::t('app', 'Check your mailbox for instructions'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Check your mailbox for instructions'));
 
                 return $this->refresh();
             } else {

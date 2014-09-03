@@ -1,4 +1,5 @@
 <?php
+    use app\helpers\FlashAlert;
     use app\models\User;
     use app\themes\ace\assets\AceAsset;
     use yii\bootstrap\Nav;
@@ -70,6 +71,9 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
+                        <div class="alerts">
+                            <?= FlashAlert::flashArea() ?>
+                        </div>
                         <?= $content ?>
                     </div>
                 </div>
