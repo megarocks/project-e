@@ -15,7 +15,7 @@
 
     <p><?= Yii::t('app', 'Enter your email to receive instructions') ?></p>
 
-    <?php $form = ActiveForm::begin(['action' => '/site/login?initForm=credentials']) ?>
+    <?php $form = ActiveForm::begin(['action' => '/site/login?visibleForm=forgot']) ?>
     <form>
         <fieldset>
 
@@ -52,7 +52,7 @@
     <?=
         Html::a(Yii::t('app', 'Back to login'), '#', [
             'class'       => 'back-to-login-link',
-            'data-target' => '#login-box'
+            'data-target' => '#credentials-box'
         ]) ?>
 </div>
 

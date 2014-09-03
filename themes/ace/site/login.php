@@ -13,7 +13,7 @@
     /* @var $credentialsLoginForm app\models\CredentialsLoginForm */
     /* @var $codeLoginForm app\models\CodeLoginForm */
     /* @var $forgotPasswordForm app\models\ForgotPasswordForm */
-    /* @var $initForm boolean */
+    /* @var $visibleForm boolean */
 ?>
 
 <?php $this->beginPage() ?>
@@ -47,21 +47,18 @@
                         </div>
                         <div class="space-6"></div>
                         <div class="position-relative">
-                            <div id="login-box" class="login-box widget-box no-border visible">
+                            <div id="credentials-box" class="login-box widget-box no-border">
                                 <div class="widget-body">
                                     <!--widget main-->
                                     <?= LoginForm::widget(['model' => $credentialsLoginForm, 'formType' => 'credentials']) ?>
-                                    <div class="toolbar clearfix">
-                                        <div class="forgot-password center">
-                                            <?=
-                                                Html::a(Yii::t('app', 'I forgot my password'), '#',
-                                                    [
-                                                        'class'       => 'forgot-password-link',
-                                                        'data-target' => '#forgot-box'
-                                                    ]) ?>
-                                        </div>
-                                    </div>
-                                    <!--end toolbar-->
+                                </div>
+                                <!--end widget body-->
+                            </div>
+                            <!--end login box-->
+                            <div id="code-box" class="code-box widget-box no-border">
+                                <div class="widget-body">
+                                    <!--widget main-->
+                                    <?= LoginForm::widget(['model' => $codeLoginForm, 'formType' => 'code']) ?>
                                 </div>
                                 <!--end widget body-->
                             </div>
@@ -86,6 +83,7 @@
     </div>
     <!--end main container-->
 
+    <?= Html::hiddenInput('visibleForm', $visibleForm, ['id' => 'visible-form']) ?>
     <?php $this->endBody() ?>
     </body>
 

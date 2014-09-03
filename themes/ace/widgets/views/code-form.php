@@ -2,25 +2,66 @@
     use yii\bootstrap\ActiveForm;
     use yii\helpers\Html;
 
-    $form = ActiveForm::begin([
-        'id'          => 'code-login-form',
-        'action'      => '/site/login-by-code?initForm=code',
-        'options'     => ['class' => 'form-horizontal'],
-        'fieldConfig' => [
-            'template'     => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-3\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-offset-3 col-lg-2 control-label'],
-        ],
-    ]); ?>
+?>
 
-    <?= $form->field($model, 'loginCode')->textInput(['placeholder' => Yii::t('app', 'Enter login code')]) ?>
 
-    <div class="col-lg-offset-6">
-        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+<div class="widget-main">
+    <h4 class="header blue lighter bigger">
+        <i class="ace-icon fa fa-coffee green"></i>
+        <?= Yii::t('app', 'Please Enter Your Information') ?>
+    </h4>
+
+    <div class="space-6"></div>
+    <?php $form = ActiveForm::begin(['action' => '/site/login?visibleForm=code']) ?>
+    <form>
+        <fieldset>
+
+            <label class="block clearfix">
+                <span class="block input-icon input-icon-right">
+                    <?=
+                        $form->field($model, 'loginCode')->textInput(
+                            [
+                                'placeholder' => Yii::t('app', 'Login Code'),
+                                'class'       => 'form-control'
+                            ]
+                        )->label(false)
+                    ?>
+                    <i class="ace-icon fa fa-compass"></i>
+                </span>
+            </label>
+
+            <div class="space"></div>
+
+            <div class="clearfix">
+
+                <label class="inline">
+                    <?= Html::activeCheckbox($model, 'rememberMe', ['class' => 'ace']) ?>
+                    <span class="lbl"> <?= Yii::t('app', 'Remember Me') ?></span>
+                </label>
+
+                <?=
+                    Html::submitButton(
+                        '<i class="ace-icon fa fa-key"></i>' .
+                        '<span class="bigger-110">' . Yii::t('app', 'Login') . '</span>',
+                        ['class' => 'width-35 pull-right btn btn-sm btn-primary', 'name' => 'login-button']) ?>
+            </div>
+
+            <div class="space-4"></div>
+
+        </fieldset>
+    </form>
+    <?php ActiveForm::end(); ?>
+
+    <div class="social-or-login center">
+        <span class="bigger-110"><?= Yii::t('app', 'Or Login Using') ?> </span>
     </div>
-    <div class="form-group">
-        <div class="col-lg-offset-6 col-lg-2">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-        </div>
-    </div>
 
-<?php ActiveForm::end(); ?>
+    <div class="space-6"></div>
+
+    <div class="social-login center">
+        <?=
+            Html::a(Yii::t('app', 'Email and Password'), '#', [
+                'data-target' => '#credentials-box'
+            ]) ?>
+    </div>
+</div>

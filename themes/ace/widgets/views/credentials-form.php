@@ -12,7 +12,7 @@
     </h4>
 
     <div class="space-6"></div>
-    <?php $form = ActiveForm::begin(['action' => '/site/login?initForm=credentials']) ?>
+    <?php $form = ActiveForm::begin(['action' => '/site/login?visibleForm=credentials']) ?>
     <form>
         <fieldset>
 
@@ -73,7 +73,22 @@
     <div class="space-6"></div>
 
     <div class="social-login center">
-        <?= Html::a(Yii::t('app', 'System Code'), '#') ?>
+        <?=
+            Html::a(Yii::t('app', 'System Code'), '#', [
+                'data-target' => '#code-box'
+            ]) ?>
     </div>
 </div>
+
+<div class="toolbar clearfix">
+    <div class="forgot-password center">
+        <?=
+            Html::a(Yii::t('app', 'I forgot my password'), '#',
+                [
+                    'class'       => 'forgot-password-link',
+                    'data-target' => '#forgot-box'
+                ]) ?>
+    </div>
+</div>
+
 
