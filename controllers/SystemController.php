@@ -194,8 +194,8 @@
                     $s['login_code'] = $system->login_code;
                     $s['npl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->npl : null;
                     $s['ctpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->ctpl : null;
-                    $s['created_at'] = $system->created_at;
-                    $s['updated_at'] = $system->updated_at;
+                    $s['created_at'] = date('M d, Y h:i A', strtotime($system->created_at));
+                    $s['updated_at'] = date('M d, Y h:i A', strtotime($system->created_at));
                     $s['country'] = isset($system->purchaseOrder) ? $system->purchaseOrder->country : null;
                     $s['distributor'] = isset($system->purchaseOrder) ? $system->purchaseOrder->distributor : null;
                     $s['endUser'] = isset($system->purchaseOrder) ? $system->purchaseOrder->endUser : null;
