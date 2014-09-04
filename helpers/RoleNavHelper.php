@@ -92,7 +92,7 @@
                 ],
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
+                    ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
                 ],
             ]);
         }
