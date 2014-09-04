@@ -30,7 +30,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['request-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment'],
+                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -65,8 +65,18 @@
             return $this->render('view-' . $user->role, ['model' => $payment]);
         }
 
+        /***
+         * Method called from system screen. It gets system by id from get param and renders form for adding payment
+         * to this system
+         *
+         * @param $system_id
+         * @return string|\yii\web\Response
+         */
         public function actionCreate($system_id)
         {
+            /**@var $user User */
+            $user = Yii::$app->user->identity;
+
             $request = Yii::$app->request->post();
 
             $system = $this->getSystem($system_id);
@@ -82,14 +92,14 @@
                     //navigate to view with payment details
                     return $this->redirect('payment/' . $payment->id);
                 } else {
-                    return $this->render('create',
+                    return $this->render('create-' . $user->role,
                         [
                             'model'  => $payment,
                             'system' => $system
                         ]);
                 }
             } else {
-                return $this->render('create',
+                return $this->render('create-' . $user->role,
                     [
                         'model'  => $payment,
                         'system' => $system
@@ -97,6 +107,12 @@
             }
         }
 
+        /**
+         * Method called from index page. Renders form which gives capability to specify order/system to which
+         * it needed to add a payment
+         *
+         * @return string|\yii\web\Response
+         */
         public function actionAddPayment()
         {
             /**@var $user User */
@@ -137,65 +153,47 @@
         /**
          *  Action gets data from code request form and initiates payment process
          *
-         * @param null|integer $id
+         * @param null|integer $id this is system id
          * @throws \yii\web\NotFoundHttpException
          * @return mixed
          */
-        public function actionRequestCode($id = null)
+        public function actionPurchaseCode($system_id)
         {
+            /**@var $user User */
+            $user = Yii::$app->user->identity;
             //Get post request body
             $request = Yii::$app->request->post();
             //prepare model for form
             $model = new CodeRequestForm;
 
-            //if nothing is posted
-            if (empty($request)) {
-                //get system
-                $system = $this->getSystem($id);
+            if (!empty($request)) {
+                $model->load($request);
+                $system = System::findBySN($model->system_sn);
 
-                //if system has been found
-                if ($system) {
+                $pp = new PayPal();
+                $token = $pp->getToken([
+                    'system_sn'     => $system->sn, //sn of system
+                    'cost'          => ($model->payment_from == Payment::FROM_DISTR) ? $system->purchaseOrder->dmp : $system->purchaseOrder->cmp, //cost of single period
+                    'qty'           => $model->periods_qty, //qty of periods to pay
+                    'description'   => Yii::t('app', 'Code for system #') . $system->sn, //code description
+                    'currency_code' => $system->purchaseOrder->currency_code,
+                    'payment_from'  => $model->payment_from,
+                ]);
 
-                    //initialize code request form
-                    $model->system_sn = $system->sn;
-                    $model->order_num = $system->purchaseOrder->po_num;
-                    $model->periods_qty = 1;
+                if (!is_null($token)) {
+                    $this->redirect('https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . urlencode($token));
+                }
 
+            } else {
+                $system = $this->getSystem($system_id);
+                $model->system_sn = $system->sn;
+                $model->order_num = $system->purchaseOrder->po_num;
+                $model->periods_qty = 1;
 
-                    return $this->render('code-request-form', [
+                return $this->render('code-purchase-form-' . $user->role, [
                         'model'  => $model,
                         'system' => $system
                     ]);
-
-                } else {
-                    throw new NotFoundHttpException;
-                }
-            } else {
-                $model->load($request);
-
-                //find system by serial number from code request form
-                $system = System::findBySN($model->system_sn);
-
-                //if payment is needed for generation of code
-                if ($model->checkIfPaymentNeeded($system)) {
-                    $pp = new PayPal();
-
-                    //send request to pp with initial payment data.
-                    $token = $pp->getToken([
-                        'system_sn'   => $system->sn, //sn of system
-                        'cost'        => $system->purchaseOrder->cmp, //cost of single period
-                        'qty'         => $model->periods_qty, //qty of periods to pay
-                        'description' => Yii::t('app', 'Code for system #') . $system->sn, //code description
-                    ], $system->purchaseOrder->currency_code);
-                    //if pp is ready to process payment it returns token
-                    if (!is_null($token)) {
-                        // navigate user to pp to authorize it
-                        $this->redirect('https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . urlencode($token));
-                    }
-                } else {
-                    echo "Generating code...";
-                    //if payment is not needed we can trigger system locking params update somewhere here
-                }
             }
         }
 
@@ -249,11 +247,14 @@
             }
         }
 
-        public function actionCancel()
+        public function actionCancel($system_sn)
         {
-            Yii::$app->session->setFlash('notice', Yii::t('app', 'Payment was canceled'));
+            Yii::$app->session->setFlash('warning', Yii::t('app', 'Payment was canceled'));
             Yii::getLogger()->log('Payment canceled by user', Logger::LEVEL_WARNING, 'paypal');
-            $this->redirect('system/view-by-code');
+
+            $system = System::findBySN($system_sn);
+
+            return $this->redirect(['system/view', 'id' => $system->id]);
         }
 
         /**
@@ -262,21 +263,23 @@
          *
          * @param null|integer $id
          *
+         * @throws \yii\web\NotFoundHttpException
          * @return System|null
          */
         private function getSystem($id = null)
         {
-            $system = null;
+            $loginCode = Yii::$app->session->get('loginCode');
             if ($id) {
                 $system = System::findOne($id);
-            } else {
-                $loginCode = Yii::$app->session->get('loginCode');
-                if ($loginCode) {
-                    $system = System::getByLoginCode($loginCode);
-                }
-            }
 
-            return $system;
+                return $system;
+            } elseif ($loginCode) {
+                $system = System::getByLoginCode($loginCode);
+
+                return $system;
+            } else {
+                throw new NotFoundHttpException;
+            }
         }
 
         /**

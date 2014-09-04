@@ -46,6 +46,7 @@
                 'items'   => [
                     ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
                     ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
+                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
                 ],
             ]);
         }

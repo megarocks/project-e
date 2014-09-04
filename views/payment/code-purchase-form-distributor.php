@@ -1,6 +1,7 @@
 <?php
 
     use app\models\CodeRequestForm;
+    use app\models\Payment;
     use app\models\System;
     use yii\helpers\ArrayHelper;
     use yii\helpers\Html;
@@ -10,12 +11,12 @@
     /* @var $model CodeRequestForm */
     /* @var $system System */
 
-    $this->title = Yii::t('app', 'Code Request');
+    $this->title = Yii::t('app', 'Purchase Code');
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['system/index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'System #') . $system->sn, 'url' => ['system/' . $system->id]];
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div>
-    <p>Please fill out the following fields to request code:</p>
-
     <?php $form = ActiveForm::begin([
         'id' => 'code-request-form'
     ]); ?>
@@ -24,8 +25,10 @@
     <?= $form->field($model, 'order_num')->textInput(['readonly' => true]) ?>
     <?= $form->field($model, 'periods_qty')->dropDownList(ArrayHelper::map($system->lockingDates, 'periods', 'pretty_date')) ?>
 
+    <?= $form->field($model, 'payment_from')->hiddenInput(['value' => Payment::FROM_DISTR])->label(false) ?>
+
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Buy'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Proceed'), ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -189,10 +189,11 @@
                     $s['sn'] = $system->sn;
                     $s['status'] = $system->status;
                     $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
-                    $s['next_lock_date'] = $system->next_lock_date;
+                    $s['next_lock_date'] = isset($system->next_lock_date) ? date('M d, Y', strtotime($system->next_lock_date)) : null;
+                    $s['init_lock_date'] = isset($system->init_lock_date) ? date('M d, Y', strtotime($system->init_lock_date)) : null;
                     $s['current_code'] = $system->current_code;
                     $s['login_code'] = $system->login_code;
-                    $s['npl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->npl : null;
+                    $s['dtpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->dtpl : null;
                     $s['ctpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->ctpl : null;
                     $s['created_at'] = date('M d, Y h:i A', strtotime($system->created_at));
                     $s['updated_at'] = date('M d, Y h:i A', strtotime($system->created_at));
