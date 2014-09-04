@@ -83,11 +83,10 @@
          * Paypal prepares to process a payment. When ready returns token
          *
          * @param $codeParams
-         * @param $currencyCode
          * @throws Exception
          * @return string $token
          */
-        public function getToken($codeParams, $currencyCode)
+        public function getToken($codeParams)
         {
             $callbackUrlParams = [
                 'RETURNURL' => 'http://localhost:8890/payment/success?system_sn=' . $codeParams['system_sn'],
@@ -95,10 +94,11 @@
             ];
 
             $orderParams = [
-                'PAYMENTREQUEST_0_AMT' => $codeParams['cost'] * $codeParams['qty'], //total sum
-                'PAYMENTREQUEST_0_CURRENCYCODE' => $currencyCode,
-                'REQCONFIRMSHIPPING'   => 0, //no need to confirm shipping as it is electronic good
-                'NOSHIPPING'           => 1, //no need in shipping
+                'PAYMENTREQUEST_0_AMT'          => $codeParams['cost'] * $codeParams['qty'], //total sum
+                'PAYMENTREQUEST_0_CURRENCYCODE' => $codeParams['currency_code'],
+                'PAYMENTREQUEST_0_CUSTOM'       => $codeParams['payment_from'], //in custom field we are storing payer identifying information (enduser/distributor)
+                'REQCONFIRMSHIPPING'            => 0, //no need to confirm shipping as it is electronic good
+                'NOSHIPPING'                    => 1, //no need in shipping
             ];
 
             $codeItem = [

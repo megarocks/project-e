@@ -19,6 +19,7 @@
      * @property string $payer_email
      * @property string $method
      * @property string $from
+     * @property string $created_at
      *
      * @property PurchaseOrder $purchaseOrder
      */
@@ -90,7 +91,7 @@
                 'payer_email'    => Yii::t('app', 'Payer Email'),
                 'from'           => Yii::t('app', 'Payment From'),
                 'method'         => Yii::t('app', 'Payment Method'),
-                'created_at' => Yii::t('app', 'Payment Date/Time'),
+                'created_at'     => Yii::t('app', 'Payment Date/Time'),
             ];
         }
 
@@ -113,6 +114,7 @@
             $this->transaction_id = $confirmDetails['PAYMENTINFO_0_TRANSACTIONID'];
             $this->payer_id = $paymentDetails['PAYERID'];
             $this->payer_email = $paymentDetails['EMAIL'];
+            $this->from = $paymentDetails['CUSTOM'];
 
             return true;
         }

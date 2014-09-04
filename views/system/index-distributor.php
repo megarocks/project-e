@@ -21,11 +21,12 @@
             <th><?= Yii::t('app', 'Serial Number') ?></th>
             <th><?= Yii::t('app', 'PO#') ?></th>
             <th><?= Yii::t('app', 'Status') ?></th>
-            <th><?= Yii::t('app', 'Next Locking Date') ?></th>
-            <th><?= Yii::t('app', 'Current Code') ?></th>
             <th><?= Yii::t('app', 'Login Code') ?></th>
-            <th><?= Yii::t('app', 'Payment Left') ?></th>
-            <th><?= Yii::t('app', 'Number Of Payments Left') ?></th>
+            <th><?= Yii::t('app', 'Initial Locking Date') ?></th>
+            <th><?= Yii::t('app', 'Next Locking Date') ?></th>
+            <th><?= Yii::t('app', 'DTPL') ?></th>
+            <th><?= Yii::t('app', 'CTPL') ?></th>
+            <th><?= Yii::t('app', 'End-User') ?></th>
             <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>

@@ -6,7 +6,9 @@
 
     /* @var $this yii\web\View */
     /* @var $model app\models\System */
-    /**@var PurchaseOrder $po */
+    /* @var $po app\models\PurchaseOrder */
+
+    $po = $model->purchaseOrder;
 
     $this->title = "System #" . $model->sn . " management";
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
@@ -15,7 +17,15 @@
 
 <div class="systems-view">
     <p>
-        <?= Html::a(Yii::t('app', 'Generate Code'), ['code-request', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php if (!isset($po)) : ?>
+
+        <?php endif; ?>
+        <?php if (isset($po) && ($po->dtpl <= 0)) : //if distributor has no debt to endymed - he will see this area ?>
+            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php endif; ?>
+        <?php if (isset($po) && ($po->dtpl > 0)) : //if distributor HAS debt to endymed - he will see this area ?>
+            <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/purchase-code', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php endif; ?>
     </p>
 
     <h3><?= Yii::t('app', 'System Details') ?> </h3>
@@ -29,33 +39,35 @@
                     'status',
                     'login_code',
                     'current_code',
+                    'init_lock_date',
                     'next_lock_date',
                     [
                         'label' => Yii::t('app', 'Email'),
-                        'value' => $po->email,
+                        'value' => isset($po) ? $po->email : Yii::t('app', 'Email is not set'),
                     ],
                     'created_at'
                 ],
             ]) ?>
     </div>
 
-    <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
-    <?=
-        DetailView::widget([
-            'model'      => $po,
-            'attributes' => [
-                'po_num',
-                'csp',
-                'cpup',
-                'nop',
-                'ctpl',
-                'cmp',
-                'npl'
-            ],
-        ]) ?>
+    <?php if (isset($po)): ?>
+        <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
+        <?=
+    DetailView::widget([
+        'model'      => $po,
+        'attributes' => [
+            'po_num',
+            'csp',
+            'cpup',
+            'nop',
+            'cnpl',
+            'ctpl',
+            'cmp',
+        ],
+    ]) ?>
 
-    <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
-    <?=
+        <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
+        <?=
         DetailView::widget([
             'model'      => $po,
             'attributes' => [
@@ -63,10 +75,11 @@
                 'dsp',
                 'dpup',
                 'nop',
+                'dnpl',
                 'dtpl',
                 'dmp',
-                'npl'
             ],
         ]) ?>
+    <?php endif; ?>
 
 </div>
