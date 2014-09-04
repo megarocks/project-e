@@ -19,5 +19,6 @@
         ];
         public $depends = [
             'app\assets\AppAsset',
+            'app\assets\DataTableAsset',
         ];
     }

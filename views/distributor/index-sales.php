@@ -1,26 +1,27 @@
 <?php
 
     use yii\helpers\Html;
-    use app\assets\EndUsersAsset;
+    use yii\grid\GridView;
 
-    EndUsersAsset::register($this);
+    use app\assets\DistributorAsset;
+
+    DistributorAsset::register($this);
 
     /* @var $this yii\web\View */
     /* @var $dataProvider yii\data\ActiveDataProvider */
 
-    $this->title = Yii::t('app', 'End Users');
+    $this->title = Yii::t('app', 'Distributors');
     $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="end-users-index">
+<div class="distributors-index">
     <p>
         <?=
-            Html::a(Yii::t('app', 'Create end-user'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
+            Html::a(Yii::t('app', 'Register new distributor'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
-    <table id="end-users-table" class="table-hover">
+    <table id="distributors-table" class="table-hover">
         <thead>
         <tr>
-            <th>Registered At</th>
             <th>Title</th>
             <th>Email</th>
             <th>Country</th>

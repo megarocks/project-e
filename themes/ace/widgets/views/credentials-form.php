@@ -7,7 +7,7 @@
 
 <div class="widget-main">
     <h4 class="header blue lighter bigger">
-        <i class="ace-icon fa fa-coffee green"></i>
+        <i class="ace-icon fa fa-keyboard-o green"></i>
         <?= Yii::t('app', 'Please Enter Your Information') ?>
     </h4>
 
