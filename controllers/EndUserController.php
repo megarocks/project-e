@@ -9,8 +9,10 @@
     use yii\filters\AccessControl;
     use yii\helpers\Json;
     use yii\web\Controller;
+    use yii\web\ForbiddenHttpException;
     use yii\web\NotFoundHttpException;
     use yii\filters\VerbFilter;
+    use yii\web\UnauthorizedHttpException;
 
     /**
      * EndusersController implements the CRUD actions for EndUsers model.
@@ -57,59 +59,77 @@
 
         /**
          * Lists all EndUser models.
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionIndex()
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
+            if (Yii::$app->user->can('listEndUsers')) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
 
-            return $this->render('index-' . $user->role);
+                return $this->render('index-' . $user->role);
+            } else {
+                throw new ForbiddenHttpException;
+            }
+
         }
 
         /**
          * Displays a single EndUsers model.
          * @param integer $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionView($id)
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            $model = $this->findModel($id);
+            if (Yii::$app->user->can('viewEndUser', ['endUserId' => $id])) {
 
-            return $this->render('view-' . $user->role, ['model' => $model]);
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
+                $model = $this->findModel($id);
 
+                return $this->render('view-' . $user->role, ['model' => $model]);
+
+            } else {
+                throw new ForbiddenHttpException;
+            }
         }
 
         /**
          * Creates a new EndUsers model.
          * If creation is successful, the browser will be redirected to the 'view' page.
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionCreate()
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
+            if (Yii::$app->user->can('createEndUser')) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
 
-            /**@var EndUser $model */
-            $model = new EndUser();
+                /**@var EndUser $model */
+                $model = new EndUser();
 
-            $request = Yii::$app->request->post();
+                $request = Yii::$app->request->post();
 
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->registerEndUser()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->registerEndUser()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        return $this->render('create-' . $user->role, [
+                                'model' => $model,
+                            ]);
+                    }
                 } else {
                     return $this->render('create-' . $user->role, [
                             'model' => $model,
-                    ]);
+                        ]);
                 }
+
             } else {
-                return $this->render('create-' . $user->role, [
-                        'model' => $model,
-                ]);
+                throw new ForbiddenHttpException;
             }
         }
 
@@ -117,31 +137,36 @@
          * Updates an existing EndUser model.
          * If update is successful, the browser will be redirected to the 'view' page.
          * @param integer $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionUpdate($id)
         {
+            if (Yii::$app->user->can('updateEndUser', ['endUserId' => $id])) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
+                /**@var EndUser $model */
+                $model = $this->findModel($id);
 
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            /**@var EndUser $model */
-            $model = $this->findModel($id);
+                $request = Yii::$app->request->post();
 
-            $request = Yii::$app->request->post();
-
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->updateEndUser()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->updateEndUser()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        return $this->render('update-' . $user->role, [
+                                'model' => $model,
+                            ]);
+                    }
                 } else {
                     return $this->render('update-' . $user->role, [
                             'model' => $model,
-                    ]);
+                        ]);
                 }
+
             } else {
-                return $this->render('update-' . $user->role, [
-                        'model' => $model,
-                ]);
+                throw new ForbiddenHttpException;
             }
         }
 
@@ -153,7 +178,7 @@
          */
         public function actionList($fields = null)
         {
-            $endUsers = EndUser::find()->all();
+            $endUsers = $this->getEndUsersListForCurrentUser();
             $result = [];
 
             if ($fields) {
@@ -204,9 +229,29 @@
                         $out[] = $res;
                     }
                     echo Json::encode(['output' => $out, 'selected' => '']);
+
                     return;
                 }
             }
             echo Json::encode(['output' => '', 'selected' => '']);
+        }
+
+        /**
+         * Filters list of models which current user can see in the list
+         * returns only those ones which user "CAN" view
+         * condition is defined in access rule
+         *
+         * @return array
+         */
+        private function getEndUsersListForCurrentUser()
+        {
+            $filteredEndUser = [];
+            foreach (EndUser::find()->all() as $endUser) {
+                if (Yii::$app->user->can('viewEndUser', ['endUserId' => $endUser->id])) {
+                    $filteredEndUser[] = $endUser;
+                }
+            }
+
+            return $filteredEndUser;
         }
     }

@@ -22,6 +22,8 @@
      * @property DistributorCountry[] $distributorsCountries
      * @property Country[] $countries
      * @property PurchaseOrder[] $purchaseOrders
+     * @property EndUser[] $endUsers
+     * @property System[] $systems
      */
     class Distributor extends \yii\db\ActiveRecord
     {
@@ -73,15 +75,17 @@
                 'email'       => Yii::t('app', 'Email'),
                 'created_at'  => Yii::t('app', 'Created At'),
                 'updated_at'  => Yii::t('app', 'Updated At'),
-                'country_id' => Yii::t('app', 'Country'),
+                'country_id'  => Yii::t('app', 'Country'),
                 'countryName' => Yii::t('app', 'Country'),
+                'endUsers'    => Yii::t('app', 'End-Users'),
+                'systems'     => Yii::t('app', 'Systems'),
             ];
         }
 
         /**
          * @return \yii\db\ActiveQuery
          */
-        public function getPurcheseOrders()
+        public function getPurchaseOrders()
         {
             return $this->hasMany(PurchaseOrder::className(), ['distributor_id' => 'id']);
         }
@@ -97,6 +101,39 @@
         public function getDistributorsCountries()
         {
             return $this->hasMany(DistributorCountry::className(), ['distributor_id' => 'id']);
+        }
+
+        /**
+         * Returns array of end users assigned to purchase orders which belongs to this distributor
+         *
+         * @return EndUser[]|array
+         */
+        public function getEndUsers()
+        {
+            $endUsers = [];
+            $purchaseOrders = $this->purchaseOrders;
+            foreach ($purchaseOrders as $purchaseOrder) {
+                $endUsers[] = $purchaseOrder->endUser;
+            }
+
+            return $endUsers;
+        }
+
+        /**
+         * Returns array of systems assigned to purchase orders which belongs to this distributor
+         *
+         * @return System[]|array
+         */
+        public function getSystems()
+        {
+            $systems = [];
+            $purchaseOrders = $this->purchaseOrders;
+
+            foreach ($purchaseOrders as $purchaseOrder) {
+                $systems[] = $purchaseOrder->system;
+            }
+
+            return $systems;
         }
 
         /**
@@ -156,6 +193,7 @@
                 $this->user_id = $user->id;
                 if ($this->save()) {
                     $this->saveCountry();
+
                     return true;
                 }
             } else {
@@ -164,6 +202,7 @@
                         $this->addError($attribute, $error[0]);
                     }
                 }
+
                 return false;
             }
         }

@@ -9,6 +9,7 @@
     use app\models\Distributor;
     use yii\filters\AccessControl;
     use yii\web\Controller;
+    use yii\web\ForbiddenHttpException;
     use yii\web\NotFoundHttpException;
     use yii\filters\VerbFilter;
     use yii\helpers\Json;
@@ -61,54 +62,68 @@
 
         /**
          * Lists all Distributors models.
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionIndex()
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
+            if (Yii::$app->user->can('listDistributors')) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
 
-            return $this->render('index-' . $user->role);
+                return $this->render('index-' . $user->role);
 
+            } else {
+                throw new ForbiddenHttpException;
+            }
         }
 
         /**
          * Displays a single Distributors model.
          * @param integer $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionView($id)
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            $model = $this->findModel($id);
+            if (Yii::$app->user->can('viewDistributor', ['distributor_id' => $id])) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
+                $model = $this->findModel($id);
 
-            return $this->render('view-' . $user->role, ['model' => $model]);
-
+                return $this->render('view-' . $user->role, ['model' => $model]);
+            } else {
+                throw new ForbiddenHttpException;
+            }
         }
 
         /**
          * Creates a new Distributors model.
          * If creation is successful, the browser will be redirected to the 'view' page.
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionCreate()
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            /**@var Distributor $model */
-            $model = new Distributor();
+            if (Yii::$app->user->can('createDistributor')) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
+                /**@var Distributor $model */
+                $model = new Distributor();
 
-            $request = Yii::$app->request->post();
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->registerDistributor()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                $request = Yii::$app->request->post();
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->registerDistributor()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        return $this->render('create-' . $user->role, ['model' => $model]);
+                    }
                 } else {
                     return $this->render('create-' . $user->role, ['model' => $model]);
                 }
             } else {
-                return $this->render('create-' . $user->role, ['model' => $model]);
+                throw new ForbiddenHttpException;
             }
         }
 
@@ -116,27 +131,32 @@
          * Updates an existing Distributors model.
          * If update is successful, the browser will be redirected to the 'view' page.
          * @param integer $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionUpdate($id)
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            /**@var Distributor $model */
-            $model = $this->findModel($id);
+            if (Yii::$app->user->can('updateDistributor', ['distributorId' => $id])) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
+                /**@var Distributor $model */
+                $model = $this->findModel($id);
 
-            $request = Yii::$app->request->post();
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->updateDistributor()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                $request = Yii::$app->request->post();
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->updateDistributor()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        return $this->render('update-' . $user->role, ['model' => $model]);
+                    }
                 } else {
+                    $model->country_id = $model->getCountryId();
+
                     return $this->render('update-' . $user->role, ['model' => $model]);
                 }
             } else {
-                $model->country_id = $model->getCountryId();
-
-                return $this->render('update-' . $user->role, ['model' => $model]);
+                throw new ForbiddenHttpException;
             }
         }
 
@@ -148,7 +168,7 @@
          */
         public function actionList($fields = null)
         {
-            $distributors = Distributor::find()->all();
+            $distributors = $this->getDistributorsListForCurrentUser();
             $result = [];
             if ($fields) {
                 $specField = explode(",", $fields);
@@ -214,5 +234,24 @@
                 echo Json::encode(['output' => '', 'selected' => '']);
             }
 
+        }
+
+        /**
+         * Filters list of models which current user can see in the list
+         * returns only those ones which user "CAN" view
+         * condition is defined in access rule
+         *
+         * @return array
+         */
+        private function getDistributorsListForCurrentUser()
+        {
+            $filteredDistributors = [];
+            foreach (Distributor::find()->all() as $distributor) {
+                if (Yii::$app->user->can('viewDistributor', ['distributorId' => $distributor->id])) {
+                    $filteredDistributors[] = $distributor;
+                }
+            }
+
+            return $filteredDistributors;
         }
     }

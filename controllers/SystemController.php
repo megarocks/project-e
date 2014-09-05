@@ -14,6 +14,7 @@
     use yii\helpers\Json;
     use yii\web\BadRequestHttpException;
     use yii\web\Controller;
+    use yii\web\ForbiddenHttpException;
     use yii\web\NotFoundHttpException;
     use yii\filters\VerbFilter;
     use yii\web\UnauthorizedHttpException;
@@ -63,99 +64,131 @@
 
         /**
          * Lists all Systems models.
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionIndex()
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
+            if (Yii::$app->user->can('listSystems')) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
 
-            return $this->render('index-' . $user->role);
+                return $this->render('index-' . $user->role);
 
+            } else {
+                throw new ForbiddenHttpException;
+            }
         }
 
         /**
          * Displays a single Systems model.
          * @param integer $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionView($id)
         {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
+            if (Yii::$app->user->can('viewSystem', ['systemId' => $id])) {
+                /**@var User $user */
+                $user = Yii::$app->user->identity;
 
-            return $this->render('view-' . $user->role, [
-                    'model' => $this->findModel($id),
-                ]);
+                return $this->render('view-' . $user->role, [
+                        'model' => $this->findModel($id),
+                    ]);
+            } else {
+                throw new ForbiddenHttpException;
+            }
+
         }
 
         /**
          * Creates new system
          *
+         * @throws \yii\web\ForbiddenHttpException
          * @return string|\yii\web\Response
          */
         public function actionCreate()
         {
-            $request = Yii::$app->request->post();
-            $userRole = Yii::$app->user->identity->role;
+            if (Yii::$app->user->can('createSystem')) {
+                $request = Yii::$app->request->post();
+                $userRole = Yii::$app->user->identity->role;
 
-            /**@var $model System */
-            $model = new System();
+                /**@var $model System */
+                $model = new System();
 
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->registerSystem()) {
-                    return $this->redirect('/system/' . $model->id);
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->registerSystem()) {
+                        return $this->redirect('/system/' . $model->id);
+                    } else {
+                        return $this->render('create-' . $userRole, ['model' => $model]);
+                    }
                 } else {
                     return $this->render('create-' . $userRole, ['model' => $model]);
                 }
+
             } else {
-                return $this->render('create-' . $userRole, ['model' => $model]);
+                throw new ForbiddenHttpException;
             }
+
         }
 
         /**
          * Assigns System to Purchase Order
          *
          * @param $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return string|\yii\web\Response
          */
         public function actionAssign($id)
         {
-            $request = Yii::$app->request->post();
-            $model = new PoSystemModel();
-            $system = $this->findModel($id);
-            $model->system_sn = $system->sn;
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->assign()) {
-                    $this->redirect(['view', 'id' => $model->system->id]);
+            if (Yii::$app->user->can('assignSystem', ['systemId' => $id])) {
+                $request = Yii::$app->request->post();
+                $model = new PoSystemModel();
+                $system = $this->findModel($id);
+                $model->system_sn = $system->sn;
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->assign()) {
+                        $this->redirect(['view', 'id' => $model->system->id]);
+                    } else {
+                        return $this->render('assign-form', ['model' => $model]);
+                    }
                 } else {
                     return $this->render('assign-form', ['model' => $model]);
                 }
+
             } else {
-                return $this->render('assign-form', ['model' => $model]);
+                throw new ForbiddenHttpException;
             }
+
         }
 
         /**
          * Un-assigns system from purchase order
          *
          * @param $id
+         * @throws \yii\web\ForbiddenHttpException
          * @return \yii\web\Response
          */
         public function actionUnassign($id)
         {
-            /*@var $model System*/
-            $model = $this->findModel($id);
+            if (Yii::$app->user->can('unAssignSystem', ['systemId' => $id])) {
+                /*@var $model System*/
+                $model = $this->findModel($id);
 
-            $model->purchaseOrder->system_sn = null;
-            if ($model->purchaseOrder->save()) {
-                $model->resetLockingParams();
-                $model->save();
+                $model->purchaseOrder->system_sn = null;
+                if ($model->purchaseOrder->save()) {
+                    $model->resetLockingParams();
+                    $model->save();
+                }
+
+                return $this->redirect('/system/' . $model->id);
+
+            } else {
+                throw new ForbiddenHttpException;
             }
 
-            return $this->redirect('/system/' . $model->id);
         }
 
         /**
@@ -166,7 +199,7 @@
         public function actionList($fields = null)
         {
 
-            $systems = System::find()->all();
+            $systems = $this->getSystemsListForCurrentUser();
 
             $result = [];
 
@@ -213,16 +246,20 @@
          * This action is especially for endusers
          * It takes care to find out user system and display it on view
          *
+         * @throws \yii\web\ForbiddenHttpException
          * @return \yii\web\Response
          */
         public function actionViewSystem()
         {
-            $system = $this->findSystemForEndUser(Yii::$app->user->id);
+            if (Yii::$app->user->can('viewSystem')) {
+                $system = $this->findSystemForEndUser(Yii::$app->user->id);
 
-            if (!is_null($system)) {
-                $this->redirect(['view', 'id' => $system->id]);
+                if (!is_null($system)) {
+                    $this->redirect(['view', 'id' => $system->id]);
+                }
+            } else {
+                throw new ForbiddenHttpException;
             }
-
         }
 
         private function findSystemForEndUser($userId)
@@ -247,6 +284,25 @@
             }
 
             return $system;
+        }
+
+        /**
+         * Filters list of models which current user can see in the list
+         * returns only those ones which user "CAN" view
+         * condition is defined in access rule
+         *
+         * @return array
+         */
+        private function getSystemsListForCurrentUser()
+        {
+            $filteredSystems = [];
+            foreach (System::find()->all() as $system) {
+                if (Yii::$app->user->can('viewSystem', ['systemId' => $system->id])) {
+                    $filteredSystems[] = $system;
+                }
+            }
+
+            return $filteredSystems;
         }
 
     }
