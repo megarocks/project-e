@@ -75,8 +75,10 @@
                 return $this->goBack();
             } elseif ($visibleForm == 'code' && $codeLoginForm->load($request) && $codeLoginForm->login()) {
                 Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
+                $system = System::getByLoginCode($codeLoginForm->loginCode);
+                Yii::$app->session->set('systemId', $system->id);
 
-                return $this->redirect('/system/view-by-code');
+                return $this->redirect(['system/view', 'id' => $system->id]);
             } elseif ($visibleForm == 'forgot' && $forgotPasswordForm->load($request) && $forgotPasswordForm->validate()) {
                 $forgotPasswordForm->sendMailWithLink();
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Check your mailbox for instructions'));
