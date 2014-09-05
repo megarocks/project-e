@@ -4,7 +4,9 @@
 
     use app\helpers\PayPal;
     use app\models\CodeRequestForm;
+    use app\models\EndUser;
     use app\models\PoSystemModel;
+    use app\models\PurchaseOrder;
     use app\models\User;
     use Yii;
     use app\models\System;
@@ -35,7 +37,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'list', 'view-by-code', 'create', 'assign', 'unassign'],
+                            'actions' => ['index', 'view', 'list', 'view-system', 'create', 'assign', 'unassign'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -207,20 +209,44 @@
             echo(Json::encode($result));
         }
 
-        public function actionViewByCode()
+        /**
+         * This action is especially for endusers
+         * It takes care to find out user system and display it on view
+         *
+         * @return \yii\web\Response
+         */
+        public function actionViewSystem()
         {
-            $loginCode = Yii::$app->session->get('loginCode');
-            if (!is_null($loginCode)) {
-                $model = System::getByLoginCode($loginCode);
+            $system = $this->findSystemForEndUser(Yii::$app->user->id);
 
-                //D($model->lockingDates,true);
-                return $this->render('view-enduser', [
-                    'model' => $model,
-                    'po'    => $model->purchaseOrder,
-                ]);
-            } else {
-                throw new NotFoundHttpException;
+            if (!is_null($system)) {
+                $this->redirect(['view', 'id' => $system->id]);
             }
+
+        }
+
+        private function findSystemForEndUser($userId)
+        {
+            $system = null;
+
+            //find end user assigned to currently logged in user
+            /**
+             * @var $endUser EndUser
+             */
+            $endUser = EndUser::findOne(['user_id' => $userId]);
+
+            //find po assigned to EU
+            /**
+             * @var $po PurchaseOrder
+             */
+            if ($endUser) {
+                $po = $endUser->purchaseOrder;
+                if ($po) {
+                    $system = $po->system;
+                }
+            }
+
+            return $system;
         }
 
     }

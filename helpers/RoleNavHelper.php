@@ -59,7 +59,7 @@
                     'style' => 'top: 0px;',
                 ],
                 'items'   => [
-                    ['label' => Yii::t('app', 'System'), 'url' => ['/system/view-by-code']],
+                    ['label' => Yii::t('app', 'System'), 'url' => ['/system/view-system']],
                 ],
             ]);
         }

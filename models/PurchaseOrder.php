@@ -28,7 +28,7 @@
      * @property integer $end_user_id
      * @property integer $distributor_id
      * @property integer $country_id
-     * @property integer $currency_code
+     * @property string $currency_code
      * @property string $email
      * @property string $created_at
      * @property string $updated_at
@@ -100,8 +100,8 @@
                 'cmp'            => Yii::t('app', 'CMP (Customer Monthly Payment)'),
                 'dmp'            => Yii::t('app', 'DMP (Distributor Monthly Payment)'),
                 'npl'            => Yii::t('app', 'NPL (Number of payments left)'),
-                'dnpl' => Yii::t('app', 'DNPL (Distributor Number of payments left)'),
-                'cnpl' => Yii::t('app', 'CNPL (Customer Number of payments left)'),
+                'dnpl'           => Yii::t('app', 'DNPL (Distributor Number of payments left)'),
+                'cnpl'           => Yii::t('app', 'CNPL (Customer Number of payments left)'),
                 'ctpl'           => Yii::t('app', 'CTPL (Customer Total Payment Left)'),
                 'dtpl'           => Yii::t('app', 'DTPL (Distributor Total Payment Left)'),
                 'end_user_id'    => Yii::t('app', 'End-User'),

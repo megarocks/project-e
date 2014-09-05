@@ -15,7 +15,7 @@
      * @property string $email
      * @property integer $country_id
      *
-     * @property System[] $systems
+     * @property PurchaseOrder $purchaseOrder
      * @property User $user
      * @property Country $country
      *
@@ -84,6 +84,11 @@
         public function getSystems()
         {
             return $this->hasMany(System::className(), ['end_user_id' => 'id']);
+        }
+
+        public function getPurchaseOrder()
+        {
+            return $this->hasOne(PurchaseOrder::className(), ['end_user_id' => 'id']);
         }
 
         /**

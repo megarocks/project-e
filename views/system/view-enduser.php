@@ -8,22 +8,14 @@
     /* @var $model app\models\System */
     /**@var PurchaseOrder $po */
 
-    $this->title = "System #" . $model->sn . " management";
+    $this->title = Yii::t('app', 'System Details');
     $this->params['breadcrumbs'][] = $this->title;
-?>
-
-<?php
-    foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
-        echo '<div class="flash-' . $key . '">' . $message . '</div>';
-    }
 ?>
 
 <div class="systems-view">
     <p>
-        <?= Html::a(Yii::t('app', 'Request Code'), ['payment/request-code', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/purchase-code', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
-
-    <h3><?= Yii::t('app', 'System Details') ?> </h3>
 
     <div class="well">
         <?=
@@ -37,7 +29,7 @@
                     'next_lock_date',
                     [
                         'label' => Yii::t('app', 'Email'),
-                        'value' => $po->email,
+                        'value' => $model->purchaseOrder->email,
                     ],
                 ],
             ]) ?>
@@ -46,15 +38,16 @@
     <h3><?= Yii::t('app', 'Monetary details') ?> </h3>
     <?=
         DetailView::widget([
-            'model'      => $po,
+            'model'      => $model->purchaseOrder,
             'attributes' => [
                 'po_num',
+                'currency_code',
                 'csp',
                 'cpup',
                 'nop',
                 'ctpl',
                 'cmp',
-                'npl'
+                'cnpl',
             ],
         ]) ?>
 </div>
