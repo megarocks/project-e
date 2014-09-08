@@ -25,7 +25,7 @@
      * @property EndUser[] $endUsers
      * @property System[] $systems
      */
-    class Distributor extends \yii\db\ActiveRecord
+    class Distributor extends \yii\db\ActiveRecord implements PpdModelInterface
     {
         public $country_id; //temp  country id storage
 
@@ -180,7 +180,10 @@
             }
         }
 
-        public function registerDistributor()
+        /**
+         * @return boolean
+         */
+        public function saveModel()
         {
             $user = new User();
             $user->email = $this->email;
@@ -189,7 +192,7 @@
             $user->password_repeat = $user->password;
             $user->roleField = User::ROLE_DISTR;
 
-            if ($user->registerAccount()) {
+            if ($user->saveModel()) {
                 $this->user_id = $user->id;
                 if ($this->save()) {
                     $this->saveCountry();
@@ -207,7 +210,10 @@
             }
         }
 
-        public function updateDistributor()
+        /**
+         * @return boolean
+         */
+        public function updateModel()
         {
             if ($this->save()) {
                 $this->saveCountry();
@@ -216,5 +222,11 @@
             } else {
                 return false;
             }
+        }
+
+        public function afterFind()
+        {
+            parent::afterFind();
+            $this->country_id = $this->getCountryId();
         }
     }

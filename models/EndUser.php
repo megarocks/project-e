@@ -22,7 +22,7 @@
      * @property string $created_at
      * @property string $updated_at
      */
-    class EndUser extends ActiveRecord
+    class EndUser extends ActiveRecord implements PpdModelInterface
     {
         /**
          * @inheritdoc
@@ -52,9 +52,9 @@
         public function attributeLabels()
         {
             return [
-                'id'    => 'ID',
-                'title' => Yii::t('app', 'Title'),
-                'email' => Yii::t('app', 'Email'),
+                'id'         => 'ID',
+                'title'      => Yii::t('app', 'Title'),
+                'email'      => Yii::t('app', 'Email'),
                 'systems'    => Yii::t('app', 'Systems'),
                 'country'    => Yii::t('app', 'Country'),
                 'user'       => Yii::t('app', 'User'),
@@ -112,12 +112,9 @@
         }
 
         /**
-         * Creates end user record and registers related to it user account,
-         * which can be used to login into the system
-         *
-         * @return bool
+         * @return boolean
          */
-        public function registerEndUser()
+        public function saveModel()
         {
             if ($this->validate()) {
                 $user = new User();
@@ -127,7 +124,7 @@
                 $user->password_repeat = $user->password;
                 $user->roleField = User::ROLE_END_USER;
 
-                if ($user->registerAccount()) {
+                if ($user->saveModel()) {
                     $this->user_id = $user->id;
                     if ($this->save()) {
                         return true;
@@ -149,12 +146,10 @@
         }
 
         /**
-         * Updates end-user record. For now without touching associated user-account
-         * @return bool
+         * @return boolean
          */
-        public function updateEndUser()
+        public function updateModel()
         {
             return $this->save();
         }
-
     }

@@ -167,12 +167,10 @@
 
                 $model = $reflectionClass->newInstance();
 
-                $model->scenario = 'create';
-
                 $request = Yii::$app->request->post();
                 if (!empty($request)) {
                     $model->load($request);
-                    if ($model->saveData()) {
+                    if ($model->saveModel()) {
                         return $this->redirect(['view', 'id' => $model->id]);
                     } else {
                         return $this->render('create-' . $user->role, ['model' => $model]);
@@ -202,13 +200,12 @@
                 $user = Yii::$app->user->identity;
 
                 $model = $this->findModel($id);
-                $model->scenario = 'update';
 
                 $request = Yii::$app->request->post();
 
                 if (!empty($request)) {
                     $model->load($request);
-                    if ($model->updateData()) {
+                    if ($model->updateModel()) {
                         return $this->redirect(['view', 'id' => $model->id]);
                     } else {
                         return $this->render('update-' . $user->role, ['model' => $model]);
