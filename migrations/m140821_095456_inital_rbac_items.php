@@ -21,6 +21,9 @@
             //PERMISSIONS
 
             //Operations with users
+            $viewDashboard = $auth->createPermission('viewDashboard');
+            $viewDashboard->description = 'View Dashboard Screen';
+
             $listUsers = $auth->createPermission('listUsers');
             $listUsers->description = 'View Users List';
 
@@ -128,7 +131,6 @@
             $unAssignSystem = $auth->createPermission('unAssignSystem');
             $unAssignSystem->description = 'unAssignSystem System';
 
-
             //RULES
 
             $endUserAccessRule = new AccessToEndUserRule;
@@ -139,6 +141,8 @@
 
 
             //ADDING OPERATIONS
+            $auth->add($viewDashboard);
+
             $auth->add($listUsers);
             $auth->add($viewUser);
             $auth->add($createUser);
@@ -191,6 +195,7 @@
 
             //ASSIGNING OPERATIONS TO ROLES
             //root
+            $auth->addChild($endyMed, $viewDashboard);
             $auth->addChild($endyMed, $updateProfile);
 
             $auth->addChild($endyMed, $listUsers);
@@ -235,6 +240,7 @@
 
             //sales
             $auth->addChild($sales, $updateProfile);
+            $auth->addChild($sales, $viewDashboard);
 
             $auth->addChild($sales, $listEndUsers);
             $auth->addChild($sales, $createEndUser);
@@ -256,6 +262,7 @@
 
             //manufacturer
             $auth->addChild($manufacturer, $updateProfile);
+            $auth->addChild($manufacturer, $viewDashboard);
 
             $auth->addChild($manufacturer, $listSystems);
             $auth->addChild($manufacturer, $createSystem);
@@ -266,6 +273,7 @@
 
             //distributor
             $auth->addChild($distributor, $updateProfile);
+            $auth->addChild($distributor, $viewDashboard);
 
             $auth->addChild($distributor, $listEndUsers);
             $auth->addChild($distributor, $createEndUser);
@@ -277,6 +285,7 @@
 
             //end-user
             $auth->addChild($endUser, $updateProfile);
+            $auth->addChild($endUser, $viewDashboard);
             $auth->addChild($endUser, $viewSystem);
 
             $auth->addChild($endUser, $purchaseCode);

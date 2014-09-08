@@ -83,6 +83,7 @@
                 ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index'], 'permission' => 'listPurchaseOrders'],
                 ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index'], 'permission' => 'listPayments'],
                 ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index'], 'permission' => 'listSystems'],
+                ['label' => Yii::t('app', 'View System'), 'url' => ['/system/view-system'], 'permission' => 'viewSingleSystem'],
                 ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index'], 'permission' => 'listDistributors'],
                 ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index'], 'permission' => 'listEndUsers'],
                 ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index'], 'permission' => 'listUsers'],

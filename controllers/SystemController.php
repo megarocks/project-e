@@ -58,13 +58,13 @@
          * @throws \yii\web\ForbiddenHttpException
          * @return string|\yii\web\Response
          */
-        public function actionAssign($id)
+        public function actionAssign($system_id = null, $po_id = null)
         {
-            if (Yii::$app->user->can('assignSystem', ['systemId' => $id])) {
+            if (Yii::$app->user->can('assignSystem', ['systemId' => $system_id, 'poId' => $po_id])) {
                 $request = Yii::$app->request->post();
                 $model = new PoSystemModel();
-                $system = $this->findModel($id);
-                $model->system_sn = $system->sn;
+                /*                $system = $this->findModel($system_id);
+                                $model->system_sn = $system->sn;*/
                 if (!empty($request)) {
                     $model->load($request);
                     if ($model->assign()) {
@@ -160,13 +160,13 @@
          */
         public function actionViewSystem()
         {
-            if (Yii::$app->user->can('viewSystem')) {
+            if (Yii::$app->user->can('viewSingleSystem')) {
                 $system = $this->findSystemForEndUser(Yii::$app->user->id);
 
                 if (!is_null($system)) {
                     $this->redirect(['view', 'id' => $system->id]);
                 } else {
-                    throw new HttpException(200, Yii::t('app', 'System is not attached to your account yet'));
+                    throw new NotFoundHttpException(Yii::t('app', 'System is not attached to your account yet'));
                 }
             } else {
                 throw new ForbiddenHttpException;

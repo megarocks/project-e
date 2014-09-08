@@ -19,9 +19,9 @@
     <div class="system-form">
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'system_sn')->dropDownList([$model->system_sn => $model->system_sn], ['readonly' => true]) ?>
+        <?= $form->field($model, 'system_id')->dropDownList(ArrayHelper::map(System::find()->all(), 'id', 'sn')) ?>
 
-        <?= $form->field($model, 'po_num')->dropDownList(ArrayHelper::map(PurchaseOrder::findAll(['system_sn' => null]), 'po_num', 'po_num')) ?>
+        <?= $form->field($model, 'po_id')->dropDownList(ArrayHelper::map(PurchaseOrder::findAll(['system_sn' => null]), 'id', 'po_num')) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('app', 'Assign'), ['class' => 'btn btn-success']) ?>

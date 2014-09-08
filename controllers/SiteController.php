@@ -23,7 +23,7 @@
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['index', 'logout', 'password-reset', 'error'],
+                            'actions' => ['index', 'logout', 'password-reset', 'error', 'login'],
                             'allow'   => true,
                             'roles'   => ['@'],
                         ],
@@ -58,8 +58,7 @@
 
         public function actionIndex()
         {
-
-            if (Yii::$app->user->can('  ')) {
+            if (Yii::$app->user->can('viewDashboard')) {
                 return $this->render('index');
             } else {
                 throw new ForbiddenHttpException;

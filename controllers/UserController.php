@@ -58,7 +58,7 @@
 
                 if (!empty($request)) {
                     $model->load($request);
-                    if ($model->updateAccount()) {
+                    if ($model->updateModel()) {
                         Yii::$app->session->setFlash('success', Yii::t('app', 'Profile data has been updated successfully'));
                         $this->refresh();
                     } else {
