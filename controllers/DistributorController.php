@@ -40,7 +40,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'create', 'update', 'delete', 'list', 'dynamic'],
+                            'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic'],
                             'roles'   => ['@'],
                         ],
                     ],

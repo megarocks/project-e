@@ -72,20 +72,20 @@
             $deleteDistributor->description = 'Delete Distributor Account';
 
             //Operations with orders
-            $listOrders = $auth->createPermission('listOrders');
-            $listOrders->description = 'View Orders List';
+            $listPurchaseOrders = $auth->createPermission('listPurchaseOrders');
+            $listPurchaseOrders->description = 'View PurchaseOrders List';
 
-            $viewOrder = $auth->createPermission('viewOrder');
-            $viewOrder->description = 'View Order Details';
+            $viewPurchaseOrder = $auth->createPermission('viewPurchaseOrder');
+            $viewPurchaseOrder->description = 'View PurchaseOrder Details';
 
-            $createOrder = $auth->createPermission('createOrder');
-            $createOrder->description = 'Create Order';
+            $createPurchaseOrder = $auth->createPermission('createPurchaseOrder');
+            $createPurchaseOrder->description = 'Create PurchaseOrder';
 
-            $updateOrder = $auth->createPermission('updateOrder');
-            $updateOrder->description = 'Update Order';
+            $updatePurchaseOrder = $auth->createPermission('updatePurchaseOrder');
+            $updatePurchaseOrder->description = 'Update PurchaseOrder';
 
-            $deleteOrder = $auth->createPermission('deleteOrder');
-            $deleteOrder->description = 'Delete Order';
+            $deletePurchaseOrder = $auth->createPermission('deletePurchaseOrder');
+            $deletePurchaseOrder->description = 'Delete PurchaseOrder';
 
             //Operations with payments
             $listPayments = $auth->createPermission('listPayments');
@@ -158,11 +158,11 @@
             $auth->add($updateDistributor);
             $auth->add($deleteDistributor);
 
-            $auth->add($listOrders);
-            $auth->add($viewOrder);
-            $auth->add($createOrder);
-            $auth->add($updateOrder);
-            $auth->add($deleteOrder);
+            $auth->add($listPurchaseOrders);
+            $auth->add($viewPurchaseOrder);
+            $auth->add($createPurchaseOrder);
+            $auth->add($updatePurchaseOrder);
+            $auth->add($deletePurchaseOrder);
 
             $auth->add($listPayments);
             $auth->add($viewPayment);
@@ -220,11 +220,11 @@
             $auth->addChild($endyMed, $assignSystem);
             $auth->addChild($endyMed, $unAssignSystem);
 
-            $auth->addChild($endyMed, $listOrders);
-            $auth->addChild($endyMed, $createOrder);
-            $auth->addChild($endyMed, $viewOrder);
-            $auth->addChild($endyMed, $updateOrder);
-            $auth->addChild($endyMed, $deleteOrder);
+            $auth->addChild($endyMed, $listPurchaseOrders);
+            $auth->addChild($endyMed, $createPurchaseOrder);
+            $auth->addChild($endyMed, $viewPurchaseOrder);
+            $auth->addChild($endyMed, $updatePurchaseOrder);
+            $auth->addChild($endyMed, $deletePurchaseOrder);
 
             $auth->addChild($endyMed, $listPayments);
             $auth->addChild($endyMed, $createPayment);
@@ -248,11 +248,11 @@
             $auth->addChild($sales, $updateDistributor);
             $auth->addChild($sales, $deleteDistributor);
 
-            $auth->addChild($sales, $listOrders);
-            $auth->addChild($sales, $createOrder);
-            $auth->addChild($sales, $viewOrder);
-            $auth->addChild($sales, $updateOrder);
-            $auth->addChild($sales, $deleteOrder);
+            $auth->addChild($sales, $listPurchaseOrders);
+            $auth->addChild($sales, $createPurchaseOrder);
+            $auth->addChild($sales, $viewPurchaseOrder);
+            $auth->addChild($sales, $updatePurchaseOrder);
+            $auth->addChild($sales, $deletePurchaseOrder);
 
             //manufacturer
             $auth->addChild($manufacturer, $updateProfile);

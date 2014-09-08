@@ -40,11 +40,11 @@
                 $po = $this->purchaseOrder;
                 $po->system_sn = $this->system_sn;
 
-                if ($po->save()) {
+                if ($po->updateModel()) {
                     /*@var System $system */
                     $system = $po->system;
                     $system->generateLockingParams();
-                    $system->save();
+                    $system->updateModel();
 
                     return true;
                 }

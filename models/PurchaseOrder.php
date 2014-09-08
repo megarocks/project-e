@@ -40,7 +40,7 @@
      * @property Distributor $distributor
      * @property System $system
      */
-    class PurchaseOrder extends \yii\db\ActiveRecord
+    class PurchaseOrder extends \yii\db\ActiveRecord implements PpdModelInterface
     {
         /**
          * @inheritdoc
@@ -229,18 +229,23 @@
             return true;
         }
 
-        public function createPurchaseOrder()
+        /**
+         * @return boolean
+         */
+        public function saveModel()
         {
             $this->calculateValues(true);
 
             return $this->save();
         }
 
-        public function updatePurchaseOrder()
+        /**
+         * @return boolean
+         */
+        public function updateModel()
         {
             $this->calculateValues(false);
 
             return $this->save();
         }
-
     }
