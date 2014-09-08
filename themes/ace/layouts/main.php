@@ -57,7 +57,7 @@
 
 <div class="main-container" id="main-container">
     <div id="sidebar" class="sidebar responsive sidebar-fixed sidebar-scroll">
-        <?= RoleNavHelper::renderNav(Yii::$app->user->isGuest ? null : Yii::$app->user->identity->role) ?>
+        <?= RoleNavHelper::navigationMenu() ?>
     </div>
 
     <div class="main-content">
