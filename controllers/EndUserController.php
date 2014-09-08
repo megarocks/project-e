@@ -6,6 +6,7 @@
     use app\models\User;
     use Yii;
     use app\models\EndUser;
+    use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\helpers\Json;
     use yii\web\Controller;
@@ -178,7 +179,7 @@
          */
         public function actionList($fields = null)
         {
-            $endUsers = $this->getEndUsersListForCurrentUser();
+            $endUsers = $this->getModelsListForCurrentUser(EndUser::className());
             $result = [];
 
             if ($fields) {
@@ -237,21 +238,26 @@
         }
 
         /**
-         * Filters list of models which current user can see in the list
-         * returns only those ones which user "CAN" view
-         * condition is defined in access rule
+         * Checks access of current user to view model. If can - adds to result array
          *
+         * @param $modelClass ActiveRecord class
          * @return array
          */
-        private function getEndUsersListForCurrentUser()
+        private function getModelsListForCurrentUser($modelClass)
         {
-            $filteredEndUser = [];
-            foreach (EndUser::find()->all() as $endUser) {
-                if (Yii::$app->user->can('viewEndUser', ['endUserId' => $endUser->id])) {
-                    $filteredEndUser[] = $endUser;
+            /**
+             * @var $modelClass ActiveRecord
+             * @var $modelClassName string
+             */
+            $reflectionClass = new \ReflectionClass($modelClass);
+            $modelClassName = $reflectionClass->getShortName();
+            $filteredModels = [];
+            foreach ($modelClass::find()->all() as $model) {
+                if (Yii::$app->user->can('view' . $modelClassName, ['modelId' => $model->id])) {
+                    $filteredModels[] = $model;
                 }
             }
 
-            return $filteredEndUser;
+            return $filteredModels;
         }
     }

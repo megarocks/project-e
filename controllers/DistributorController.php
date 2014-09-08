@@ -7,6 +7,7 @@
     use app\models\User;
     use Yii;
     use app\models\Distributor;
+    use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\web\Controller;
     use yii\web\ForbiddenHttpException;
@@ -168,7 +169,7 @@
          */
         public function actionList($fields = null)
         {
-            $distributors = $this->getDistributorsListForCurrentUser();
+            $distributors = $this->getModelsListForCurrentUser(Distributor::className());
             $result = [];
             if ($fields) {
                 $specField = explode(",", $fields);
@@ -237,21 +238,26 @@
         }
 
         /**
-         * Filters list of models which current user can see in the list
-         * returns only those ones which user "CAN" view
-         * condition is defined in access rule
+         * Checks access of current user to view model. If can - adds to result array
          *
+         * @param $modelClass ActiveRecord class
          * @return array
          */
-        private function getDistributorsListForCurrentUser()
+        private function getModelsListForCurrentUser($modelClass)
         {
-            $filteredDistributors = [];
-            foreach (Distributor::find()->all() as $distributor) {
-                if (Yii::$app->user->can('viewDistributor', ['distributorId' => $distributor->id])) {
-                    $filteredDistributors[] = $distributor;
+            /**
+             * @var $modelClass ActiveRecord
+             * @var $modelClassName string
+             */
+            $reflectionClass = new \ReflectionClass($modelClass);
+            $modelClassName = $reflectionClass->getShortName();
+            $filteredModels = [];
+            foreach ($modelClass::find()->all() as $model) {
+                if (Yii::$app->user->can('view' . $modelClassName, ['modelId' => $model->id])) {
+                    $filteredModels[] = $model;
                 }
             }
 
-            return $filteredDistributors;
+            return $filteredModels;
         }
     }

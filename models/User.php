@@ -300,7 +300,7 @@
          *
          * @return bool
          */
-        public function registerAccount()
+        public function saveData()
         {
             $this->scenario = 'create';
             if ($this->validate()) {
@@ -336,7 +336,7 @@
          *
          * @return bool
          */
-        public function updateAccount()
+        public function updateData()
         {
             $this->scenario = 'update';
             if ($this->validate()) {

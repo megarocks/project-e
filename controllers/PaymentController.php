@@ -9,6 +9,7 @@
     use app\models\User;
     use Yii;
     use app\models\System;
+    use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\filters\VerbFilter;
     use yii\helpers\Json;
@@ -324,7 +325,7 @@
          */
         public function actionList($fields = null)
         {
-            $payments = $this->getPaymentsListForCurrentUser();
+            $payments = $this->getModelsListForCurrentUser(Payment::className());
             $result = [];
 
             if ($fields) {
@@ -359,22 +360,27 @@
         }
 
         /**
-         * Filters list of models which current user can see in the list
-         * returns only those ones which user "CAN" view
-         * condition is defined in access rule
+         * Checks access of current user to view model. If can - adds to result array
          *
+         * @param $modelClass ActiveRecord class
          * @return array
          */
-        private function getPaymentsListForCurrentUser()
+        private function getModelsListForCurrentUser($modelClass)
         {
-            $filteredPayments = [];
-            foreach (Payment::find()->all() as $payment) {
-                if (Yii::$app->user->can('viewPayment', ['paymentId' => $payment->id])) {
-                    $filteredPayments[] = $payment;
+            /**
+             * @var $modelClass ActiveRecord
+             * @var $modelClassName string
+             */
+            $reflectionClass = new \ReflectionClass($modelClass);
+            $modelClassName = $reflectionClass->getShortName();
+            $filteredModels = [];
+            foreach ($modelClass::find()->all() as $model) {
+                if (Yii::$app->user->can('view' . $modelClassName, ['modelId' => $model->id])) {
+                    $filteredModels[] = $model;
                 }
             }
 
-            return $filteredPayments;
+            return $filteredModels;
         }
 
     }

@@ -7,6 +7,7 @@
     use app\models\System;
     use app\models\User;
     use Yii;
+    use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\filters\VerbFilter;
     use yii\helpers\Json;
@@ -166,7 +167,7 @@
          */
         public function actionList($fields = null)
         {
-            $orders = $this->getOrdersListForCurrentUser();
+            $orders = $this->getModelsListForCurrentUser(PurchaseOrder::className());
             $result = [];
             //if fields are defined in request
             if (!is_null($fields)) {
@@ -235,22 +236,27 @@
         }
 
         /**
-         * Filters list of models which current user can see in the list
-         * returns only those ones which user "CAN" view
-         * condition is defined in access rule
+         * Checks access of current user to view model. If can - adds to result array
          *
+         * @param $modelClass ActiveRecord class
          * @return array
          */
-        private function getOrdersListForCurrentUser()
+        private function getModelsListForCurrentUser($modelClass)
         {
-            $filteredOrders = [];
-            foreach (PurchaseOrder::find()->all() as $order) {
-                if (Yii::$app->user->can('viewOrder', ['orderId' => $order->id])) {
-                    $filteredOrders[] = $order;
+            /**
+             * @var $modelClass ActiveRecord
+             * @var $modelClassName string
+             */
+            $reflectionClass = new \ReflectionClass($modelClass);
+            $modelClassName = $reflectionClass->getShortName();
+            $filteredModels = [];
+            foreach ($modelClass::find()->all() as $model) {
+                if (Yii::$app->user->can('view' . $modelClassName, ['modelId' => $model->id])) {
+                    $filteredModels[] = $model;
                 }
             }
 
-            return $filteredOrders;
+            return $filteredModels;
         }
 
     }
