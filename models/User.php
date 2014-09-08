@@ -308,7 +308,7 @@
         /**
          * @return boolean
          */
-        public function saveModel()
+        public function createModel()
         {
             $this->scenario = 'create';
             if ($this->validate()) {

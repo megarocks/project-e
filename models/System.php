@@ -171,7 +171,7 @@
         /**
          * @return boolean
          */
-        public function saveModel()
+        public function createModel()
         {
             if ($this->validate()) {
                 $this->status = static::STATUS_UNLOCKED;

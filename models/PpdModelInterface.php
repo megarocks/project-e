@@ -14,7 +14,7 @@
         /**
          * @return boolean
          */
-        public function saveModel();
+        public function createModel();
 
         /**
          * @return boolean

@@ -50,7 +50,7 @@
                 }
 
                 //check if requested end user id is in the the array
-                return in_array($params['endUserId'], $endUsers);
+                return in_array($params['modelId'], $endUsers);
 
             } elseif ($role == User::ROLE_SALES) {
                 //sales have access to all end users

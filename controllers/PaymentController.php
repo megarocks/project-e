@@ -22,8 +22,11 @@
     /**
      * PaymentController implements the actions related to payment operations.
      */
-    class PaymentController extends Controller
+    class PaymentController extends PpdBaseController
     {
+
+        public $modelName = 'app\models\Payment';
+
         public function behaviors()
         {
             return [
@@ -38,41 +41,6 @@
                     ],
                 ],
             ];
-        }
-
-        protected function findModel($id)
-        {
-            if (($model = Payment::findOne($id)) !== null) {
-                return $model;
-            } else {
-                throw new NotFoundHttpException('The requested page does not exist.');
-            }
-        }
-
-        public function actionIndex()
-        {
-            if (Yii::$app->user->can('listPayments')) {
-                /**@var User $user */
-                $user = Yii::$app->user->identity;
-
-                return $this->render('index-' . $user->role);
-            } else {
-                throw new ForbiddenHttpException;
-            }
-        }
-
-        public function actionView($id)
-        {
-            if (Yii::$app->user->can('viewPayment', ['paymentId' => $id])) {
-                /**@var $user User */
-                $user = Yii::$app->user->identity;
-                /**@var $payment Payment */
-                $payment = $this->findModel($id);
-
-                return $this->render('view-' . $user->role, ['model' => $payment]);
-            } else {
-                throw new ForbiddenHttpException;
-            }
         }
 
         /***
@@ -159,23 +127,6 @@
             } else {
                 throw new ForbiddenHttpException;
             }
-        }
-
-        public function actionDelete()
-        {
-            if (Yii::$app->user->can('deletePayment')) {
-                $request = Yii::$app->request->post();
-
-                if (!empty($request)) {
-                    $payment = $this->findModel($request['payment_id']);
-                    if ($payment->purchaseOrder->revokePayment($payment)) {
-                        $payment->delete();
-                    }
-                }
-            } else {
-                throw new ForbiddenHttpException;
-            }
-
         }
 
         /**
@@ -325,24 +276,15 @@
          */
         public function actionList($fields = null)
         {
-            $payments = $this->getModelsListForCurrentUser(Payment::className());
-            $result = [];
-
             if ($fields) {
-                $specifiedFields = explode(",", $fields);
-                /**@var $payment Payment */
-                foreach ($payments as $payment) {
-                    $p = null;
-                    foreach ($specifiedFields as $field) {
-                        if ($field != '') {
-                            $p[$field] = $payment[$field];
-                        }
-                    }
-                    if (!is_null($p)) {
-                        $result[] = $p;
-                    }
-                }
+                echo parent::actionList($fields);
+
+                return;
             } else {
+
+                $payments = $this->getModelsListForCurrentUser();
+                $result = [];
+
                 /**@var $payment Payment */
                 foreach ($payments as $payment) {
                     $eu['id'] = $payment->id;
@@ -357,30 +299,6 @@
                 }
             }
             echo(Json::encode($result));
-        }
-
-        /**
-         * Checks access of current user to view model. If can - adds to result array
-         *
-         * @param $modelClass ActiveRecord class
-         * @return array
-         */
-        private function getModelsListForCurrentUser($modelClass)
-        {
-            /**
-             * @var $modelClass ActiveRecord
-             * @var $modelClassName string
-             */
-            $reflectionClass = new \ReflectionClass($modelClass);
-            $modelClassName = $reflectionClass->getShortName();
-            $filteredModels = [];
-            foreach ($modelClass::find()->all() as $model) {
-                if (Yii::$app->user->can('view' . $modelClassName, ['modelId' => $model->id])) {
-                    $filteredModels[] = $model;
-                }
-            }
-
-            return $filteredModels;
         }
 
     }

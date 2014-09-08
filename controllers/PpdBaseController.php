@@ -170,7 +170,7 @@
                 $request = Yii::$app->request->post();
                 if (!empty($request)) {
                     $model->load($request);
-                    if ($model->saveModel()) {
+                    if ($model->createModel()) {
                         return $this->redirect(['view', 'id' => $model->id]);
                     } else {
                         return $this->render('create-' . $user->role, ['model' => $model]);

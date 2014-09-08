@@ -232,7 +232,7 @@
         /**
          * @return boolean
          */
-        public function saveModel()
+        public function createModel()
         {
             $this->calculateValues(true);
 

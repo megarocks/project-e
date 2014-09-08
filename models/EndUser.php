@@ -114,7 +114,7 @@
         /**
          * @return boolean
          */
-        public function saveModel()
+        public function createModel()
         {
             if ($this->validate()) {
                 $user = new User();
@@ -124,7 +124,7 @@
                 $user->password_repeat = $user->password;
                 $user->roleField = User::ROLE_END_USER;
 
-                if ($user->saveModel()) {
+                if ($user->createModel()) {
                     $this->user_id = $user->id;
                     if ($this->save()) {
                         return true;

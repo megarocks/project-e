@@ -183,7 +183,7 @@
         /**
          * @return boolean
          */
-        public function saveModel()
+        public function createModel()
         {
             $user = new User();
             $user->email = $this->email;
@@ -192,7 +192,7 @@
             $user->password_repeat = $user->password;
             $user->roleField = User::ROLE_DISTR;
 
-            if ($user->saveModel()) {
+            if ($user->createModel()) {
                 $this->user_id = $user->id;
                 if ($this->save()) {
                     $this->saveCountry();
