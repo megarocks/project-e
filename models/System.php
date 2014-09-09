@@ -23,7 +23,7 @@
      *
      * @property PurchaseOrder $purchaseOrder
      */
-    class System extends \yii\db\ActiveRecord
+    class System extends PpdBaseModel
     {
         const STATUS_UNLOCKED = "unlocked";
         const STATUS_ACTIVE = "active";
@@ -121,18 +121,6 @@
             $this->login_code = null;
         }
 
-        public function beforeSave($insert)
-        {
-            if (parent::beforeSave($insert)) {
-                if ($insert) {
-                    //$this->generateLockingParams();
-                }
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         public static function getByLoginCode($code)
         {
             return static::findOne(['login_code' => $code]);
@@ -180,7 +168,10 @@
             $this->save();
         }
 
-        public function registerSystem()
+        /**
+         * @return boolean
+         */
+        public function createModel()
         {
             if ($this->validate()) {
                 $this->status = static::STATUS_UNLOCKED;
@@ -191,4 +182,11 @@
             }
         }
 
+        /**
+         * @return boolean
+         */
+        public function updateModel()
+        {
+            return $this->save();
+        }
     }

@@ -15,38 +15,40 @@
      */
     class PoSystemModel extends Model
     {
-        public $po_num;
-        public $system_sn;
+
+        public $po_id;
+        public $system_id;
 
         public function  rules()
         {
             return [
-                [['po_num', 'system_sn'], 'required'],
-                [['po_num', 'system_sn'], 'integer']
+                [['po_id', 'system_id'], 'required'],
+                [['po_id', 'system_id'], 'integer']
             ];
         }
 
         public function attributeLabels()
         {
             return [
-                'po_num'    => Yii::t('app', 'PO# (Purchase Order Number)'),
-                'system_sn' => Yii::t('app', 'System SN'),
+                'system_id' => Yii::t('app', 'System SN'),
+                'po_id'     => Yii::t('app', 'Purchase Order #'),
             ];
         }
 
         public function assign()
         {
-            if ($this->system && $this->purchaseOrder) {
+            if (!is_null($this->system) && !is_null($this->purchaseOrder)) {
+                $system = $this->system;
                 $po = $this->purchaseOrder;
-                $po->system_sn = $this->system_sn;
 
-                if ($po->save()) {
-                    /*@var System $system */
-                    $system = $po->system;
+                $po->system_sn = $system->sn;
+                if ($po->updateModel()) {
                     $system->generateLockingParams();
-                    $system->save();
+                    $system->updateModel();
 
                     return true;
+                } else {
+                    return false;
                 }
             } else {
                 return false;
@@ -55,12 +57,12 @@
 
         public function getSystem()
         {
-            return System::findBySN($this->system_sn);
+            return System::findOne($this->system_id);
         }
 
         public function getPurchaseOrder()
         {
-            return PurchaseOrder::findOne(['po_num' => $this->po_num]);
+            return PurchaseOrder::findOne($this->po_id);
         }
 
     }

@@ -9,122 +9,27 @@
     class RoleNavHelper
     {
         /**
-         * Renders Nav widget with items accordingly to specified role
-         * @param null $role
-         * @return mixed
+         * Renders navigation menu with permitted menu items
+         *
+         * @return string
          */
-        public static function renderNav($role = null)
-        {
-            switch ($role) {
-                case User::ROLE_DISTR:
-                    return static::renderDistributorNav();
-                    break;
-                case User::ROLE_END_USER:
-                    return static::renderEndUserNav();
-                    break;
-                case User::ROLE_ENDY:
-                    return static::renderEndyMedNav();
-                    break;
-                case User::ROLE_MAN:
-                    return static::renderManufacturerNav();
-                    break;
-                case User::ROLE_SALES:
-                    return static::renderSalesNav();
-                    break;
-                default:
-                    return static::renderDefaultNav();
-            }
-        }
-
-        private static function renderDistributorNav()
+        public static function navigationMenu()
         {
             return Nav::widget([
                 'options' => [
                     'class' => 'nav nav-list',
                     'style' => 'top: 0px;',
                 ],
-                'items'   => [
-                    ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
-                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
-                ],
+                'items'   => static::permittedMenuItems()
             ]);
         }
 
-        private static function renderEndUserNav()
-        {
-            return Nav::widget([
-                'options' => [
-                    'class' => 'nav nav-list',
-                    'style' => 'top: 0px;',
-                ],
-                'items'   => [
-                    ['label' => Yii::t('app', 'System'), 'url' => ['/system/view-system']],
-                ],
-            ]);
-        }
-
-        private static function renderEndyMedNav()
-        {
-            return Nav::widget([
-                'options' => [
-                    'class' => 'nav nav-list',
-                    'style' => 'top: 0px;',
-                ],
-                'items'   => [
-                    ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
-                    ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index']],
-                    ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
-                    ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
-                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
-                    ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
-                ],
-
-            ]);
-        }
-
-        private static function renderManufacturerNav()
-        {
-            return Nav::widget([
-                'options' => [
-                    'class' => 'nav nav-list',
-                    'style' => 'top: 0px;',
-                ],
-                'items'   => [
-                    ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']],
-                ],
-            ]);
-        }
-
-        private static function renderSalesNav()
-        {
-            return Nav::widget([
-                'options' => [
-                    'class' => 'nav nav-list',
-                    'style' => 'top: 0px;',
-                ],
-                'items'   => [
-                    ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                    ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index']],
-                    ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index']],
-                    ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index']],
-                ],
-            ]);
-        }
-
-        private static function renderDefaultNav()
-        {
-            /*            return Nav::widget([
-                            'options' => ['class' => 'navbar-nav navbar-right'],
-                            'items'   => [
-                                ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index']],
-                            ],
-                        ]);*/
-        }
-
-
+        /**
+         * Renders profile menu dropdown items
+         *
+         * @param $isGuest
+         * @return string
+         */
         public static function profileMenu($isGuest)
         {
             return Nav::widget([
@@ -133,7 +38,7 @@
                     'role'  => 'navigation',
                 ],
                 'items'   => [
-                    static::getProfileMenuItems($isGuest)
+                    static::ProfileMenuItems($isGuest)
                 ]
             ]);
         }
@@ -144,7 +49,7 @@
          * @param $isGuest
          * @return array
          */
-        private static function getProfileMenuItems($isGuest)
+        private static function profileMenuItems($isGuest)
         {
             if (!$isGuest) {
                 $menuItems = [
@@ -166,5 +71,37 @@
             }
 
             return $menuItems;
+        }
+
+        /**
+         * @return array
+         */
+        private static function allMenuItems()
+        {
+            return [
+                ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index'], 'permission' => 'viewDashboard'],
+                ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index'], 'permission' => 'listPurchaseOrders'],
+                ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index'], 'permission' => 'listPayments'],
+                ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index'], 'permission' => 'listSystems'],
+                ['label' => Yii::t('app', 'View System'), 'url' => ['/system/view-system'], 'permission' => 'viewSingleSystem'],
+                ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index'], 'permission' => 'listDistributors'],
+                ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index'], 'permission' => 'listEndUsers'],
+                ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index'], 'permission' => 'listUsers'],
+            ];
+        }
+
+        /**
+         * @return array
+         */
+        private static function permittedMenuItems()
+        {
+            $permittedMenuItems = [];
+            foreach (static::allMenuItems() as $menuItem) {
+                if (Yii::$app->user->can($menuItem['permission'])) {
+                    array_push($permittedMenuItems, $menuItem);
+                }
+            }
+
+            return $permittedMenuItems;
         }
     }

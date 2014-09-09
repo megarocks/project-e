@@ -3,10 +3,13 @@
     namespace app\controllers;
 
     use app\models\User;
+    use yii\base\Model;
+    use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\filters\VerbFilter;
     use yii\helpers\Json;
     use yii\web\Controller;
+    use yii\web\ForbiddenHttpException;
     use yii\web\NotFoundHttpException;
     use yii\web\UnauthorizedHttpException;
     use Yii;
@@ -14,8 +17,10 @@
     /**
      *UserController implements CRUD actions for User model
      */
-    class UserController extends Controller
+    class UserController extends PpdBaseController
     {
+        public $modelName = 'app\models\User';
+
         public function behaviors()
         {
             return [
@@ -38,125 +43,35 @@
             ];
         }
 
-        protected function findModel($id)
-        {
-            if (($model = User::findOne($id)) !== null) {
-                return $model;
-            } else {
-                throw new NotFoundHttpException('The requested page does not exist.');
-            }
-        }
-
-        /**
-         * Renders view with list of users
-         *
-         * @return mixed
-         */
-        public function actionIndex()
-        {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-
-            return $this->render('index-' . $user->role);
-
-        }
-
-        /**
-         * Displays single User model view
-         *
-         * @param $id
-         * @return mixed
-         */
-        public function actionView($id)
-        {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            $model = $this->findModel($id);
-
-            return $this->render('view-' . $user->role, ['model' => $model]);
-
-        }
-
-        /**
-         * Displays user creation form
-         *
-         * @return string|\yii\web\Response
-         */
-        public function actionCreate()
-        {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-            /**@var User $model */
-            $model = new User();
-
-            $model->scenario = 'create';
-
-            $request = Yii::$app->request->post();
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->registerAccount()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    return $this->render('create-' . $user->role, ['model' => $model]);
-                }
-            } else {
-                return $this->render('create-' . $user->role, ['model' => $model]);
-            }
-        }
-
-        /**
-         * Displays user account update form
-         *
-         * @param $id
-         * @return mixed
-         */
-        public function actionUpdate($id)
-        {
-            /**@var User $user */
-            $user = Yii::$app->user->identity;
-
-            /**@var User $model */
-            $model = $this->findModel($id);
-            $model->scenario = 'update';
-
-            $request = Yii::$app->request->post();
-
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->updateAccount()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    return $this->render('update-' . $user->role, ['model' => $model]);
-                }
-            } else {
-                return $this->render('update-' . $user->role, ['model' => $model]);
-            }
-        }
-
         /**
          * Displays own profile update form
          *
+         * @throws \yii\web\ForbiddenHttpException
          * @return mixed
          */
         public function actionProfile()
         {
-            $model = $this->findModel(Yii::$app->user->id);
-            $model->scenario = 'update';
-            $request = Yii::$app->request->post();
+            if (Yii::$app->user->can('updateProfile')) {
+                $model = $this->findModel(Yii::$app->user->id);
+                $model->scenario = 'update';
+                $request = Yii::$app->request->post();
 
-            if (!empty($request)) {
-                $model->load($request);
-                if ($model->updateAccount()) {
-                    Yii::$app->session->setFlash('success', Yii::t('app', 'Profile data has been updated successfully'));
-                    $this->refresh();
+                if (!empty($request)) {
+                    $model->load($request);
+                    if ($model->updateModel()) {
+                        Yii::$app->session->setFlash('success', Yii::t('app', 'Profile data has been updated successfully'));
+                        $this->refresh();
+                    } else {
+                        return $this->render('own-profile', ['model' => $model]);
+                    }
+
                 } else {
                     return $this->render('own-profile', ['model' => $model]);
                 }
 
             } else {
-                return $this->render('own-profile', ['model' => $model]);
+                throw new ForbiddenHttpException;
             }
-
         }
 
         /**
@@ -166,24 +81,15 @@
          */
         public function actionList($fields = null)
         {
-            $users = User::find()->all();
-            $result = [];
-
             if ($fields) {
-                $specifiedFields = explode(",", $fields);
-                /**@var $user User */
-                foreach ($users as $user) {
-                    $u = null;
-                    foreach ($specifiedFields as $field) {
-                        if ($field != '') {
-                            $u[$field] = $user[$field];
-                        }
-                    }
-                    if (!is_null($u)) {
-                        $result[] = $u;
-                    }
-                }
+                echo parent::actionList($fields);
+
+                return;
             } else {
+                $className = $this->modelName;
+                $users = $className::findAllFiltered();
+                $result = [];
+
                 /** @var User $user */
                 foreach ($users as $user) {
                     $u['id'] = $user->id;
@@ -194,7 +100,9 @@
                     $u['created_at'] = date('M j Y', strtotime($user->created_at));
                     $result[] = $u;
                 }
+                echo(Json::encode($result));
             }
-            echo(Json::encode($result));
         }
+
     }
+

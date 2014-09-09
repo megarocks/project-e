@@ -23,7 +23,7 @@
      *
      * @property PurchaseOrder $purchaseOrder
      */
-    class Payment extends \yii\db\ActiveRecord
+    class Payment extends PpdBaseModel
     {
         //source of information regards payment
         const METHOD_PAYPAL = 'paypal';
@@ -117,5 +117,21 @@
             $this->from = $paymentDetails['CUSTOM'];
 
             return true;
+        }
+
+        /**
+         * @return boolean
+         */
+        public function createModel()
+        {
+            return $this->save();
+        }
+
+        /**
+         * @return boolean
+         */
+        public function updateModel()
+        {
+            return $this->save();
         }
     }

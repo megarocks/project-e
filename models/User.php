@@ -28,7 +28,7 @@
      * @property string $password_repeat
      *
      */
-    class User extends ActiveRecord implements IdentityInterface
+    class User extends PpdBaseModel implements IdentityInterface
     {
         const ROLE_SALES = 'sales';
         const ROLE_MAN = 'manufacturer';
@@ -294,13 +294,21 @@
             return !is_null($system) ? true : false;
         }
 
+        public static function findByPasswordResetToken($token)
+        {
+            return $user = static::findOne(['password_reset_token' => $token]);
+        }
+
+        public function regeneratePasswordResetToken()
+        {
+            $this->password_reset_token = Yii::$app->security->generateRandomString();
+            $this->save();
+        }
+
         /**
-         * Created new user account
-         * Generates hashes for all needed fields
-         *
-         * @return bool
+         * @return boolean
          */
-        public function registerAccount()
+        public function createModel()
         {
             $this->scenario = 'create';
             if ($this->validate()) {
@@ -331,12 +339,9 @@
         }
 
         /**
-         * Updates user account.
-         * In case when password have been provided on update form  - password hash will be updated also
-         *
-         * @return bool
+         * @return boolean
          */
-        public function updateAccount()
+        public function updateModel()
         {
             $this->scenario = 'update';
             if ($this->validate()) {
@@ -347,21 +352,5 @@
 
                 return $this->save();
             }
-        }
-
-        public function afterSave($insert, $changedAttributes)
-        {
-            parent::afterSave($insert, $changedAttributes);
-        }
-
-        public static function findByPasswordResetToken($token)
-        {
-            return $user = static::findOne(['password_reset_token' => $token]);
-        }
-
-        public function regeneratePasswordResetToken()
-        {
-            $this->password_reset_token = Yii::$app->security->generateRandomString();
-            $this->save();
         }
     }

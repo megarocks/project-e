@@ -4,7 +4,7 @@
 (function () {
     var ctrlName = "purchase-order"; //define controller name here
     $(document).ready(function () {
-        $('#systems-po-table').dataTable({
+        $('#po-table').dataTable({
             "deferRender": true,
             "ajax": {
                 "url": '/' + ctrlName + '/list?fields=id,created_at,po_num,system_sn',
@@ -13,16 +13,13 @@
             "columns": [
                 {data: "created_at"},
                 {data: "po_num"},
-                {data: "system_sn"}
-            ],
-            "columnDefs": [
+                {data: "system_sn"},
                 {
-                    "targets": 3,
                     "data": "id",
                     "render": function (id) {
-                        return '<a href="/' + ctrlName + '/view/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
-                            '<a href="/' + ctrlName + '/update?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>'
-                    }
+                        return '<a href="/' + ctrlName + '/view/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ';
+                    },
+                    "sortable": false
                 }
             ]
         });

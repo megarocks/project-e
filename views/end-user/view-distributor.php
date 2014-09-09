@@ -6,7 +6,7 @@
     /* @var $this yii\web\View */
     /* @var $model app\models\EndUser */
 
-    $this->title = $model->title;
+    $this->title = Yii::t('app', 'End-User Details');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'End Users'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
 ?>

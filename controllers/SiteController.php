@@ -11,6 +11,7 @@
     use yii\filters\AccessControl;
     use yii\web\Controller;
     use yii\filters\VerbFilter;
+    use yii\web\ForbiddenHttpException;
     use yii\web\NotFoundHttpException;
 
     class SiteController extends Controller
@@ -22,7 +23,7 @@
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['index', 'logout', 'password-reset', 'error'],
+                            'actions' => ['index', 'logout', 'password-reset', 'error', 'login'],
                             'allow'   => true,
                             'roles'   => ['@'],
                         ],
@@ -57,7 +58,11 @@
 
         public function actionIndex()
         {
-            return $this->render('index');
+            if (Yii::$app->user->can('viewDashboard')) {
+                return $this->render('index');
+            } else {
+                throw new ForbiddenHttpException;
+            }
         }
 
         public function actionLogin($visibleForm = 'credentials')
