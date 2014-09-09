@@ -25,7 +25,7 @@
      * @property EndUser[] $endUsers
      * @property System[] $systems
      */
-    class Distributor extends \yii\db\ActiveRecord implements PpdModelInterface
+    class Distributor extends PpdBaseModel
     {
         public $country_id; //temp  country id storage
 

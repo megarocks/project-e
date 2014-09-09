@@ -22,7 +22,7 @@
      * @property string $created_at
      * @property string $updated_at
      */
-    class EndUser extends ActiveRecord implements PpdModelInterface
+    class EndUser extends PpdBaseModel
     {
         /**
          * @inheritdoc

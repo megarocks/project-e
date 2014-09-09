@@ -61,10 +61,9 @@
 
                 return;
             } else {
-
-                $distributors = $this->getModelsListForCurrentUser();
+                $className = $this->modelName;
+                $distributors = $className::findAllFiltered();
                 $result = [];
-
                 /**@var Distributor $distributor */
                 foreach ($distributors as $distributor) {
                     $d['id'] = $distributor->id;

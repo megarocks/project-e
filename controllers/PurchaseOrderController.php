@@ -60,10 +60,9 @@
 
                 return;
             } else {
-
-                $orders = $this->getModelsListForCurrentUser();
+                $className = $this->modelName;
+                $orders = $className::findAllFiltered();
                 $result = [];
-
                 /** @var $order PurchaseOrder */
                 foreach ($orders as $order) {
                     $o['id'] = $order->id;

@@ -281,10 +281,9 @@
 
                 return;
             } else {
-
-                $payments = $this->getModelsListForCurrentUser();
+                $className = $this->modelName;
+                $payments = $className::findAllFiltered();
                 $result = [];
-
                 /**@var $payment Payment */
                 foreach ($payments as $payment) {
                     $eu['id'] = $payment->id;

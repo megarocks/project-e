@@ -57,8 +57,8 @@
 
                 return;
             } else {
-
-                $endUsers = $this->getModelsListForCurrentUser();
+                $className = $this->modelName;
+                $endUsers = $className::findAllFiltered();
                 $result = [];
 
                 /**@var $endUser EndUser */

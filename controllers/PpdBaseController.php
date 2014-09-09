@@ -9,6 +9,7 @@
     namespace app\controllers;
 
 
+    use app\models\PpdBaseModel;
     use yii\base\Exception;
     use yii\db\ActiveRecord;
     use yii\helpers\Json;
@@ -25,28 +26,8 @@
      */
     class PpdBaseController extends Controller
     {
+
         public $modelName;
-
-        /**
-         * Checks access of current user to view model. If can - adds to result array
-         *
-         * @internal param \yii\db\ActiveRecord $modelClass class
-         * @return array
-         */
-        protected function getModelsListForCurrentUser()
-        {
-            $reflectionClass = new \ReflectionClass($this->modelName);
-            $modelClassFulName = $reflectionClass->getName();
-            $modelClassName = $reflectionClass->getShortName();
-            $filteredModels = [];
-            foreach ($modelClassFulName::find()->all() as $model) {
-                if (Yii::$app->user->can('view' . $modelClassName, ['modelId' => $model->id])) {
-                    $filteredModels[] = $model;
-                }
-            }
-
-            return $filteredModels;
-        }
 
         /**
          * Returns json array with models
@@ -57,9 +38,13 @@
          */
         public function actionList($fields)
         {
+            /**
+             * @var $className PpdBaseModel
+             */
+            $className = $this->modelName;
             $result = [];
             if ($fields) {
-                $models = $this->getModelsListForCurrentUser();
+                $models = $className::findAllFiltered();
 
                 $specField = explode(",", $fields);
 

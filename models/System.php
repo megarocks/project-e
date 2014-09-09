@@ -23,7 +23,7 @@
      *
      * @property PurchaseOrder $purchaseOrder
      */
-    class System extends \yii\db\ActiveRecord implements PpdModelInterface
+    class System extends PpdBaseModel
     {
         const STATUS_UNLOCKED = "unlocked";
         const STATUS_ACTIVE = "active";

@@ -124,8 +124,8 @@
 
                 return;
             } else {
-
-                $systems = $this->getModelsListForCurrentUser();
+                $className = $this->modelName;
+                $systems = $className::findAllFiltered();
                 $result = [];
                 /**@var System $system */
                 foreach ($systems as $system) {

@@ -40,7 +40,7 @@
      * @property Distributor $distributor
      * @property System $system
      */
-    class PurchaseOrder extends \yii\db\ActiveRecord implements PpdModelInterface
+    class PurchaseOrder extends PpdBaseModel
     {
         /**
          * @inheritdoc

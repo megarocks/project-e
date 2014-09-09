@@ -28,7 +28,7 @@
      * @property string $password_repeat
      *
      */
-    class User extends ActiveRecord implements IdentityInterface, PpdModelInterface
+    class User extends PpdBaseModel implements IdentityInterface
     {
         const ROLE_SALES = 'sales';
         const ROLE_MAN = 'manufacturer';

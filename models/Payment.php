@@ -23,7 +23,7 @@
      *
      * @property PurchaseOrder $purchaseOrder
      */
-    class Payment extends \yii\db\ActiveRecord implements PpdModelInterface
+    class Payment extends PpdBaseModel
     {
         //source of information regards payment
         const METHOD_PAYPAL = 'paypal';
