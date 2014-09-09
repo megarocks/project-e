@@ -131,15 +131,6 @@
             $unAssignSystem = $auth->createPermission('unAssignSystem');
             $unAssignSystem->description = 'unAssignSystem System';
 
-            //RULES
-
-            $endUserAccessRule = new AccessToEndUserRule;
-            $auth->add($endUserAccessRule);
-            $viewEndUser->ruleName = $endUserAccessRule->name;
-            $updateEndUser->ruleName = $endUserAccessRule->name;
-            $deleteEndUser->ruleName = $endUserAccessRule->name;
-
-
             //ADDING OPERATIONS
             $auth->add($viewDashboard);
 
