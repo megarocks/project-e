@@ -21,7 +21,10 @@
             'attributes' => [
                 'title',
                 'email:email',
-                'countryName',
+                [
+                    'label' => Yii::t('app', 'Country'),
+                    'value' => $model->country->name,
+                ],
             ],
         ]) ?>
 

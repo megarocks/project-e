@@ -15,7 +15,7 @@
      * @property int $country_id;
      * @property string $created_at
      * @property string $updated_at
-     * @property string $countryName;
+     * @property Country $country;
      *
      * @property string $email
      *
@@ -61,6 +61,22 @@
                 [['email'], 'email'],
                 [['email'], 'unique'],
                 [['country_id', 'created_at', 'updated_at', 'user_id', 'title'], 'safe']
+            ];
+        }
+
+        public function fields()
+        {
+            return [
+                'id', 'title', 'email',
+                'country'    => function () {
+                        return (isset($this->country)) ? $this->country->name : null;
+                    },
+                'created_at' => function () {
+                        return date('M j Y h:i A', strtotime($this->created_at));
+                    },
+                'updated_at' => function () {
+                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                    }
             ];
         }
 
@@ -144,9 +160,9 @@
             return $this->hasMany(Country::className(), ['id_countries' => 'country_id'])->viaTable('distributors_countries', ['distributor_id' => 'id']);
         }
 
-        public function getCountryName()
+        public function getCountry()
         {
-            return isset($this->countries[0]) ? $this->countries[0]->name : null; //TODO Distributors possibly will have more than one country
+            return isset($this->countries[0]) ? $this->countries[0] : null; //TODO Distributors possibly will have more than one country
         }
 
         public function getCountryId()

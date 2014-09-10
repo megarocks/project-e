@@ -46,6 +46,22 @@
             ];
         }
 
+        public function fields()
+        {
+            return [
+                'id', 'title', 'email',
+                'country'    => function () {
+                        return (isset($this->country)) ? $this->country->name : null;
+                    },
+                'created_at' => function () {
+                        return date('M j Y h:i A', strtotime($this->created_at));
+                    },
+                'updated_at' => function () {
+                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                    }
+            ];
+        }
+
         /**
          * @inheritdoc
          */

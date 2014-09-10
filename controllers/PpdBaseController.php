@@ -36,18 +36,18 @@
          * @param $fields
          * @return string
          */
-        public function actionList($fields)
+        public function actionList($fields = null)
         {
             /**
              * @var $className PpdBaseModel
              */
             $className = $this->modelName;
+
+            $models = $className::findAllFiltered();
+
             $result = [];
             if ($fields) {
-                $models = $className::findAllFiltered();
-
                 $specField = explode(",", $fields);
-
                 foreach ($models as $model) {
                     $m = null;
                     foreach ($specField as $field) {
@@ -64,8 +64,11 @@
                         $result[] = $m;
                     }
                 }
+            } else {
+                foreach ($models as $model) {
+                    $result[] = $model->toArray();
+                }
             }
-
             return (Json::encode($result));
         }
 

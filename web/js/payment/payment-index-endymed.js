@@ -12,7 +12,7 @@
                 {data: "po_num"},
                 {data: "periods"},
                 {data: "amount"},
-                {data: "currency"},
+                {data: "currency_code"},
                 {data: "payer_email"},
                 {data: "method"},
                 {

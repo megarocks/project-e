@@ -112,45 +112,6 @@
         }
 
         /**
-         * Returns json array with list of systems
-         *
-         * @param string|null $fields
-         * @return string
-         */
-        public function actionList($fields = null)
-        {
-            if ($fields) {
-                echo parent::actionList($fields);
-
-                return;
-            } else {
-                $className = $this->modelName;
-                $systems = $className::findAllFiltered();
-                $result = [];
-                /**@var System $system */
-                foreach ($systems as $system) {
-                    $s['id'] = $system->id;
-                    $s['sn'] = $system->sn;
-                    $s['status'] = $system->status;
-                    $s['po_num'] = isset($system->purchaseOrder) ? $system->purchaseOrder->po_num : null;
-                    $s['next_lock_date'] = isset($system->next_lock_date) ? date('M d, Y', strtotime($system->next_lock_date)) : null;
-                    $s['init_lock_date'] = isset($system->init_lock_date) ? date('M d, Y', strtotime($system->init_lock_date)) : null;
-                    $s['current_code'] = $system->current_code;
-                    $s['login_code'] = $system->login_code;
-                    $s['dtpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->dtpl : null;
-                    $s['ctpl'] = isset($system->purchaseOrder) ? $system->purchaseOrder->ctpl : null;
-                    $s['created_at'] = date('M d, Y h:i A', strtotime($system->created_at));
-                    $s['updated_at'] = date('M d, Y h:i A', strtotime($system->created_at));
-                    $s['country'] = isset($system->purchaseOrder) ? $system->purchaseOrder->country : null;
-                    $s['distributor'] = isset($system->purchaseOrder) ? $system->purchaseOrder->distributor : null;
-                    $s['endUser'] = isset($system->purchaseOrder) ? $system->purchaseOrder->endUser : null;
-                    $result[] = $s;
-                }
-                echo(Json::encode($result));
-            }
-        }
-
-        /**
          * This action is especially for endusers
          * It takes care to find out user system and display it on view
          *

@@ -22,6 +22,7 @@
     <table id="distributors-table" class="table-hover">
         <thead>
         <tr>
+            <th>Registered At</th>
             <th>Title</th>
             <th>Email</th>
             <th>Country</th>

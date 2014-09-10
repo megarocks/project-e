@@ -74,35 +74,5 @@
             }
         }
 
-        /**
-         * Returns json array of user accounts
-         *
-         * return string
-         */
-        public function actionList($fields = null)
-        {
-            if ($fields) {
-                echo parent::actionList($fields);
-
-                return;
-            } else {
-                $className = $this->modelName;
-                $users = $className::findAllFiltered();
-                $result = [];
-
-                /** @var User $user */
-                foreach ($users as $user) {
-                    $u['id'] = $user->id;
-                    $u['first_name'] = $user->first_name;
-                    $u['last_name'] = $user->last_name;
-                    $u['email'] = $user->email;
-                    $u['role'] = $user->getRole();
-                    $u['created_at'] = date('M j Y', strtotime($user->created_at));
-                    $result[] = $u;
-                }
-                echo(Json::encode($result));
-            }
-        }
-
     }
 
