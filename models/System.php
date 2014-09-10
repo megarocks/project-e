@@ -69,6 +69,44 @@
             ];
         }
 
+        public function fields()
+        {
+            return [
+                'id', 'sn', 'status', 'current_code', 'login_code',
+                'po_num'         => function () {
+                        return isset($this->purchaseOrder) ? $this->purchaseOrder->po_num : null;
+                    },
+                'next_lock_date' => function () {
+                        return isset($this->next_lock_date) ? date('M d, Y', strtotime($this->next_lock_date)) : null;
+                    },
+                'init_lock_date' => function () {
+                        return isset($this->init_lock_date) ? date('M d, Y', strtotime($this->init_lock_date)) : null;
+                    },
+                'dtpl'           => function () {
+                        return isset($this->purchaseOrder) ? $this->purchaseOrder->dtpl : null;
+                    },
+                'ctpl'           => function () {
+                        return isset($this->purchaseOrder) ? $this->purchaseOrder->ctpl : null;
+                    },
+                'country'        => function () {
+                        return isset($this->purchaseOrder) ? $this->purchaseOrder->country : null;
+                    },
+                'distributor'    => function () {
+                        return isset($this->purchaseOrder) ? $this->purchaseOrder->distributor : null;
+                    },
+                'endUser'        => function () {
+                        return isset($this->purchaseOrder) ? $this->purchaseOrder->endUser : null;
+                    },
+                'created_at'     => function () {
+                        return date('M j Y h:i A', strtotime($this->created_at));
+                    },
+                'updated_at'     => function () {
+                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                    }
+
+            ];
+        }
+
         /**
          * @inheritdoc
          */

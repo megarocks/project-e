@@ -268,36 +268,4 @@
             }
         }
 
-        /**
-         * Returns json array with list of payments
-         *
-         * @param null $fields
-         * @return string
-         */
-        public function actionList($fields = null)
-        {
-            if ($fields) {
-                echo parent::actionList($fields);
-
-                return;
-            } else {
-                $className = $this->modelName;
-                $payments = $className::findAllFiltered();
-                $result = [];
-                /**@var $payment Payment */
-                foreach ($payments as $payment) {
-                    $eu['id'] = $payment->id;
-                    $eu['po_num'] = $payment->po_num;
-                    $eu['amount'] = $payment->amount;
-                    $eu['periods'] = $payment->periods;
-                    $eu['currency'] = $payment->currency_code;
-                    $eu['payer_email'] = $payment->payer_email;
-                    $eu['method'] = $payment->method;
-                    $eu['created_at'] = date('M d, Y h:i A', strtotime($payment->created_at));
-                    $result[] = $eu;
-                }
-            }
-            echo(Json::encode($result));
-        }
-
     }

@@ -45,36 +45,6 @@
         }
 
         /**
-         * Returns json array with list of endUsers
-         *
-         * @param null $fields
-         * @return string
-         */
-        public function actionList($fields = null)
-        {
-            if ($fields) {
-                echo parent::actionList($fields);
-
-                return;
-            } else {
-                $className = $this->modelName;
-                $endUsers = $className::findAllFiltered();
-                $result = [];
-
-                /**@var $endUser EndUser */
-                foreach ($endUsers as $endUser) {
-                    $eu['id'] = $endUser->id;
-                    $eu['title'] = $endUser->title;
-                    $eu['email'] = $endUser->email;
-                    $eu['country'] = isset($endUser->country) ? $endUser->country->name : null;
-                    $eu['created_at'] = date('M d, Y h:i A', strtotime($endUser->created_at));
-                    $result[] = $eu;
-                }
-            }
-            echo(Json::encode($result));
-        }
-
-        /**
          * Returns json string with endUsers filtered by country
          * used for dependent dropdowns
          */

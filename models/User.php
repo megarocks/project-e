@@ -103,6 +103,19 @@
             ];
         }
 
+        public function fields()
+        {
+            return [
+                'id', 'first_name', 'last_name', 'email', 'role',
+                'created_at' => function () {
+                        return date('M j Y h:i A', strtotime($this->created_at));
+                    },
+                'updated_at' => function () {
+                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                    }
+            ];
+        }
+
         /**
          * @inheritdoc
          */

@@ -11,6 +11,7 @@
                 "dataSrc": ""
             },
             "columns": [
+                {data: "created_at"},
                 {data: "title"},
                 {data: "email"},
                 {data: "country"},

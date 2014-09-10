@@ -49,34 +49,6 @@
         }
 
         /**
-         * Returns json array with distributors
-         *
-         * @param null $fields gives capability to specify required fields. If null will return default set
-         * @return string
-         */
-        public function actionList($fields = null)
-        {
-            if ($fields) {
-                echo parent::actionList($fields);
-
-                return;
-            } else {
-                $className = $this->modelName;
-                $distributors = $className::findAllFiltered();
-                $result = [];
-                /**@var Distributor $distributor */
-                foreach ($distributors as $distributor) {
-                    $d['id'] = $distributor->id;
-                    $d['title'] = $distributor->title;
-                    $d['email'] = $distributor->email;;
-                    $d['country'] = $distributor->countryName;
-                    $result[] = $d;
-                }
-            }
-            echo(Json::encode($result));
-        }
-
-        /**
          * Get country specified in "dependent dropdown"
          * Returns json encoded list of distributors assigned to the specified country
          *
