@@ -21,9 +21,13 @@
                     "render": function (id) {
                         return '<a href="/' + ctrlName + '/view/' + id + '" title="View Details" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
                             '<a href="/' + ctrlName + '/update?id=' + id + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-remove"></span></a>';
-                    }
+                    },
+                    "class": "text-center"
 
                 }
+            ],
+            "order": [
+                [ 0, "desc" ]
             ]
         });
     });

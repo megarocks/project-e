@@ -16,15 +16,14 @@
                 {data: "next_lock_date"},
                 {data: "current_code"},
                 {data: "ctpl"},
-                {data: "npl"}
-            ],
-            "columnDefs": [
+                {data: "npl"},
                 {
-                    "targets": 7,
                     "data": "id",
+                    "sortable": false,
                     "render": function (id) {
                         return '<a href="/system/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-cog"></span></a> '
-                    }
+                    },
+                    "class": "text-center"
                 }
             ]
         });

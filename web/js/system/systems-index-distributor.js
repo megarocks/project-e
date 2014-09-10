@@ -29,8 +29,12 @@
                     "orderable": false,
                     "render": function (id) {
                         return '<a href="/system/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-cog"></span></a> '
-                    }
+                    },
+                    "class": "text-center"
                 }
+            ],
+            "order": [
+                [ 5, "asc" ]
             ]
         });
     });

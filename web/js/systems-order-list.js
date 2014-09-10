@@ -13,17 +13,19 @@
             "columns": [
                 {data: "created_at"},
                 {data: "po_num"},
-                {data: "system_sn"}
-            ],
-            "columnDefs": [
+                {data: "system_sn"},
                 {
-                    "targets": 3,
                     "data": "id",
+                    "sortable": false,
                     "render": function (id) {
                         return '<a href="/' + ctrlName + '/view-order/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
                             '<a href="/' + ctrlName + '/update-order?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>'
-                    }
+                    },
+                    "class": "text-center"
                 }
+            ],
+            "order": [
+                [ 0, "desc" ]
             ]
         });
     });

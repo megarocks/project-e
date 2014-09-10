@@ -21,8 +21,12 @@
                         return '<a href="/' + ctrlName + '/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
                             '<a href="/' + ctrlName + '/update?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a> ';
                     },
-                    "sortable": false
+                    "orderable": false,
+                    "class": "text-center"
                 }
+            ],
+            "order": [
+                [ 0, "desc" ]
             ]
         });
     });

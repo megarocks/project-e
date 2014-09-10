@@ -19,8 +19,12 @@
                     "render": function (id) {
                         return '<a href="/' + ctrlName + '/view/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ';
                     },
-                    "sortable": false
+                    "orderable": false,
+                    "class": "text-center"
                 }
+            ],
+            "order": [
+                [ 0, "desc" ]
             ]
         });
     });
