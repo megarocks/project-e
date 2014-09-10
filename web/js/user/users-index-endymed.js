@@ -1,7 +1,4 @@
-/**
- * Created by rocks on 8/14/14.
- */
-(function () {
+var initScreen = function (user) {
     var ctrlName = "user"; //define controller name here
     $(document).ready(function () {
         $('#users-table').dataTable({
@@ -20,8 +17,7 @@
                     "data": "id",
                     "sortable": false,
                     "render": function (id) {
-                        return '<a href="/' + ctrlName + '/view/' + id + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> ' +
-                            '<a href="/' + ctrlName + '/update?id=' + id + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>'
+                        return actionIcons(user, id);
                     },
                     "class": "text-center"
                 }
@@ -31,4 +27,18 @@
             ]
         });
     });
-}());
+
+    function actionIcons(user, entryId) {
+        var iconsHtmlString = "";
+        if (user.can('view') + ctrlName.capitalize) {
+            iconsHtmlString += '<a href="/' + ctrlName + '/' + entryId + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>&nbsp';
+        }
+        if (user.can('update') + ctrlName.capitalize) {
+            iconsHtmlString += '<a href="/' + ctrlName + '/update?id=' + entryId + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp';
+        }
+        if (user.can('delete') + ctrlName.capitalize) {
+            iconsHtmlString += '<a href="/' + ctrlName + '/delete?id=' + entryId + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-trash"></span></a>';
+        }
+        return iconsHtmlString;
+    }
+}

@@ -9,9 +9,12 @@
     use app\models\User;
     use Yii;
     use yii\filters\AccessControl;
+    use yii\helpers\ArrayHelper;
+    use yii\helpers\Json;
     use yii\web\Controller;
     use yii\filters\VerbFilter;
     use yii\web\ForbiddenHttpException;
+    use yii\web\MethodNotAllowedHttpException;
     use yii\web\NotFoundHttpException;
 
     class SiteController extends Controller
@@ -23,12 +26,12 @@
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['index', 'logout', 'password-reset', 'error', 'login'],
+                            'actions' => ['index', 'logout', 'password-reset', 'error', 'login', 'permissions-json'],
                             'allow'   => true,
                             'roles'   => ['@'],
                         ],
                         [
-                            'actions' => ['login', 'login-by-code', 'forgot-password', 'password-reset'],
+                            'actions' => ['login', 'login-by-code', 'forgot-password', 'password-reset', 'permissions-json'],
                             'allow'   => true,
                             'roles'   => ['?']
                         ]
@@ -114,6 +117,19 @@
                 $this->redirect('user/profile');
             } else {
                 throw new NotFoundHttpException;
+            }
+        }
+
+        public function actionPermissionsJson()
+        {
+            if (Yii::$app->request->isPost) {
+                if (!Yii::$app->user->isGuest) {
+                    echo Json::encode(array_keys(Yii::$app->authManager->getPermissionsByUser(Yii::$app->user->id)));
+                } else {
+                    echo Json::encode([]);
+                }
+            } else {
+                throw new MethodNotAllowedHttpException;
             }
         }
     }
