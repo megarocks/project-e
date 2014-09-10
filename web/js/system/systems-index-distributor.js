@@ -38,13 +38,13 @@ var initScreen = function (user) {
 
     function actionIcons(user, entryId) {
         var iconsHtmlString = "";
-        if (user.can('view') + ctrlName.capitalize) {
+        if (user.can('view' + ctrlName.capitalize())) {
             iconsHtmlString += '<a href="/' + ctrlName + '/' + entryId + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>&nbsp';
         }
-        if (user.can('update') + ctrlName.capitalize) {
+        if (user.can('update' + ctrlName.capitalize())) {
             iconsHtmlString += '<a href="/' + ctrlName + '/update?id=' + entryId + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp';
         }
-        if (user.can('delete') + ctrlName.capitalize) {
+        if (user.can('delete' + ctrlName.capitalize())) {
             iconsHtmlString += '<a href="/' + ctrlName + '/delete?id=' + entryId + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-trash"></span></a>';
         }
         return iconsHtmlString;

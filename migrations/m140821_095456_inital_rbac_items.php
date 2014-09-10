@@ -237,19 +237,16 @@
             $auth->addChild($sales, $createEndUser);
             $auth->addChild($sales, $viewEndUser);
             $auth->addChild($sales, $updateEndUser);
-            $auth->addChild($sales, $deleteEndUser);
 
             $auth->addChild($sales, $listDistributors);
             $auth->addChild($sales, $createDistributor);
             $auth->addChild($sales, $viewDistributor);
             $auth->addChild($sales, $updateDistributor);
-            $auth->addChild($sales, $deleteDistributor);
 
             $auth->addChild($sales, $listPurchaseOrders);
             $auth->addChild($sales, $createPurchaseOrder);
             $auth->addChild($sales, $viewPurchaseOrder);
             $auth->addChild($sales, $updatePurchaseOrder);
-            $auth->addChild($sales, $deletePurchaseOrder);
 
             //manufacturer
             $auth->addChild($manufacturer, $updateProfile);
@@ -259,7 +256,6 @@
             $auth->addChild($manufacturer, $createSystem);
             $auth->addChild($manufacturer, $updateSystem);
             $auth->addChild($manufacturer, $viewSystem);
-            $auth->addChild($manufacturer, $deleteSystem);
             $auth->addChild($manufacturer, $assignSystem);
 
             //distributor
