@@ -18,7 +18,7 @@ $(document)
     .on('click', '.delete-button', function (event) {
         event.preventDefault();
 
-        var requestLink = $(this).parent().attr('requestlink');
+        var requestLink = $(this).parent().attr('requestlink') || $(this).attr('requestLink');
         bootbox.confirm("Are You Sure?", function (result) {
             if (result) {
                 $.post(requestLink);

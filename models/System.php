@@ -233,6 +233,10 @@
          */
         public function deleteModel()
         {
-            return $this->delete();
+            if (!is_null($this->purchaseOrder)) {
+                return false;
+            } else {
+                return $this->delete();
+            }
         }
     }

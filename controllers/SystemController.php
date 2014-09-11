@@ -54,8 +54,10 @@
         /**
          * Assigns System to Purchase Order
          *
-         * @param $id
+         * @param null $system_id
+         * @param null $po_id
          * @throws \yii\web\ForbiddenHttpException
+         * @internal param $id
          * @return string|\yii\web\Response
          */
         public function actionAssign($system_id = null, $po_id = null)
@@ -68,7 +70,7 @@
                 if (!empty($request)) {
                     $model->load($request);
                     if ($model->assign()) {
-                        $this->redirect(['view', 'id' => $model->system->id]);
+                        return $this->goBack();
                     } else {
                         return $this->render('assign-form', ['model' => $model]);
                     }
@@ -103,8 +105,7 @@
                     }
                 }
 
-                return $this->redirect(['view', 'id' => $model->id]);
-
+                return $this->goBack();
             } else {
                 throw new ForbiddenHttpException;
             }

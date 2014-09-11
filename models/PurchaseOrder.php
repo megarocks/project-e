@@ -34,7 +34,7 @@
      * @property string $updated_at
      * @property integer $system_sn
      *
-     *
+     * @property Payment[] $payments
      * @property EndUser $endUser
      * @property Country $country
      * @property Distributor $distributor
@@ -174,6 +174,11 @@
             return $this->hasOne(System::className(), ['sn' => 'system_sn']);
         }
 
+        public function getPayments()
+        {
+            return $this->hasMany(Payment::className(), ['po_num' => 'po_num']);
+        }
+
         private function calculateValues($initial = true)
         {
             if ($initial) {
@@ -273,6 +278,12 @@
          */
         public function deleteModel()
         {
-            return $this->delete();
+            if (count($this->payments) > 0) {
+                return false;
+            } elseif (!is_null($this->system)) {
+                return false;
+            } else {
+                return $this->delete();
+            }
         }
     }

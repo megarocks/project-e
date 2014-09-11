@@ -2,6 +2,7 @@
 
     use app\models\PurchaseOrder;
     use yii\helpers\Html;
+    use yii\helpers\Url;
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
@@ -12,13 +13,17 @@
     $this->title = "System #" . $model->sn . " management";
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
+
+    Yii::$app->user->setReturnUrl(Url::to());
 ?>
 
 <div class="systems-view">
     <p>
+        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (!isset($po)) : ?>
             <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
+            <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
 
         <?php endif; ?>
         <?php if (isset($po)) : ?>

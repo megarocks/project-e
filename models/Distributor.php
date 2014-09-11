@@ -185,17 +185,6 @@
             }
         }
 
-        public function beforeDelete()
-        {
-            if (parent::beforeDelete()) {
-                DistributorCountry::deleteAll(['distributor_id' => $this->id]);
-
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         /**
          * @return boolean
          */
@@ -251,6 +240,12 @@
          */
         public function deleteModel()
         {
-            return $this->delete();
+            if ($this->delete()) {
+                DistributorCountry::deleteAll(['distributor_id' => $this->id]);
+
+                return true;
+            } else {
+                return false;
+            }
         }
     }

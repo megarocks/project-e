@@ -153,6 +153,7 @@
          */
         public function deleteModel()
         {
+            //TODO Implement Payment Revoke logic
             return $this->delete();
         }
     }
