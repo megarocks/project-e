@@ -15,20 +15,9 @@
 
 <div class="user-view">
     <p>
-        <?php
-            echo Html::a(Yii::t('app', 'View All'),
-                ['index'],
-                ['class' => 'btn btn-default']);
-            echo "&nbsp";
-            echo Html::a(Yii::t('app', 'Update'),
-                ['update', 'id' => $model->id],
-                ['class' => 'btn btn-primary']);
-            echo "&nbsp";
-            echo Html::a(Yii::t('app', 'Delete'),
-                ['#'],
-                ['class'       => 'btn btn-danger delete-button',
-                 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]);
-        ?>
+        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
     </p>
 
     <?=
