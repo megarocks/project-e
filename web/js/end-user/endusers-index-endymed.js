@@ -15,7 +15,11 @@ var initScreen = function (user) {
             {
                 "data": "id",
                 "render": function (id) {
-                    return actionIcons(user, id);
+                    return actionIcons(user, id, {
+                        "view": true,
+                        "update": true,
+                        "delete": true
+                    });
                 },
                 "orderable": false,
                 "class": "text-center"
@@ -26,16 +30,16 @@ var initScreen = function (user) {
         ]
     });
 
-    function actionIcons(user, entryId) {
+    function actionIcons(user, entryId, options) {
         var iconsHtmlString = "";
-        if (user.can('viewEndUser')) {
+        if ((options.view) && (user.can('viewEndUser'))) {
             iconsHtmlString += '<a href="/' + ctrlName + '/' + entryId + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>&nbsp';
         }
-        if (user.can('updateEndUser')) {
+        if ((options.update) && (user.can('updateEndUser'))) {
             iconsHtmlString += '<a href="/' + ctrlName + '/update?id=' + entryId + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp';
         }
-        if (user.can('deleteEndUser')) {
-            iconsHtmlString += '<a href="/' + ctrlName + '/delete?id=' + entryId + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-trash"></span></a>';
+        if ((options.delete) && (user.can('deleteEndUser'))) {
+            iconsHtmlString += '<a href="#" title="Delete" requestLink="/' + ctrlName + '/delete/' + entryId + '"><span class="delete-button glyphicon glyphicon-trash"></span></a>';
         }
         return iconsHtmlString;
     }

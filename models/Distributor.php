@@ -245,4 +245,12 @@
             parent::afterFind();
             $this->country_id = $this->getCountryId();
         }
+
+        /**
+         * @return boolean
+         */
+        public function deleteModel()
+        {
+            return $this->delete();
+        }
     }

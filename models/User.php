@@ -366,4 +366,12 @@
                 return $this->save();
             }
         }
+
+        /**
+         * @return boolean
+         */
+        public function deleteModel()
+        {
+            return $this->delete();
+        }
     }

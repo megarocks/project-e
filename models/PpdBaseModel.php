@@ -19,6 +19,8 @@
 
         abstract public function updateModel();
 
+        abstract public function deleteModel();
+
         /**
          * Returns array of models which are visible for current user
          *

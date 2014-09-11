@@ -43,7 +43,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'list', 'view-system', 'create', 'assign', 'unassign'],
+                            'actions' => ['index', 'view', 'list', 'view-system', 'create', 'assign', 'unassign', 'delete', 'update'],
                             'roles'   => ['@'],
                         ],
                     ],
