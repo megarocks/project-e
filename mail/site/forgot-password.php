@@ -3,6 +3,7 @@
     use yii\helpers\Html;
 
     /**@var $user User */
+    $passwordResetUrl = \yii\helpers\Url::toRoute(['/site/password-reset', 'password_reset_token' => urlencode($user->password_reset_token)], true);
 ?>
 
 <p>Dear <?= $user->first_name ?>,</p>
@@ -11,8 +12,7 @@
 </p>
 <p>
     <?=
-        Html::a('http://localhost:8890/site/password-reset?password_reset_token=' . urlencode($user->password_reset_token),
-            'http://localhost:8890/site/password-reset?password_reset_token=' . urlencode($user->password_reset_token));
+        Html::a($passwordResetUrl, $passwordResetUrl);
     ?>
 </p>
 <p>
