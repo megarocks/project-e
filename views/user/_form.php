@@ -19,7 +19,7 @@
 
     <?=
         $form->field($model, 'roleField')->dropDownList([
-            User::ROLE_ENDY     => Yii::t('app', 'Administrator'),
+            User::ROLE_ENDY     => Yii::t('app', 'Endymed User'),
             User::ROLE_DISTR    => Yii::t('app', 'Distributor'),
             User::ROLE_SALES    => Yii::t('app', 'Sales'),
             User::ROLE_MAN      => Yii::t('app', 'Manufacturer'),

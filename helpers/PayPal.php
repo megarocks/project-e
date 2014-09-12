@@ -10,6 +10,7 @@
 
 
     use Exception;
+    use yii\helpers\Url;
     use yii\log\Logger;
     use Yii;
 
@@ -89,8 +90,8 @@
         public function getToken($codeParams)
         {
             $callbackUrlParams = [
-                'RETURNURL' => 'http://localhost:8890/payment/success?system_sn=' . $codeParams['system_sn'],
-                'CANCELURL' => 'http://localhost:8890/payment/cancel?system_sn=' . $codeParams['system_sn'],
+                'RETURNURL' => Url::toRoute(['/payment/success', 'system_sn' => $codeParams['system_sn']], true),
+                'CANCELURL' => Url::toRoute(['/payment/cancel', 'system_sn' => $codeParams['system_sn']], true),
             ];
 
             $orderParams = [
