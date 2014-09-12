@@ -17,6 +17,7 @@
 
 <div class="systems-view">
     <p>
+        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (!isset($po)) : ?>
 
         <?php endif; ?>

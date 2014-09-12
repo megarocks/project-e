@@ -16,8 +16,10 @@
 
 <div class="systems-view">
     <p>
+        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (!isset($po) && Yii::$app->user->can('assignSystem')) : ?>
             <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
         <?php if (isset($po) && Yii::$app->user->can('unAssignSystem')) : ?>
             <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>

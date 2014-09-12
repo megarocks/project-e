@@ -32,6 +32,7 @@
             'js/ace/ace.js',
             'js/ace-elements.min.js',
             'js/ace-extra.min.js',
+            'js/bootbox.min.js',
         ];
         public $depends = [
             'yii\web\YiiAsset',

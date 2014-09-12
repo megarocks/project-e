@@ -38,7 +38,11 @@ var initScreen = function (user) {
                 "data": "id",
                 "orderable": false,
                 "render": function (id) {
-                    return actionIcons(user, id);
+                    return actionIcons(user, id, {
+                        "view": true,
+                        "update": false,
+                        "delete": false
+                    });
                 },
                 "class": "text-center"
 
@@ -49,16 +53,16 @@ var initScreen = function (user) {
         ]
     });
 
-    function actionIcons(user, entryId) {
+    function actionIcons(user, entryId, options) {
         var iconsHtmlString = "";
-        if (user.can('viewPurchaseOrder')) {
+        if ((options.view) && (user.can('viewPurchaseOrder'))) {
             iconsHtmlString += '<a href="/' + ctrlName + '/' + entryId + '" title="View" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>&nbsp';
         }
-        if (user.can('updatePurchaseOrder')) {
+        if ((options.update) && (user.can('updatePurchaseOrder'))) {
             iconsHtmlString += '<a href="/' + ctrlName + '/update?id=' + entryId + '" title="Update" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp';
         }
-        if (user.can('deletePurchaseOrder')) {
-            iconsHtmlString += '<a href="/' + ctrlName + '/delete?id=' + entryId + '" title="Delete" data-pjax="0"><span class="glyphicon glyphicon-trash"></span></a>';
+        if ((options.delete) && (user.can('deletePurchaseOrder'))) {
+            iconsHtmlString += '<a href="#" title="Delete" requestLink="/' + ctrlName + '/delete/' + entryId + '"><span class="delete-button glyphicon glyphicon-trash"></span></a>';
         }
         return iconsHtmlString;
     }

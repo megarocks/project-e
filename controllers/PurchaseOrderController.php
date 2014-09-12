@@ -38,7 +38,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic-currency'],
+                            'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic-currency', 'delete'],
                             'roles'   => ['@'],
                         ],
                     ],

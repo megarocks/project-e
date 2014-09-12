@@ -2,6 +2,7 @@
 
     use app\models\User;
     use yii\helpers\Html;
+    use yii\helpers\Url;
     use yii\widgets\DetailView;
 
     /**@var $this yii\web\View */
@@ -14,20 +15,9 @@
 
 <div class="user-view">
     <p>
-        <?=
-            Html::a(Yii::t('app', 'Update'),
-                ['update', 'id' => $model->id],
-                ['class' => 'btn btn-primary']);
-
-            Html::a(Yii::t('app', 'Delete'),
-                ['delete', 'id' => $model->id],
-                ['class' => 'btn btn-primary',
-                 'data'  => [
-                     'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                     'method'  => 'post',
-                 ],
-                ]);
-        ?>
+        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
     </p>
 
     <?=

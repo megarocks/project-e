@@ -227,4 +227,16 @@
         {
             return $this->save();
         }
+
+        /**
+         * @return boolean
+         */
+        public function deleteModel()
+        {
+            if (!is_null($this->purchaseOrder)) {
+                return false;
+            } else {
+                return $this->delete();
+            }
+        }
     }

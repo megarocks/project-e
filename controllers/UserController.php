@@ -35,7 +35,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'list', 'view', 'create', 'update', 'profile'],
+                            'actions' => ['index', 'list', 'view', 'create', 'update', 'profile', 'delete'],
                             'roles'   => ['@'],
                         ],
                     ],

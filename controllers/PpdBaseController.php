@@ -69,6 +69,7 @@
                     $result[] = $model->toArray();
                 }
             }
+
             return (Json::encode($result));
         }
 
@@ -202,6 +203,33 @@
                     return $this->render('update-' . $user->role, ['model' => $model]);
                 }
 
+            } else {
+                throw new ForbiddenHttpException;
+            }
+        }
+
+        /**
+         * Performs logic to delete model
+         * @param $id
+         * @return \yii\web\Response
+         * @throws \yii\web\ForbiddenHttpException
+         */
+        public function actionDelete($id)
+        {
+            $reflectionClass = new \ReflectionClass($this->modelName);
+            $modelClassShortName = $reflectionClass->getShortName();
+
+            if (Yii::$app->user->can('delete' . $modelClassShortName, ['modelId' => $id])) {
+                $model = $this->findModel($id);
+                if ($model->deleteModel()) {
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Entry was deleted successfully'));
+
+                    return $this->redirect(['index']);
+                } else {
+                    Yii::$app->session->setFlash('danger', Yii::t('app', "Something went wrong while deleting entry. It wasn't deleted"));
+
+                    return $this->refresh();
+                }
             } else {
                 throw new ForbiddenHttpException;
             }

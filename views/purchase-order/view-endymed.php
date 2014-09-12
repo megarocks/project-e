@@ -1,6 +1,7 @@
 <?php
 
     use yii\helpers\Html;
+    use yii\helpers\Url;
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
@@ -10,19 +11,21 @@
     $this->title = Yii::t('app', 'Purchase Order Details');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
+
+    Yii::$app->user->setReturnUrl(Url::to());
 ?>
 
 <div class="po-view">
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <!--<?/*=
-            Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data'  => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                    'method'  => 'post',
-                ],
-            ]) */?> -->
+        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
+        <?php if (is_null($model->system)) : ?>
+            <?= Html::a(Yii::t('app', 'Assign to System'), ['system/assign', 'po_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
+        <?php endif; ?>
+        <?php if (!is_null($model->system)) : ?>
+            <?= Html::a(Yii::t('app', 'Unassign from System'), ['system/unassign', 'id' => $model->system->id], ['class' => 'btn btn-danger']) ?>
+        <?php endif; ?>
     </p>
 
     <?=
