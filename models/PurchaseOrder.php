@@ -112,7 +112,7 @@
                 'id'             => 'ID',
                 'po_num'         => Yii::t('app', 'PO# (Purchase Order Number)'),
                 'cpup'           => Yii::t('app', 'CPUP (Customer Payment Upon Purchase)'),
-                'dpup' => Yii::t('app', 'DPUP (Distributor Payment Upon Purchase)'),
+                'dpup'           => Yii::t('app', 'DPUP (Distributor Payment Upon Purchase)'),
                 'dsp'            => Yii::t('app', 'DSP (Distributor System Price)'),
                 'csp'            => Yii::t('app', 'CSP (Customer System Price)'),
                 'nop'            => Yii::t('app', 'NOP (Number of payments in plan)'),

@@ -99,3 +99,7 @@ div.required label:after {
 #credentials-box > div > div.toolbar.clearfix > div {
     width: 100%;
 }
+
+table.dataTable thead .sorting {
+    background: none !important;
+}
