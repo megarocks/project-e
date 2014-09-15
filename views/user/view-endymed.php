@@ -22,7 +22,7 @@
 
     <?=
         DetailView::widget([
-            'model'      => $model,
+            'model' => $model->toArray(),
             'attributes' => [
                 'role',
                 'first_name',
@@ -32,7 +32,5 @@
                 'updated_at'
             ]
         ])
-
-
     ?>
 </div>
