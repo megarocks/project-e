@@ -26,13 +26,13 @@
         <thead>
         <tr>
             <th><?= Yii::t('app', 'Added at') ?></th>
-            <th><?= Yii::t('app', 'PO#') ?></th>
+            <th><?= Yii::t('app', 'PO# (Purchase Order Number)') ?></th>
             <th><?= Yii::t('app', 'System SN') ?></th>
-            <th><?= Yii::t('app', 'CTPL') ?></th>
-            <th><?= Yii::t('app', 'DTPL') ?></th>
-            <th><?= Yii::t('app', 'NOP') ?></th>
-            <th><?= Yii::t('app', 'CNPL') ?></th>
-            <th><?= Yii::t('app', 'DNPL') ?></th>
+            <th><?= Yii::t('app', 'CTPL (Customer Total Payment Left)') ?></th>
+            <th><?= Yii::t('app', 'DTPL (Distributor Total Payment Left)') ?></th>
+            <th><?= Yii::t('app', 'NOP (Number of payments in plan)') ?></th>
+            <th><?= Yii::t('app', 'CNPL (Customer Number of payments left)') ?></th>
+            <th><?= Yii::t('app', 'DNPL (Distributor Number of payments left)') ?></th>
             <th><?= Yii::t('app', 'Country') ?></th>
             <th><?= Yii::t('app', 'Distributor') ?></th>
             <th><?= Yii::t('app', 'End-User') ?></th>
