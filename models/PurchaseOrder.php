@@ -72,7 +72,7 @@
         public function rules()
         {
             return [
-                [['po_num', 'country_id', 'email', 'currency_code', 'distributor_id', 'end_user_id', 'nop'], 'required'],
+                [['po_num', 'country_id', 'email', 'currency_code', 'distributor_id', 'end_user_id', 'nop', 'cpup', 'dpup', 'dsp', 'csp'], 'required'],
                 [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number', 'min' => 0],
                 [['po_num', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
                 [['created_at', 'updated_at', 'currency_code'], 'safe'],
@@ -112,7 +112,7 @@
                 'id'             => 'ID',
                 'po_num'         => Yii::t('app', 'PO# (Purchase Order Number)'),
                 'cpup'           => Yii::t('app', 'CPUP (Customer Payment Upon Purchase)'),
-                'dpup'           => Yii::t('app', 'DPUP (Distributor Payment Upon purchase)'),
+                'dpup' => Yii::t('app', 'DPUP (Distributor Payment Upon Purchase)'),
                 'dsp'            => Yii::t('app', 'DSP (Distributor System Price)'),
                 'csp'            => Yii::t('app', 'CSP (Customer System Price)'),
                 'nop'            => Yii::t('app', 'NOP (Number of payments in plan)'),

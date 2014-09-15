@@ -17,15 +17,15 @@ use kartik\widgets\DepDrop;
 <div class="po-form">
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'country_id')->dropDownList(['' => Yii::t('app', 'Select Country...')] + ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'country-id']) ?>
+    <?= $form->field($model, 'country_id')->dropDownList([null => Yii::t('app', 'Select Country...')] + ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'purchaseorder-country_id']) ?>
     <?= $form->field($model, 'po_num')->textInput() ?>
     <?= $form->field($model, 'email')->textInput() ?>
 
     <?=
         $form->field($model, 'currency_code')->widget(DepDrop::className(), [
-            'options'       => ['id' => 'currency-code'],
+            'options'       => ['id' => 'purchaseorder-currency_code'],
             'pluginOptions' => [
-                'depends'     => ['country-id'],
+                'depends' => ['purchaseorder-country_id'],
                 'placeholder' => Yii::t('app', 'Select currency...'),
                 'url'         => \yii\helpers\Url::to(['dynamic-currency'])
             ],
@@ -40,9 +40,9 @@ use kartik\widgets\DepDrop;
     <?= $form->field($model, 'nop')->textInput() ?>
     <?=
     $form->field($model, 'distributor_id')->widget(DepDrop::className(), [
-        'options' => ['id' => 'distributor-id'],
+        'options'       => ['id' => 'purchaseorder-distributor_id'],
         'pluginOptions' => [
-            'depends' => ['country-id'],
+            'depends' => ['purchaseorder-country_id'],
             'placeholder' => Yii::t('app', 'Select distributor...'),
             'url' => \yii\helpers\Url::to(['/distributor/dynamic'])
         ],
@@ -52,17 +52,15 @@ use kartik\widgets\DepDrop;
 
     <?=
         $form->field($model, 'end_user_id')->widget(DepDrop::className(), [
-            'options'       => ['id' => 'end-user-id'],
+            'options'       => ['id' => 'purchaseorder-end_user_id'],
             'pluginOptions' => [
-                'depends'     => ['country-id'],
+                'depends' => ['purchaseorder-country_id'],
                 'placeholder' => Yii::t('app', 'Select end-user...'),
                 'url'         => \yii\helpers\Url::to(['/end-user/dynamic'])
             ],
             'data' => ['' => Yii::t('app', 'Select End-User...')] + ArrayHelper::map(EndUser::find()->all(), 'id', 'title'),
         ]);
     ?>
-
-    <?= $form->errorSummary($model) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

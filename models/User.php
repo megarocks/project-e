@@ -105,15 +105,32 @@
 
         public function fields()
         {
-            return [
-                'id', 'first_name', 'last_name', 'email', 'role',
+            return array(
+                'id', 'first_name', 'last_name', 'email',
+                'role'       => function () {
+                        switch ($this->role) {
+                            case static::ROLE_DISTR:
+                                return Yii::t('app', 'Distributor');
+                            case static::ROLE_SALES:
+                                return Yii::t('app', 'Sales');
+                            case static::ROLE_END_USER:
+                                return Yii::t('app', 'End-User');
+                            case static::ROLE_MAN:
+                                return Yii::t('app', 'Manufacturer');
+                            case static::ROLE_ENDY:
+                                return Yii::t('app', 'Endymed');
+                            default:
+                                return Yii::t('app', 'Unknown Role');
+                                break;
+                        }
+                    },
                 'created_at' => function () {
                         return date('M j Y h:i A', strtotime($this->created_at));
                     },
                 'updated_at' => function () {
                         return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
                     }
-            ];
+            );
         }
 
         /**
