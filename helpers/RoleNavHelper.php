@@ -2,9 +2,10 @@
 
     namespace app\helpers;
 
-    use app\models\User;
     use Yii;
     use yii\bootstrap\Nav;
+    use kartik\widgets\SideNav;
+    use yii\widgets\Menu;
 
     class RoleNavHelper
     {
@@ -15,10 +16,11 @@
          */
         public static function navigationMenu()
         {
-            return Nav::widget([
+            return Menu::widget([
                 'options' => [
                     'class' => 'nav nav-list',
                     'style' => 'top: 0px;',
+                    'activateParents' => true,
                 ],
                 'items'   => static::permittedMenuItems()
             ]);
@@ -79,14 +81,14 @@
         private static function allMenuItems()
         {
             return [
-                ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index'], 'permission' => 'viewDashboard'],
-                ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index'], 'permission' => 'listPurchaseOrders'],
-                ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index'], 'permission' => 'listPayments'],
-                ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index'], 'permission' => 'listSystems'],
-                ['label' => Yii::t('app', 'View System'), 'url' => ['/system/view-system'], 'permission' => 'viewSingleSystem'],
-                ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index'], 'permission' => 'listDistributors'],
-                ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index'], 'permission' => 'listEndUsers'],
-                ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index'], 'permission' => 'listUsers'],
+                ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/site/index'], 'permission' => 'viewDashboard', 'active' => Yii::$app->controller->id == 'site' ? true : false],
+                ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['/purchase-order/index'], 'permission' => 'listPurchaseOrders', 'active' => Yii::$app->controller->id == 'purchase-order' ? true : false],
+                ['label' => Yii::t('app', 'Payments'), 'url' => ['/payment/index'], 'permission' => 'listPayments', 'active' => Yii::$app->controller->id == 'payment' ? true : false],
+                ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index'], 'permission' => 'listSystems', 'active' => Yii::$app->controller->id == 'system' ? true : false],
+                ['label' => Yii::t('app', 'View System'), 'url' => ['/system/view-system'], 'permission' => 'viewSingleSystem', 'active' => Yii::$app->controller->id == 'system' ? true : false],
+                ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index'], 'permission' => 'listDistributors', 'active' => Yii::$app->controller->id == 'distributor' ? true : false],
+                ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index'], 'permission' => 'listEndUsers', 'active' => Yii::$app->controller->id == 'end-user' ? true : false],
+                ['label' => Yii::t('app', 'Users'), 'url' => ['/user'], 'permission' => 'listUsers', 'active' => Yii::$app->controller->id == 'user' ? true : false],
             ];
         }
 
