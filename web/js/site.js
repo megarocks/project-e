@@ -14,7 +14,7 @@ $(document)
             }
         };
 
-        $('[data-rel=tooltip]').tooltip();
+        bindGridTitleToolTips()
 
     })
     .on('click', '.delete-button', function (event) {
@@ -31,5 +31,12 @@ $(document)
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
+
+function bindGridTitleToolTips() {
+    var toolTipElements = $('[data-rel=tooltip]');
+    if (toolTipElements.length > 0) {
+        toolTipElements.tooltip();
+    }
+}
 
 
