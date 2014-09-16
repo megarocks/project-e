@@ -78,7 +78,7 @@
                 [['created_at', 'updated_at', 'currency_code'], 'safe'],
                 [['email'], 'string', 'max' => 64],
                 [['email'], 'email'],
-                [['system_sn'], 'unique'],
+                [['system_sn', 'po_num'], 'unique'],
                 [['nop'], 'integer', 'min' => 1],
                 [['npl', 'dnpl', 'cnpl'], 'integer', 'min' => 0],
             ];
