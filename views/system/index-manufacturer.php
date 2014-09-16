@@ -24,10 +24,28 @@
     <table id="systems-table" class="table-hover">
         <thead>
         <tr>
-            <th><?= Yii::t('app', 'Registered At') ?></th>
-            <th><?= Yii::t('app', 'Serial Number') ?></th>
-            <th><?= Yii::t('app', 'PO#') ?></th>
-            <th><?= Yii::t('app', 'Status') ?></th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Date and time when this system was added to database') ?> ">
+                    <?= Yii::t('app', 'Registered At') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'System serial number') ?> ">
+                    <?= Yii::t('app', 'System SN') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Order number to which system is assigned') ?> ">
+                    <?= Yii::t('app', 'PO#') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'Current system status') ?> ">
+                    <?= Yii::t('app', 'Status') ?>
+                </a>
+            </th>
             <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>

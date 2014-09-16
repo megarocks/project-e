@@ -25,17 +25,70 @@
     <table id="po-table" class="table-hover">
         <thead>
         <tr>
-            <th><?= Yii::t('app', 'Added at') ?></th>
-            <th><?= Yii::t('app', 'PO#') ?></th>
-            <th><?= Yii::t('app', 'System SN') ?></th>
-            <th><?= Yii::t('app', 'CTPL') ?></th>
-            <th><?= Yii::t('app', 'DTPL') ?></th>
-            <th><?= Yii::t('app', 'NOP') ?></th>
-            <th><?= Yii::t('app', 'CNPL') ?></th>
-            <th><?= Yii::t('app', 'DNPL') ?></th>
-            <th><?= Yii::t('app', 'Country') ?></th>
-            <th><?= Yii::t('app', 'Distributor') ?></th>
-            <th><?= Yii::t('app', 'End-User') ?></th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Date and time when this order was added to database') ?> ">
+                    <?= Yii::t('app', 'Added At') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'Purchase order number') ?> ">
+                    <?= Yii::t('app', 'PO#') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'System serial number') ?> ">
+                    <?= Yii::t('app', 'System SN') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'The remaining amount that the customer must pay') ?> ">
+                    <?= Yii::t('app', 'CTPL') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'The remaining amount that the distributor must pay') ?> ">
+                    <?= Yii::t('app', 'DTPL') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Total number of payments in plan') ?> ">
+                    <?= Yii::t('app', 'NOP') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'The remaining number of payments from the customer') ?> ">
+                    <?= Yii::t('app', 'CNPL') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'The remaining number of payments from the distributor') ?> ">
+                    <?= Yii::t('app', 'DNPL') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Order country') ?> ">
+                    <?= Yii::t('app', 'Country') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Title of system distributor') ?> ">
+                    <?= Yii::t('app', 'Distributor') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Title of system end-user') ?> ">
+                    <?= Yii::t('app', 'End-User') ?>
+                </a>
+            </th>
             <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>
