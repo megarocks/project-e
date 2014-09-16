@@ -20,10 +20,30 @@
     <table id="end-users-table" class="table-hover">
         <thead>
         <tr>
-            <th>Registered At</th>
-            <th>Title</th>
-            <th>Email</th>
-            <th>Country</th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Date and time when this account was added to database') ?> ">
+                    <?= Yii::t('app', 'Registered At') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'End-User title') ?> ">
+                    <?= Yii::t('app', 'Title') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'End-User contact email') ?> ">
+                    <?= Yii::t('app', 'Email') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'End-User country') ?> ">
+                    <?= Yii::t('app', 'Country') ?>
+                </a>
+            </th>
             <th>Actions</th>
         </tr>
         </thead>

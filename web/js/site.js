@@ -14,6 +14,8 @@ $(document)
             }
         };
 
+        $('[data-rel=tooltip]').tooltip();
+
     })
     .on('click', '.delete-button', function (event) {
         event.preventDefault();
@@ -28,6 +30,6 @@ $(document)
 
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
-}
+};
 
 

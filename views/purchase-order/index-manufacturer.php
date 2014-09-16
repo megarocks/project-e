@@ -21,9 +21,22 @@
     <table id="po-table" class="table-hover">
         <thead>
         <tr>
-            <th><?= Yii::t('app', 'Added at') ?></th>
-            <th><?= Yii::t('app', 'PO#') ?></th>
-            <th><?= Yii::t('app', 'System SN') ?></th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Date and time when this order was added to database') ?> ">
+                    <?= Yii::t('app', 'Added At') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'Purchase order number') ?> ">
+                    <?= Yii::t('app', 'PO#') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'System serial number') ?> ">
+                    <?= Yii::t('app', 'System SN') ?>
+                </a>
+            </th>
             <th><?= Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>
