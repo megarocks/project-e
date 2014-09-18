@@ -87,19 +87,20 @@
         public function fields()
         {
             return [
-                'id', 'cpup', 'dpup', 'dsp', 'csp', 'nop',
-                'distributor' => function () {
-                        return isset($this->distributor) ? $this->distributor->title : null;
-                    },
-                'country'     => function () {
-                        return isset($this->country) ? $this->country->name : null;
-                    },
+                'id', 'po_num', 'cpup', 'dpup', 'dsp', 'csp', 'nop', 'ctpl', 'dtpl', 'cnpl', 'dnpl', 'system_sn', 'distributor', 'country', 'endUser',
                 'created_at'  => function () {
                         return date('M j Y h:i A', strtotime($this->created_at));
                     },
                 'updated_at'  => function () {
                         return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
                     }
+            ];
+        }
+
+        public function extraFields()
+        {
+            return [
+
             ];
         }
 
