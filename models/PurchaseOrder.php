@@ -81,6 +81,18 @@
                 [['system_sn', 'po_num'], 'unique'],
                 [['nop'], 'integer', 'min' => 1],
                 [['npl', 'dnpl', 'cnpl'], 'integer', 'min' => 0],
+                ['cpup',
+                    'compare',
+                    'skipOnError'      => true,
+                    'operator'         => '<=',
+                    'compareAttribute' => 'csp',
+                    'message'          => Yii::t('yii', 'Customer payment upon purchase must be no greater than customer system price.')],
+                ['dpup',
+                    'compare',
+                    'skipOnError'      => true,
+                    'operator'         => '<=',
+                    'compareAttribute' => 'dsp',
+                    'message'          => Yii::t('yii', 'Distributor payment upon purchase must be no greater than distributor system price.')],
             ];
         }
 
@@ -88,12 +100,12 @@
         {
             return [
                 'id', 'po_num', 'cpup', 'dpup', 'dsp', 'csp', 'nop', 'ctpl', 'dtpl', 'cnpl', 'dnpl', 'system_sn', 'distributor', 'country', 'endUser',
-                'created_at'  => function () {
-                        return date('M j Y h:i A', strtotime($this->created_at));
-                    },
-                'updated_at'  => function () {
-                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
-                    }
+                'created_at' => function () {
+                    return date('M j Y h:i A', strtotime($this->created_at));
+                },
+                'updated_at' => function () {
+                    return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                }
             ];
         }
 
