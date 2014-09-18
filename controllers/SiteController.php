@@ -89,7 +89,7 @@
                 return $this->redirect(['system/view', 'id' => $system->id]);
             } elseif ($visibleForm == 'forgot' && $forgotPasswordForm->load($request) && $forgotPasswordForm->validate()) {
                 $forgotPasswordForm->sendMailWithLink();
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Check your mailbox for instructions'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Check mailbox: {email} for instructions', ['email' => $forgotPasswordForm->email]));
 
                 return $this->refresh();
             } else {
