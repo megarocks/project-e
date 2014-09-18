@@ -47,22 +47,9 @@
 
             $result = [];
             if ($fields) {
-                $specField = explode(",", $fields);
+                $specFields = explode(",", $fields);
                 foreach ($models as $model) {
-                    $m = null;
-                    foreach ($specField as $field) {
-                        if ($field != "") {
-                            //get field from model and set same field for temp variable
-                            try {
-                                $m[$field] = $model[$field];
-                            } catch (Exception $e) {
-                                $m[$field] = $e->getName(); //TODO Possibly better to set null in production mode
-                            }
-                        }
-                    }
-                    if (!is_null($m)) {
-                        $result[] = $m;
-                    }
+                    $result[] = $model->toArray($specFields, $specFields);
                 }
             } else {
                 foreach ($models as $model) {

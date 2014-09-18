@@ -33,10 +33,10 @@ use kartik\widgets\DepDrop;
 
         ]);
     ?>
+    <?= $form->field($model, 'csp')->textInput() ?>
+    <?= $form->field($model, 'dsp')->textInput() ?>
     <?= $form->field($model, 'cpup')->textInput() ?>
     <?= $form->field($model, 'dpup')->textInput() ?>
-    <?= $form->field($model, 'dsp')->textInput() ?>
-    <?= $form->field($model, 'csp')->textInput() ?>
     <?= $form->field($model, 'nop')->textInput() ?>
     <?=
     $form->field($model, 'distributor_id')->widget(DepDrop::className(), [

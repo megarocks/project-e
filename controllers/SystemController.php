@@ -128,7 +128,7 @@
                 if (!is_null($system)) {
                     $this->redirect(['view', 'id' => $system->id]);
                 } else {
-                    throw new NotFoundHttpException(Yii::t('app', 'System is not attached to your account yet'));
+                    return $this->render('view-enduser-system-not-found');
                 }
             } else {
                 throw new ForbiddenHttpException;

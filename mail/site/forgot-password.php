@@ -20,6 +20,6 @@
 </p>
 
 <p>
-    <?= Yii::t('app', 'If you do not need to reset password just ignore this message or call a police') ?>
+    <?= Yii::t('app', 'If you do not need to reset password just ignore this message') ?>
 </p>
 

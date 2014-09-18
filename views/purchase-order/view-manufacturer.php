@@ -1,6 +1,7 @@
 <?php
 
     use yii\helpers\Html;
+    use yii\helpers\Url;
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
@@ -10,6 +11,8 @@
     $this->title = Yii::t('app', 'Purchase Order Details');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
+
+    Yii::$app->user->setReturnUrl(Url::to());
 ?>
 
 <div class="po-view">

@@ -11,6 +11,7 @@
     use yii\filters\AccessControl;
     use yii\helpers\ArrayHelper;
     use yii\helpers\Json;
+    use yii\web\BadRequestHttpException;
     use yii\web\Controller;
     use yii\filters\VerbFilter;
     use yii\web\ForbiddenHttpException;
@@ -89,7 +90,7 @@
                 return $this->redirect(['system/view', 'id' => $system->id]);
             } elseif ($visibleForm == 'forgot' && $forgotPasswordForm->load($request) && $forgotPasswordForm->validate()) {
                 $forgotPasswordForm->sendMailWithLink();
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Check your mailbox for instructions'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Check mailbox: {email} for instructions', ['email' => $forgotPasswordForm->email]));
 
                 return $this->refresh();
             } else {
@@ -114,9 +115,13 @@
             $user = User::findByPasswordResetToken($password_reset_token);
             if ($user && Yii::$app->user->login($user)) {
                 $user->regeneratePasswordResetToken();
-                $this->redirect('user/profile');
+                $this->redirect('/user/profile');
             } else {
-                throw new NotFoundHttpException;
+                if (Yii::$app->user->isGuest) {
+                    Yii::$app->user->logout();
+                }
+                Yii::$app->session->setFlash('danger', Yii::t('app', 'This password reset link is already expired'));
+                $this->redirect(['/site/login']);
             }
         }
 
