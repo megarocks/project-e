@@ -13,15 +13,15 @@
     $system = $model->purchaseOrder->system;
 
     $this->title = Yii::t('app', 'Payment Details');
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['system/index']];
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'System details'), 'url' => ['system/' . $system->id]];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['/system/index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'System details'), 'url' => ['/system/' . $system->id]];
     $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
 <div class="payment-details">
     <p>
-        <?= Html::a(Yii::t('app', 'View System Details'), 'system/' . $system->id, ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'View System Details'), '/system/' . $system->id, ['class' => 'btn btn-primary']) ?>
     </p>
 
     <div class="well">
