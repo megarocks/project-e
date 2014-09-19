@@ -39,7 +39,10 @@
                 'model'      => $model,
                 'attributes' => [
                     'sn',
-                    'status',
+                    [
+                        'label' => Yii::t('app', 'Status'),
+                        'value' => $model->toArray(['status'])['status'],
+                    ],
                     'login_code',
                     'current_code',
                     'init_lock_date',

@@ -53,12 +53,12 @@
                     <?= Yii::t('app', 'DTPL') ?>
                 </a>
             </th>
-            <th>
+            <!--            <th>
                 <a href="#" data-rel="tooltip"
-                   data-original-title="<?= Yii::t('app', 'Total number of payments in plan') ?> ">
-                    <?= Yii::t('app', 'NOP') ?>
+                   data-original-title="<? /*= Yii::t('app', 'Total number of payments in plan') */ ?> ">
+                    <? /*= Yii::t('app', 'NOP') */ ?>
                 </a>
-            </th>
+            </th>-->
             <th>
                 <a href="#" data-rel="tooltip"
                    data-original-title="<?= Yii::t('app', 'The remaining number of payments from the customer') ?> ">

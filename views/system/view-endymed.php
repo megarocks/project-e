@@ -22,7 +22,7 @@
     <p>
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (!isset($po)) : ?>
-            <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
             <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
 
@@ -41,7 +41,10 @@
                 'model'      => $model,
                 'attributes' => [
                     'sn',
-                    'status',
+                    [
+                        'label' => Yii::t('app', 'Status'),
+                        'value' => $model->toArray(['status'])['status'],
+                    ],
                     'login_code',
                     'current_code',
                     'init_lock_date',
@@ -50,7 +53,10 @@
                         'label' => Yii::t('app', 'Email'),
                         'value' => isset($po) ? $po->email : Yii::t('app', 'Email is not set'),
                     ],
-                    'created_at'
+                    [
+                        'label' => Yii::t('app', 'Created At'),
+                        'value' => $model->toArray(['created_at'])['created_at'],
+                    ],
                 ],
             ]) ?>
     </div>

@@ -25,10 +25,11 @@
      */
     class System extends PpdBaseModel
     {
-        const STATUS_UNLOCKED = "unlocked";
-        const STATUS_ACTIVE = "active";
-        const STATUS_ACTIVE_PAYMENT = "active_payment";
-        const STATUS_LOCKED = "locked";
+        const STATUS_UNASSIGNED = "0";
+        const STATUS_UNLOCKED = "1";
+        const STATUS_ACTIVE = "2";
+        const STATUS_ACTIVE_PAYMENT = "3";
+        const STATUS_LOCKED = "4";
 
         /**
          * @inheritdoc
@@ -72,7 +73,29 @@
         public function fields()
         {
             return [
-                'id', 'sn', 'status', 'current_code', 'login_code',
+                'id', 'sn', 'current_code', 'login_code',
+                'status' => function () {
+                    $status = '';
+                    switch ($this->status) {
+                        case static::STATUS_UNASSIGNED:
+                            $status = Yii::t('app', 'Unassigned');
+                            break;
+                        case static::STATUS_UNLOCKED:
+                            $status = Yii::t('app', 'Unlocked');
+                            break;
+                        case static::STATUS_ACTIVE_PAYMENT:
+                            $status = Yii::t('app', 'Active/Payment');
+                            break;
+                        case static::STATUS_ACTIVE:
+                            $status = Yii::t('app', 'Active');
+                            break;
+                        case static::STATUS_LOCKED:
+                            $status = Yii::t('app', 'Locked');
+                            break;
+                    }
+
+                    return $status;
+                },
                 'po_num'         => function () {
                         return isset($this->purchaseOrder) ? $this->purchaseOrder->po_num : null;
                     },
@@ -151,8 +174,8 @@
 
         public function resetLockingParams()
         {
-            $this->status = static::STATUS_UNLOCKED;
-            $this->main_unlock_code = null; //TODO Code generation logic will be here
+            $this->status = static::STATUS_UNASSIGNED;
+            $this->main_unlock_code = null;
             $this->next_lock_date = null;
             $this->init_lock_date = null;
             $this->current_code = null;
