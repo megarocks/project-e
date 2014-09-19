@@ -64,7 +64,10 @@
         {
             if (Yii::$app->user->can('assignSystem', ['systemId' => $system_id, 'poId' => $po_id])) {
                 $request = Yii::$app->request->post();
-                $model = new PoSystemModel();
+                $model = new PoSystemModel([
+                    'system_id' => $system_id,
+                    'po_id'     => $po_id,
+                ]);
                 /*                $system = $this->findModel($system_id);
                                 $model->system_sn = $system->sn;*/
                 if (!empty($request)) {

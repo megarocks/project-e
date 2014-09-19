@@ -8,7 +8,7 @@
     /* @var $model app\models\PurchaseOrder */
 
 
-    $this->title = Yii::t('app', 'Purchase Order Details');
+    $this->title = Yii::t('app', 'Purchase Order #{po_num} Details', ['po_num' => $model->po_num]);
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
 ?>

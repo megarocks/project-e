@@ -9,7 +9,7 @@
     /* @var $model app\models\PurchaseOrder */
 
 
-    $this->title = Yii::t('app', 'Purchase Order Details');
+    $this->title = Yii::t('app', 'Purchase Order #{po_num} Details', ['po_num' => $model->po_num]);
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
 
@@ -58,8 +58,14 @@
                     'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
                 'email:email',
-                'created_at',
-                'updated_at'
+                [
+                    'label' => Yii::t('app', 'Created at'),
+                    'value' => $model->toArray(['created_at'])['created_at'],
+                ],
+                [
+                    'label' => Yii::t('app', 'Updated at'),
+                    'value' => $model->toArray(['updated_at'])['updated_at'],
+                ],
             ],
         ]) ?>
 

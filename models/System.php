@@ -235,7 +235,7 @@
         public function createModel()
         {
             if ($this->validate()) {
-                $this->status = static::STATUS_UNLOCKED;
+                $this->status = static::STATUS_UNASSIGNED;
 
                 return $this->save();
             } else {

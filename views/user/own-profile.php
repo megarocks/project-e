@@ -23,6 +23,7 @@
             User::ROLE_DISTR => Yii::t('app', 'Distributor'),
             User::ROLE_SALES => Yii::t('app', 'Sales'),
             User::ROLE_MAN   => Yii::t('app', 'Manufacturer'),
+            User::ROLE_END_USER => Yii::t('app', 'End-User'),
         ], ['readonly' => true, 'disabled' => true]) ?>
     <?= $form->field($model, 'first_name')->textInput(['placeholder' => Yii::t('app', 'Your first name')]) ?>
     <?= $form->field($model, 'last_name')->textInput(['placeholder' => Yii::t('app', 'Your last name')]) ?>
