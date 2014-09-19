@@ -70,7 +70,7 @@
 
         <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
         <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model'      => $po,
             'attributes' => [
                 'po_num',
