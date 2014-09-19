@@ -23,8 +23,10 @@
             <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
-        <?php if (isset($po) && Yii::$app->user->can('unAssignSystem')) : ?>
-            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
+        <?php if (isset($po)) :
+            echo '<p>' . Yii::t("app", "Contact EndyMed support to request capability to edit this system details: {support_email}",
+                    ['support_email' => '<a href=mailto:' . Yii::$app->params["mainSupportEmail"] . '>' . Yii::$app->params["mainSupportEmail"] . '</a>']) . '</p>';
+            ?>
         <?php endif; ?>
     </p>
 

@@ -85,7 +85,10 @@
     <div class="footer">
         <div class="footer-inner">
             <div class="footer-content">
-                <p class="pull-left">&copy; EndyMed <?= date('Y') ?></p>
+                <p class="pull-left">&copy; <a data-rel="tooltip"
+                                               data-original-title="<?= Yii::t('app', 'Contact EndyMed') ?>"
+                                               href="mailto:<?= Yii::$app->params['mainSupportEmail'] ?>">EndyMed</a> <?= date('Y') ?>
+                </p>
 
                 <p class="pull-right">Version: <?= Yii::$app->params['version'] ?></p>
             </div>
