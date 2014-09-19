@@ -1,6 +1,7 @@
 <?php
 
     use app\models\PurchaseOrder;
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\helpers\Url;
     use yii\widgets\DetailView;
@@ -57,7 +58,7 @@
     <?php if (isset($po)): ?>
         <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
         <?=
-    DetailView::widget([
+    PpdDetailView::widget([
         'model'      => $po,
         'attributes' => [
             'po_num',
@@ -72,7 +73,7 @@
 
         <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
         <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model'      => $po,
             'attributes' => [
                 'po_num',

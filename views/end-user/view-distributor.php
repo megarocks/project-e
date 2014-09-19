@@ -1,5 +1,6 @@
 <?php
 
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\widgets\DetailView;
 
@@ -17,7 +18,7 @@
     </p>
 
     <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model'      => $model,
             'attributes' => [
                 'title',

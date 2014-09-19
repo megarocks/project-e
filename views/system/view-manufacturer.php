@@ -1,9 +1,8 @@
 <?php
 
-    use app\models\PurchaseOrder;
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\helpers\Url;
-    use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
     /* @var $model app\models\System */
@@ -33,7 +32,7 @@
 
     <div class="well">
         <?=
-            DetailView::widget([
+            PpdDetailView::widget([
                 'model'      => $model,
                 'attributes' => [
                     'sn',
