@@ -22,9 +22,10 @@
         <?php if (!isset($po)) : ?>
 
         <?php endif; ?>
-        <?php if (isset($po) && ($po->dtpl <= 0)) : //if distributor has no debt to endymed - he will see this area ?>
-            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?php endif; ?>
+        <!--For now Distributor without capability of adding payment manually. Uncomment following to allow it and add rbac rule:-->
+        <!--        <?php /*if (isset($po) && ($po->dtpl <= 0)) : //if distributor has no debt to endymed - he will see this area */ ?>
+            <? /*= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) */ ?>
+        --><?php /*endif; */ ?>
         <?php if (isset($po) && ($po->dtpl > 0)) : //if distributor HAS debt to endymed - he will see this area ?>
             <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/purchase-code', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
