@@ -1,6 +1,7 @@
 <?php
 
     use app\models\PurchaseOrder;
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\widgets\DetailView;
 
@@ -19,11 +20,14 @@
 
     <div class="well">
         <?=
-            DetailView::widget([
+            PpdDetailView::widget([
                 'model'      => $model,
                 'attributes' => [
                     'sn',
-                    'status',
+                    [
+                        'label' => Yii::t('app', 'Status'),
+                        'value' => $model->toArray(['status'])['status'],
+                    ],
                     'login_code',
                     'current_code',
                     'next_lock_date',
@@ -37,7 +41,7 @@
 
     <h3><?= Yii::t('app', 'Monetary details') ?> </h3>
     <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model'      => $model->purchaseOrder,
             'attributes' => [
                 'po_num',

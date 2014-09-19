@@ -1,9 +1,8 @@
 <?php
 
-    use app\models\PurchaseOrder;
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\helpers\Url;
-    use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
     /* @var $model app\models\System */
@@ -21,7 +20,7 @@
     <p>
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (!isset($po) && Yii::$app->user->can('assignSystem')) : ?>
-            <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Assign to PO'), ['assign', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
         <?php if (isset($po) && Yii::$app->user->can('unAssignSystem')) : ?>
@@ -33,7 +32,7 @@
 
     <div class="well">
         <?=
-            DetailView::widget([
+            PpdDetailView::widget([
                 'model'      => $model,
                 'attributes' => [
                     'sn',
@@ -41,7 +40,10 @@
                         'label' => Yii::t('app', 'Purchase Order #'),
                         'value' => isset($model->purchaseOrder) ? $model->purchaseOrder->po_num : Yii::t('app', 'Not Assigned'),
                     ],
-                    'status',
+                    [
+                        'label' => Yii::t('app', 'Status'),
+                        'value' => $model->toArray(['status'])['status'],
+                    ],
                     'created_at'
                 ],
             ]) ?>

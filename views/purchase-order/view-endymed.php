@@ -1,5 +1,6 @@
 <?php
 
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\helpers\Url;
     use yii\widgets\DetailView;
@@ -29,7 +30,7 @@
     </p>
 
     <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model'      => $model,
             'attributes' => [
                 'po_num',

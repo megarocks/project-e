@@ -1,9 +1,9 @@
 <?php
 
     use app\models\User;
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\helpers\Url;
-    use yii\widgets\DetailView;
 
     /**@var $this yii\web\View */
     /**@var $model User */
@@ -21,7 +21,7 @@
     </p>
 
     <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model' => $model->toArray(),
             'attributes' => [
                 'role',

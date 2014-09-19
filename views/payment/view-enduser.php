@@ -3,6 +3,7 @@
     use app\models\Payment;
     use app\models\System;
 
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\widgets\DetailView;
 
@@ -24,7 +25,7 @@
 
     <div class="well">
         <?=
-            DetailView::widget([
+            PpdDetailView::widget([
                 'model'      => $model,
                 'attributes' => [
                     'po_num',

@@ -13,7 +13,7 @@ var initScreen = function (user) {
             {data: "system_sn"},
             {data: "ctpl"},
             {data: "dtpl"},
-            {data: "nop"},
+            /*{data: "nop"},*/
             {data: "cnpl"},
             {data: "dnpl"},
             {

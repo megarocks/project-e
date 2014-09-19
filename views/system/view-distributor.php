@@ -1,6 +1,7 @@
 <?php
 
     use app\models\PurchaseOrder;
+    use app\widgets\PpdDetailView;
     use yii\helpers\Html;
     use yii\widgets\DetailView;
 
@@ -21,9 +22,10 @@
         <?php if (!isset($po)) : ?>
 
         <?php endif; ?>
-        <?php if (isset($po) && ($po->dtpl <= 0)) : //if distributor has no debt to endymed - he will see this area ?>
-            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?php endif; ?>
+        <!--For now Distributor without capability of adding payment manually. Uncomment following to allow it and add rbac rule:-->
+        <!--        <?php /*if (isset($po) && ($po->dtpl <= 0)) : //if distributor has no debt to endymed - he will see this area */ ?>
+            <? /*= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) */ ?>
+        --><?php /*endif; */ ?>
         <?php if (isset($po) && ($po->dtpl > 0)) : //if distributor HAS debt to endymed - he will see this area ?>
             <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/purchase-code', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
@@ -33,11 +35,14 @@
 
     <div class="well">
         <?=
-            DetailView::widget([
+            PpdDetailView::widget([
                 'model'      => $model,
                 'attributes' => [
                     'sn',
-                    'status',
+                    [
+                        'label' => Yii::t('app', 'Status'),
+                        'value' => $model->toArray(['status'])['status'],
+                    ],
                     'login_code',
                     'current_code',
                     'init_lock_date',
@@ -54,7 +59,7 @@
     <?php if (isset($po)): ?>
         <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
         <?=
-    DetailView::widget([
+    PpdDetailView::widget([
         'model'      => $po,
         'attributes' => [
             'po_num',
@@ -69,7 +74,7 @@
 
         <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
         <?=
-        DetailView::widget([
+        PpdDetailView::widget([
             'model'      => $po,
             'attributes' => [
                 'po_num',

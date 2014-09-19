@@ -19,9 +19,9 @@
     <div class="system-form">
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'system_id')->dropDownList(ArrayHelper::map(System::find()->all(), 'id', 'sn')) ?>
+        <?= $form->field($model, 'system_id')->dropDownList(ArrayHelper::map(System::findAllFiltered(['status' => System::STATUS_UNASSIGNED]), 'id', 'sn')) ?>
 
-        <?= $form->field($model, 'po_id')->dropDownList(ArrayHelper::map(PurchaseOrder::findAll(['system_sn' => null]), 'id', 'po_num')) ?>
+        <?= $form->field($model, 'po_id')->dropDownList(ArrayHelper::map(PurchaseOrder::findAllFiltered(['system_sn' => null]), 'id', 'po_num')) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('app', 'Assign'), ['class' => 'btn btn-success']) ?>
