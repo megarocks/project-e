@@ -118,7 +118,7 @@
                             case static::ROLE_MAN:
                                 return Yii::t('app', 'Manufacturer');
                             case static::ROLE_ENDY:
-                                return Yii::t('app', 'Endymed');
+                                return Yii::t('app', 'Administrator');
                             default:
                                 return Yii::t('app', 'Unknown Role');
                                 break;
