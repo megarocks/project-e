@@ -58,8 +58,14 @@
                     'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
                 'email:email',
-                'created_at',
-                'updated_at'
+                [
+                    'label' => Yii::t('app', 'Created at'),
+                    'value' => $model->toArray(['created_at'])['created_at'],
+                ],
+                [
+                    'label' => Yii::t('app', 'Updated at'),
+                    'value' => $model->toArray(['updated_at'])['updated_at'],
+                ],
             ],
         ]) ?>
 
