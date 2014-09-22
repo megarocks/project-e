@@ -19,23 +19,37 @@
     </p>
 
     <div class="well">
-        <?=
-            PpdDetailView::widget([
-                'model'      => $model,
-                'attributes' => [
+        <?php
+
+            $systemDetails = [
+                'sn',
+                [
+                    'label' => Yii::t('app', 'Status'),
+                    'value' => $model->toArray(['status'])['status'],
+                ],
+                'login_code',
+                'current_code',
+                'next_lock_date',
+                [
+                    'label' => Yii::t('app', 'Email'),
+                    'value' => $model->purchaseOrder->email,
+                ],
+            ];
+
+            if (isset($po) && $po->ctpl <= 0) {
+                $systemDetails = [
                     'sn',
                     [
                         'label' => Yii::t('app', 'Status'),
                         'value' => $model->toArray(['status'])['status'],
                     ],
-                    'login_code',
-                    'current_code',
-                    'next_lock_date',
-                    [
-                        'label' => Yii::t('app', 'Email'),
-                        'value' => $model->purchaseOrder->email,
-                    ],
-                ],
+                    'main_unlock_code',
+                ];
+            }
+
+            echo PpdDetailView::widget([
+                'model'      => $model,
+                'attributes' => $systemDetails,
             ]) ?>
     </div>
 

@@ -74,7 +74,7 @@
         {
             return [
                 'id', 'sn', 'current_code', 'login_code',
-                'status' => function () {
+                'status'         => function () {
                     $status = '';
                     switch ($this->status) {
                         case static::STATUS_UNASSIGNED:
@@ -97,35 +97,35 @@
                     return $status;
                 },
                 'po_num'         => function () {
-                        return isset($this->purchaseOrder) ? $this->purchaseOrder->po_num : null;
-                    },
+                    return isset($this->purchaseOrder) ? $this->purchaseOrder->po_num : null;
+                },
                 'next_lock_date' => function () {
-                        return isset($this->next_lock_date) ? date('M d, Y', strtotime($this->next_lock_date)) : null;
-                    },
+                    return isset($this->next_lock_date) ? date('M d, Y', strtotime($this->next_lock_date)) : null;
+                },
                 'init_lock_date' => function () {
-                        return isset($this->init_lock_date) ? date('M d, Y', strtotime($this->init_lock_date)) : null;
-                    },
+                    return isset($this->init_lock_date) ? date('M d, Y', strtotime($this->init_lock_date)) : null;
+                },
                 'dtpl'           => function () {
-                        return isset($this->purchaseOrder) ? $this->purchaseOrder->dtpl : null;
-                    },
+                    return isset($this->purchaseOrder) ? $this->purchaseOrder->dtpl : null;
+                },
                 'ctpl'           => function () {
-                        return isset($this->purchaseOrder) ? $this->purchaseOrder->ctpl : null;
-                    },
+                    return isset($this->purchaseOrder) ? $this->purchaseOrder->ctpl : null;
+                },
                 'country'        => function () {
-                        return isset($this->purchaseOrder) ? $this->purchaseOrder->country : null;
-                    },
+                    return isset($this->purchaseOrder) ? $this->purchaseOrder->country : null;
+                },
                 'distributor'    => function () {
-                        return isset($this->purchaseOrder) ? $this->purchaseOrder->distributor : null;
-                    },
+                    return isset($this->purchaseOrder) ? $this->purchaseOrder->distributor : null;
+                },
                 'endUser'        => function () {
-                        return isset($this->purchaseOrder) ? $this->purchaseOrder->endUser : null;
-                    },
+                    return isset($this->purchaseOrder) ? $this->purchaseOrder->endUser : null;
+                },
                 'created_at'     => function () {
-                        return date('M j Y h:i A', strtotime($this->created_at));
-                    },
+                    return date('M j Y h:i A', strtotime($this->created_at));
+                },
                 'updated_at'     => function () {
-                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
-                    }
+                    return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                }
 
             ];
         }
@@ -138,15 +138,15 @@
             return [
                 'id'               => 'ID',
                 'sn'               => Yii::t('app', 'System SN'),
-                'po'               => Yii::t('app', 'Purchase Order #'),
+                'po'               => Yii::t('app', 'Purchase order #'),
                 'status'           => Yii::t('app', 'Status'),
-                'current_code'     => Yii::t('app', 'Current Code'),
-                'next_lock_date'   => Yii::t('app', 'Next Locking Date'),
-                'init_lock_date'   => Yii::t('app', 'Initial Locking Date'),
-                'main_unlock_code' => Yii::t('app', 'Main unlock Code'),
-                'login_code'       => Yii::t('app', 'Login Code'),
-                'created_at'       => Yii::t('app', 'Created At'),
-                'updated_at'       => Yii::t('app', 'Updated At'),
+                'current_code'     => Yii::t('app', 'Current code'),
+                'next_lock_date'   => Yii::t('app', 'Next locking date'),
+                'init_lock_date'   => Yii::t('app', 'Initial locking date'),
+                'main_unlock_code' => Yii::t('app', 'Main unlock code'),
+                'login_code'       => Yii::t('app', 'Login code'),
+                'created_at'       => Yii::t('app', 'Created at'),
+                'updated_at'       => Yii::t('app', 'Updated at'),
             ];
         }
 
