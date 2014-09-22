@@ -1,6 +1,7 @@
 <?php
 
     use app\models\Country;
+    use app\models\Distributor;
     use yii\helpers\ArrayHelper;
     use yii\helpers\Html;
     use yii\widgets\ActiveForm;
@@ -17,15 +18,19 @@
     <?=
         $form->field($model, 'country_id')->dropDownList(
             ['' => Yii::t('app', 'Select Country...')] +
-            ArrayHelper::map(Country::find()->all(), 'id_countries', 'name')
+            ArrayHelper::map(Country::find()->all(), 'id', 'name')
         )
     ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => 45]) ?>
+    <?=
+        $form->field($model, 'distributor_id')->dropDownList(
+            ['' => Yii::t('app', 'Select Distributor...')] +
+            ArrayHelper::map(Distributor::findAllFiltered(), 'id', 'title')
+        )
+    ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => 45]) ?>
-
-    <?= $form->errorSummary($model) ?>
+    <?= $form->field($model, 'phone')->textInput() ?>
+    <?= $form->field($model, 'contact_person')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

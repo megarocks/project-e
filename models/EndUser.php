@@ -59,7 +59,7 @@
         public function rules()
         {
             return [
-                [['user_id', 'country_id'], 'required'],
+                [['user_id', 'country_id', 'distributor_id'], 'required'],
                 [['phone'], 'string', 'max' => 45],
                 [['contact_person'], 'string', 'max' => 128],
                 [['user_id', 'country_id', 'phone', 'created_at', 'updated_at', 'contact_person'], 'safe']
@@ -100,6 +100,7 @@
                 'country'    => Yii::t('app', 'Country'),
                 'user'       => Yii::t('app', 'User'),
                 'country_id' => Yii::t('app', 'Country'),
+                'distributor_id' => Yii::t('app', 'Distributor'),
             ];
         }
 
