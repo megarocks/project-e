@@ -15,6 +15,11 @@
 ?>
 
 <div class="user-form">
+
+    <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+    <input style="display:none" type="text" name="fakeusernameremembered"/>
+    <input style="display:none" type="password" name="fakepasswordremembered"/>
+
     <?php $form = ActiveForm::begin(); ?>
 
     <?=
