@@ -34,25 +34,33 @@
     <h3><?= Yii::t('app', 'System Details') ?> </h3>
 
     <div class="well">
-        <?=
-            PpdDetailView::widget([
-                'model'      => $model,
-                'attributes' => [
-                    'sn',
-                    [
-                        'label' => Yii::t('app', 'Status'),
-                        'value' => $model->toArray(['status'])['status'],
-                    ],
-                    'login_code',
-                    'current_code',
-                    'init_lock_date',
-                    'next_lock_date',
-                    [
-                        'label' => Yii::t('app', 'Email'),
-                        'value' => isset($po) ? $po->email : Yii::t('app', 'Email is not set'),
-                    ],
-                    'created_at'
+        <?php
+
+            $systemDetailsAttributes = [
+                'sn',
+                [
+                    'label' => Yii::t('app', 'Status'),
+                    'value' => $model->toArray(['status'])['status'],
                 ],
+                'login_code',
+                'main_unlock_code',
+                'current_code',
+                'init_lock_date',
+                [
+                    'label' => Yii::t('app', 'Email'),
+                    'value' => isset($po) ? $po->email : Yii::t('app', 'Email is not set'),
+                ],
+                'created_at'
+            ];
+
+            //do not show main unlock code while distributor have debt
+            if (isset($po) && $po->dtpl > 0) {
+                unset($systemDetailsAttributes[3]);
+            }
+
+            echo PpdDetailView::widget([
+                'model'      => $model,
+                'attributes' => $systemDetailsAttributes,
             ]) ?>
     </div>
 

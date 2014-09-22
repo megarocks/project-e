@@ -46,6 +46,7 @@
                         'value' => $model->toArray(['status'])['status'],
                     ],
                     'login_code',
+                    'main_unlock_code',
                     'current_code',
                     'init_lock_date',
                     'next_lock_date',
