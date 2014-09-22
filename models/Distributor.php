@@ -11,9 +11,9 @@
      *
      * @property integer $id
      * @property integer $user_id
-     * @property int $country_id;
+     * @property integer $country_id;
      * @property string $phone
-     * @property string $contactPerson
+     * @property string $contact_person
      * @property string $created_at
      * @property string $updated_at
      *
@@ -57,7 +57,7 @@
                 [['user_id', 'country_id'], 'required'],
                 [['phone'], 'string', 'max' => 45],
                 [['contact_person'], 'string', 'max' => 128],
-                [['user_id', 'country_id', 'phone', 'created_at', 'updated_at'], 'safe']
+                [['user_id', 'country_id', 'phone', 'created_at', 'updated_at', 'contact_person'], 'safe']
             ];
         }
 
@@ -87,20 +87,21 @@
         public function attributeLabels()
         {
             return [
-                'id'         => 'ID',
-                'title'      => Yii::t('app', 'Title'),
-                'email'      => Yii::t('app', 'Email'),
-                'created_at' => Yii::t('app', 'Created At'),
-                'updated_at' => Yii::t('app', 'Updated At'),
-                'country_id' => Yii::t('app', 'Country'),
-                'endUsers'   => Yii::t('app', 'End-Users'),
-                'systems'    => Yii::t('app', 'Systems'),
+                'id'             => 'ID',
+                'title'          => Yii::t('app', 'Title'),
+                'email'          => Yii::t('app', 'Email'),
+                'created_at'     => Yii::t('app', 'Created at'),
+                'updated_at'     => Yii::t('app', 'Updated at'),
+                'country_id'     => Yii::t('app', 'Country'),
+                'endUsers'       => Yii::t('app', 'End-users'),
+                'systems'        => Yii::t('app', 'Systems'),
+                'contact_person' => Yii::t('app', 'Contact person'),
             ];
         }
 
         public function getUser()
         {
-            return User::findOne(['id' => $this->user_id]);
+            return $this->hasOne(User::className(), ['id' => 'user_id']);
         }
 
         public function getTitle()
@@ -120,12 +121,17 @@
 
         public function getOrders()
         {
-            return PurchaseOrder::findAllFiltered(['id' => $this->id]);
+            return $this->hasMany(PurchaseOrder::className(), ['distributor_id' => 'id']);
         }
 
         public function getEndUsers()
         {
-            return EndUser::findAllFiltered(['id' => $this->id]);
+            $result = [];
+            foreach ($this->orders as $oder) {
+                $result[] = $oder->endUser;
+            }
+
+            return $result;
         }
 
         public function getSystems()
