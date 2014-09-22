@@ -26,21 +26,21 @@
             'model'      => $model,
             'attributes' => [
                 'po_num',
-                'cpup',
-                'dpup',
-                'dsp',
-                'csp',
-                'nop',
-                'dnpl',
-                'cnpl',
-                'cmp',
-                'dmp',
-                'ctpl',
-                'dtpl',
                 [
                     'label' => Yii::t('app', 'Country'),
                     'value' => isset($model->country) ? $model->country->name : Yii::t('app', 'Country is not defined'),
                 ],
+                'csp',
+                'dsp',
+                'cpup',
+                'dpup',
+                'nop',
+                'cnpl',
+                'cmp',
+                'ctpl',
+                'dnpl',
+                'dmp',
+                'dtpl',
                 [
                     'label' => Yii::t('app', 'Distributor'),
                     'value' => isset($model->distributor) ? $model->distributor->title : Yii::t('app', 'Distributor not assigned'),
@@ -50,8 +50,14 @@
                     'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
                 'email:email',
-                'created_at',
-                'updated_at'
+                [
+                    'label' => Yii::t('app', 'Created at'),
+                    'value' => $model->toArray(['created_at'])['created_at'],
+                ],
+                [
+                    'label' => Yii::t('app', 'Updated at'),
+                    'value' => $model->toArray(['updated_at'])['updated_at'],
+                ],
             ],
         ]) ?>
 
