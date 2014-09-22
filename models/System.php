@@ -225,7 +225,7 @@
         {
             $lockDates = $this->getLockingDates();
             $this->next_lock_date = $lockDates[0]['date'];
-            $this->current_code = $lockDates[0]['date'];
+            $this->current_code = Yii::$app->security->generateRandomString(10);
             $this->save();
         }
 
