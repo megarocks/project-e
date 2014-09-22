@@ -14,7 +14,7 @@
 <div class="end-users-index">
     <p>
         <?=
-            Html::a(Yii::t('app', 'Create end-user'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
+            Html::a(Yii::t('app', 'Register new end-user'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
     <table id="end-users-table" class="table-hover">
