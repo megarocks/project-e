@@ -8,7 +8,7 @@
     /**
      * This is the model class for table "countries".
      *
-     * @property integer $id_countries
+     * @property integer $id
      * @property string $name
      * @property string $iso_alpha2
      * @property string $iso_alpha3
@@ -18,8 +18,7 @@
      * @property string $currency_symbol
      * @property string $flag
      *
-     * @property PurchaseOrder[] $POs
-     * @property DistributorCountry[] $distributorsCountries
+     * @property PurchaseOrder[] $orders
      * @property Distributor[] $distributors
      * @property EndUser[] $endUsers
      */
@@ -39,8 +38,8 @@
         public function rules()
         {
             return [
-                [['id_countries'], 'required'],
-                [['id_countries', 'iso_numeric'], 'integer'],
+                [['id'], 'required'],
+                [['id', 'iso_numeric'], 'integer'],
                 [['name'], 'string', 'max' => 200],
                 [['iso_alpha2'], 'string', 'max' => 2],
                 [['iso_alpha3', 'currency_code', 'currency_symbol'], 'string', 'max' => 3],
@@ -54,7 +53,7 @@
         public function attributeLabels()
         {
             return [
-                'id_countries'    => 'Id Countries',
+                'id' => 'Country Id',
                 'name'            => 'Name',
                 'iso_alpha2'      => 'Iso Alpha2',
                 'iso_alpha3'      => 'Iso Alpha3',
@@ -70,15 +69,7 @@
          */
         public function getPOs()
         {
-            return $this->hasMany(PurchaseOrder::className(), ['country_id' => 'id_countries']);
-        }
-
-        /**
-         * @return \yii\db\ActiveQuery
-         */
-        public function getDistributorsCountries()
-        {
-            return $this->hasMany(DistributorCountry::className(), ['country_id' => 'id_countries']);
+            return $this->hasMany(PurchaseOrder::className(), ['country_id' => 'id']);
         }
 
         /**
@@ -86,7 +77,7 @@
          */
         public function getDistributors()
         {
-            return $this->hasMany(Distributor::className(), ['id' => 'distributor_id'])->viaTable('distributors_countries', ['country_id' => 'id_countries']);
+            return $this->hasMany(Distributor::className(), ['id' => 'distributor_id'])->viaTable('distributors_countries', ['country_id' => 'id']);
         }
 
         /**
@@ -94,6 +85,6 @@
          */
         public function getEndUsers()
         {
-            return $this->hasMany(EndUser::className(), ['country_id' => 'id_countries']);
+            return $this->hasMany(EndUser::className(), ['country_id' => 'id']);
         }
     }
