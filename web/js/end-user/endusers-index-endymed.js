@@ -11,7 +11,7 @@ var initScreen = function (user) {
             {data: "created_at"},
             {data: "title"},
             {data: "email"},
-            {data: "country"},
+            {data: "country.name"},
             {
                 "data": "id",
                 "render": function (id) {

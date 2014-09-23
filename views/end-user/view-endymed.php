@@ -23,12 +23,18 @@
         PpdDetailView::widget([
             'model'      => $model,
             'attributes' => [
-                'title',
-                'email:email',
                 [
                     'label' => Yii::t('app', 'Country'),
                     'value' => $model->country->name,
                 ],
+                [
+                    'label' => Yii::t('app', 'Distributor'),
+                    'value' => $model->distributor->title,
+                ],
+                'title',
+                'email:email',
+                'phone',
+                'contact_person',
             ],
         ]) ?>
 

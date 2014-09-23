@@ -6,6 +6,7 @@
     use app\models\User;
     use Yii;
     use app\models\EndUser;
+    use yii\base\Security;
     use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\helpers\Json;
@@ -71,4 +72,78 @@
             echo Json::encode(['output' => '', 'selected' => '']);
         }
 
+        public function actionCreate()
+        {
+
+            if (Yii::$app->user->can('createEndUser')) {
+                $user = Yii::$app->user->identity;
+
+                $endUser = new EndUser();
+
+                $passForNewUser = Yii::$app->security->generateRandomString(6);
+                $relatedUser = new User(
+                    [
+                        'roleField'       => User::ROLE_END_USER,
+                        'password'        => $passForNewUser,
+                        'password_repeat' => $passForNewUser,
+                    ]);
+
+                $request = Yii::$app->request->post();
+                if (!empty($request)) {
+                    $endUser->load($request);
+                    $relatedUser->load($request);
+
+                    if ($relatedUser->createModel()) {
+                        $endUser->user_id = $relatedUser->id;
+                        if ($endUser->createModel()) {
+                            return $this->redirect(['view', 'id' => $endUser->id]);
+                        }
+                    } else {
+                        return $this->render('create-' . $user->role,
+                            [
+                                'endUser'     => $endUser,
+                                'relatedUser' => $relatedUser,
+                            ]);
+                    }
+                } else {
+                    return $this->render('create-' . $user->role, [
+                        'endUser'     => $endUser,
+                        'relatedUser' => $relatedUser,
+                    ]);
+                }
+            } else {
+                throw new ForbiddenHttpException;
+            }
+        }
+
+        public function actionUpdate($id)
+        {
+
+            if (Yii::$app->user->can('updateEndUser', ['modelId' => $id])) {
+
+                $user = Yii::$app->user->identity;
+                /**@var EndUser $endUser */
+                $endUser = $this->findModel($id);
+                /**@var User $relatedUser */
+                $relatedUser = $endUser->user;
+
+                $request = Yii::$app->request->post();
+
+                if (!empty($request)) {
+                    $endUser->load($request);
+                    $relatedUser->load($request);
+
+                    if ($relatedUser->updateModel() && $endUser->updateModel()) {
+                        return $this->redirect(['view', 'id' => $endUser->id]);
+                    } else {
+                        return $this->render('update-' . $user->role, ['endUser' => $endUser, 'relatedUser' => $relatedUser]);
+                    }
+                } else {
+                    return $this->render('update-' . $user->role, ['endUser' => $endUser, 'relatedUser' => $relatedUser]);
+                }
+
+            } else {
+                throw new ForbiddenHttpException;
+            }
+        }
     }

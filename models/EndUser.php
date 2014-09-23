@@ -24,6 +24,7 @@
      * @property PurchaseOrder[] $orders
      * @property Country $country
      * @property System[] $systems
+     * @property Distributor $distributor
      *
      *
      */
@@ -69,7 +70,7 @@
         public function fields()
         {
             return [
-                'id', 'user_id', 'title', 'email', 'country_id', 'contact_person',
+                'id', 'user_id', 'title', 'email', 'country_id', 'contact_person', 'country',
                 'created_at' => function () {
                     return date('M j Y h:i A', strtotime($this->created_at));
                 },
@@ -82,7 +83,7 @@
         public function extraFields()
         {
             return [
-                'user', 'country', 'orders', 'systems',
+                'user', 'orders', 'systems',
             ];
         }
 
@@ -96,7 +97,7 @@
                 'title'      => Yii::t('app', 'Title'),
                 'email'      => Yii::t('app', 'Email'),
                 'systems'    => Yii::t('app', 'Systems'),
-                'orders' => Yii::t('app', 'Purchase Orders'),
+                'orders'     => Yii::t('app', 'Purchase Orders'),
                 'country'    => Yii::t('app', 'Country'),
                 'user'       => Yii::t('app', 'User'),
                 'country_id' => Yii::t('app', 'Country'),
@@ -139,39 +140,18 @@
             return $result;
         }
 
+        public function getDistributor()
+        {
+            return $this->hasOne(Distributor::className(), ['id' => 'distributor_id']);
+        }
+
         /**
+         * @param bool $needValidate
          * @return boolean
          */
-        public function createModel()
+        public function createModel($needValidate = true)
         {
-            /*            if ($this->validate()) {
-                            $user = new User();
-                            $user->email = $this->email;
-                            $user->first_name = $this->title;
-                            $user->password = Yii::$app->security->generateRandomString(8);
-                            $user->password_repeat = $user->password;
-                            $user->roleField = User::ROLE_END_USER;
-
-                            if ($user->createModel()) {
-                                $this->user_id = $user->id;
-                                if ($this->save()) {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            } else {
-                                if (is_array($user->errors)) {
-                                    foreach ($user->errors as $attribute => $error) {
-                                        $this->addError($attribute, $error[0]);
-                                    }
-                                }
-
-                                return false;
-                            }
-                        } else {
-                            return false;
-                        }*/
-            return $this->save();
+            return $this->save($needValidate);
         }
 
         /**
@@ -187,6 +167,8 @@
          */
         public function deleteModel()
         {
-            return $this->delete();
+            if ($this->user->delete()) {
+                return $this->delete();
+            }
         }
     }
