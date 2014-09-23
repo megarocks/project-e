@@ -149,9 +149,9 @@
          * @param bool $needValidate
          * @return boolean
          */
-        public function createModel($needValidate = true)
+        public function createModel()
         {
-            return $this->save($needValidate);
+            return $this->save();
         }
 
         /**

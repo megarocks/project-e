@@ -6,10 +6,10 @@
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\EndUser */
+    /* @var $model app\models\SalesUser */
 
     $this->title = $model->title;
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'End Users'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Sales Users'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="end-users-view">
@@ -24,18 +24,19 @@
             'model'      => $model,
             'attributes' => [
                 [
-                    'label' => Yii::t('app', 'Country'),
-                    'value' => $model->country->name,
+                    'label' => Yii::t('app', 'First Name'),
+                    'value' => $model->user->first_name,
                 ],
                 [
-                    'label' => Yii::t('app', 'Distributor'),
-                    'value' => $model->distributor->title,
+                    'label' => Yii::t('app', 'Last Name'),
+                    'value' => $model->user->last_name,
                 ],
-                'title',
-                'email:email',
+                [
+                    'label'  => Yii::t('app', 'Email'),
+                    'value'  => $model->user->email,
+                    'format' => 'email',
+                ],
                 'phone',
-                'contact_person',
             ],
         ]) ?>
-
 </div>

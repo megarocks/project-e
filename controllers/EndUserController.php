@@ -6,15 +6,10 @@
     use app\models\User;
     use Yii;
     use app\models\EndUser;
-    use yii\base\Security;
-    use yii\db\ActiveRecord;
     use yii\filters\AccessControl;
     use yii\helpers\Json;
-    use yii\web\Controller;
     use yii\web\ForbiddenHttpException;
-    use yii\web\NotFoundHttpException;
     use yii\filters\VerbFilter;
-    use yii\web\UnauthorizedHttpException;
 
     /**
      * EndusersController implements the CRUD actions for EndUsers model.
