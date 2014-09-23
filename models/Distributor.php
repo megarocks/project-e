@@ -185,6 +185,10 @@
          */
         public function deleteModel()
         {
-            return $this->delete();
+            if ($this->user->delete()) {
+                return $this->delete();
+            } else {
+                return false;
+            }
         }
     }

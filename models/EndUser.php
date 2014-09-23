@@ -169,6 +169,8 @@
         {
             if ($this->user->delete()) {
                 return $this->delete();
+            } else {
+                return false;
             }
         }
     }
