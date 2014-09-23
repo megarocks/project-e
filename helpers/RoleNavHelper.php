@@ -89,6 +89,7 @@
                 ['label' => Yii::t('app', 'Distributors'), 'url' => ['/distributor/index'], 'permission' => 'listDistributors', 'active' => Yii::$app->controller->id == 'distributor' ? true : false],
                 ['label' => Yii::t('app', 'End-Users'), 'url' => ['/end-user/index'], 'permission' => 'listEndUsers', 'active' => Yii::$app->controller->id == 'end-user' ? true : false],
                 ['label' => Yii::t('app', 'Sales-Users'), 'url' => ['/sales-user/index'], 'permission' => 'listSalesUsers', 'active' => Yii::$app->controller->id == 'sales-user' ? true : false],
+                ['label' => Yii::t('app', 'Manufacturers'), 'url' => ['/manufacturer/index'], 'permission' => 'listManufacturers', 'active' => Yii::$app->controller->id == 'manufacturer' ? true : false],
                 ['label' => Yii::t('app', 'Users'), 'url' => ['/user'], 'permission' => 'listUsers', 'active' => Yii::$app->controller->id == 'user' ? true : false],
             ];
         }
