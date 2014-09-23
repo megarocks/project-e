@@ -6,10 +6,10 @@
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\Distributor */
+    /* @var $model app\models\EndUser */
 
     $this->title = $model->title;
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Distributors'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'End-users'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="distributors-view">
@@ -31,6 +31,10 @@
                 'email:email',
                 'phone',
                 'contact_person',
+                [
+                    'label' => Yii::t('app', 'Assigned to distributor'),
+                    'value' => $model->distributor->title,
+                ]
             ],
         ]) ?>
 

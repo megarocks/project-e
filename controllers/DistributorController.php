@@ -65,7 +65,7 @@
                     //get first value of array with parameters from parent dropdown
                     $countryId = $parents[0];
                     //find a country by the id
-                    $country = Country::findOne(['id_countries' => $countryId]);
+                    $country = Country::findOne(['id' => $countryId]);
                     //get list of distributors assigned to found country
                     $distributors = $country->distributors;
                     $out = [];

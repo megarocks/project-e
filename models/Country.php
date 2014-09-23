@@ -77,7 +77,7 @@
          */
         public function getDistributors()
         {
-            return $this->hasMany(Distributor::className(), ['id' => 'distributor_id'])->viaTable('distributors_countries', ['country_id' => 'id']);
+            return $this->hasMany(Distributor::className(), ['country_id' => 'id']);
         }
 
         /**

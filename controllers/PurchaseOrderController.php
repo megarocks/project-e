@@ -56,7 +56,7 @@
                 $parents = $_POST['depdrop_parents'];
                 if ($parents != null) {
                     $countryId = $parents[0];
-                    $country = Country::findOne(['id_countries' => $countryId]);
+                    $country = Country::findOne(['id' => $countryId]);
 
                     $out = [];
 

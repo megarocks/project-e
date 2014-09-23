@@ -51,10 +51,6 @@
                     'init_lock_date',
                     'next_lock_date',
                     [
-                        'label' => Yii::t('app', 'Email'),
-                        'value' => isset($po) ? $po->email : Yii::t('app', 'Email is not set'),
-                    ],
-                    [
                         'label' => Yii::t('app', 'Created At'),
                         'value' => $model->toArray(['created_at'])['created_at'],
                     ],
