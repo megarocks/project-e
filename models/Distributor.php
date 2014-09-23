@@ -66,6 +66,7 @@
             return [
                 'id', 'user_id', 'title', 'email',
                 'country_id',
+                'country',
                 'contact_person',
                 'phone',
                 'created_at' => function () {
@@ -80,7 +81,7 @@
         public function extraFields()
         {
             return [
-                'country', 'user', 'orders', 'systems', 'endUsers'
+                'user', 'orders', 'systems', 'endUsers'
             ];
         }
 

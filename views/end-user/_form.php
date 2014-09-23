@@ -30,7 +30,7 @@
         )
     ?>
 
-    <?= $form->field($relatedUser, 'first_name')->textInput()->label(Yii::t('app', 'Title/First Name')) ?>
+    <?= $form->field($relatedUser, 'first_name')->textInput(['maxlength' => 45])->label(Yii::t('app', 'Title/First Name')) ?>
     <?= $form->field($relatedUser, 'roleField')->hiddenInput()->label(false) ?>
     <?= $form->field($relatedUser, 'email')->textInput() ?>
 
