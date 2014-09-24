@@ -10,6 +10,7 @@
 
 
     use app\models\Distributor;
+    use app\models\EndUser;
     use app\models\User;
     use yii\helpers\ArrayHelper;
     use yii\rbac\Item;
@@ -40,28 +41,18 @@
                 //sales have access to all end users
                 return true;
             } elseif ($role == User::ROLE_DISTR) {
-                //return $this->checkIfEndUserRelatesToDistributorOrders($user, $params);
-                return true;
+                return $this->checkIfEndUserRelatesToDistributor($user, $params);
             } else {
                 return false;
             }
         }
 
-        private function checkIfEndUserRelatesToDistributorOrders($user, $params)
+        private function checkIfEndUserRelatesToDistributor($user, $params)
         {
-            //check do this end-user assigned to any from orders of this distributor
-
-            //get distributor
             $distributor = Distributor::findOne(['user_id' => $user]);
-            //get all orders of this distributor
-            $purchaseOrders = $distributor->purchaseOrders;
-            //get array of end-user id's assigned to orders
-            $endUsers = [];
-            foreach ($purchaseOrders as $purchaseOrder) {
-                $endUsers[] = $purchaseOrder->end_user_id;
-            }
+            $endUser = EndUser::findOne(['id' => $params['modelId']]);
 
-            //check if requested end user id is in the the array
-            return in_array($params['modelId'], $endUsers);
+            return $distributor->id == $endUser->distributor_id;
+
         }
     }

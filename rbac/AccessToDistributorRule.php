@@ -2,6 +2,7 @@
 
     namespace app\rbac;
 
+    use app\models\Distributor;
     use app\models\User;
     use yii\helpers\ArrayHelper;
     use yii\rbac\Item;
@@ -29,6 +30,11 @@
                 return true;
             } elseif ($role == User::ROLE_SALES) {
                 return true;
+            } elseif ($role == User::ROLE_DISTR) {
+                $currentDistributor = Distributor::findOne(['user_id' => $user]);
+                $requestedDistributor = Distributor::findOne(['id' => $params['modelId']]);
+
+                return $currentDistributor->id == $requestedDistributor->id;
             } else {
                 return false;
             }

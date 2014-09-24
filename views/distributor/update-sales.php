@@ -3,19 +3,19 @@
     use yii\helpers\Html;
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\Distributor */
+    /* @var $distributor app\models\Distributor */
+    /* @var $relatedUser app\models\User */
 
-    $this->title = Yii::t('app', 'Update {modelClass}: ', [
-            'modelClass' => 'Distributors',
-        ]) . ' ' . $model->title;
+    $this->title = Yii::t('app', 'Update Distributor');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Distributors'), 'url' => ['index']];
-    $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+    $this->params['breadcrumbs'][] = ['label' => $distributor->title, 'url' => ['view', 'id' => $distributor->id]];
     $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="distributors-update">
     <?=
         $this->render('_form', [
-            'model' => $model,
+            'distributor' => $distributor,
+            'relatedUser' => $relatedUser,
         ]) ?>
 
 </div>
