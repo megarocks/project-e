@@ -41,7 +41,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment', 'delete'],
+                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment', 'delete', 'periods-drop-down'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -53,11 +53,13 @@
          * Method called from system screen. It gets system by id from get param and renders form for adding payment
          * to this system
          *
-         * @param $system_id
-         * @throws \yii\web\ForbiddenHttpException
+         * @param $access_token
+         * @throws ForbiddenHttpException
+         * @throws NotFoundHttpException
+         * @internal param $system_id
          * @return string|\yii\web\Response
          */
-        public function actionCreate($system_id)
+        public function actionCreate($access_token)
         {
             if (Yii::$app->user->can('createPayment')) {
                 /**@var $user User */
@@ -65,13 +67,13 @@
 
                 $request = Yii::$app->request->post();
 
-                $system = $this->getSystem($system_id);
+                $system = $this->getSystem($access_token);
 
-                $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
+                $payment = new Payment(['scenario' => Payment::METHOD_MANUAL, 'from' => Payment::FROM_DISTR]);
 
                 if (!empty($request)) {
                     $payment->load($request);
-                    if ($payment->save()) {
+                    if ($payment->createModel()) {
                         //update system locking params accordingly to payment
                         $system->purchaseOrder->processPayment($payment);
 
@@ -113,7 +115,6 @@
 
                 /**@var $payment Payment */
                 $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
-
                 $request = Yii::$app->request->post();
                 if (!empty($request)) {
                     $payment->load($request);
@@ -258,13 +259,17 @@
          * @throws \yii\web\NotFoundHttpException
          * @return System|null
          */
-        private function getSystem($id = null)
+        private function getSystem($access_token = null)
         {
             $loginCode = Yii::$app->session->get('loginCode');
-            if ($id) {
-                $system = System::findOne($id);
+            if ($access_token) {
+                $system = System::findOne(['access_token' => $access_token]);
+                if ($system) {
+                    return $system;
+                } else {
+                    throw new NotFoundHttpException;
+                }
 
-                return $system;
             } elseif ($loginCode) {
                 $system = System::getByLoginCode($loginCode);
 
@@ -272,6 +277,13 @@
             } else {
                 throw new NotFoundHttpException;
             }
+        }
+
+        public function actionPeriodsDropDown($for, $access_token)
+        {
+            $system = $this->getSystem($access_token);
+
+            return $this->renderAjax('periods-dropdown', ['for' => $for, 'system' => $system]);
         }
 
     }

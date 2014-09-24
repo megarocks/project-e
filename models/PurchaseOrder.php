@@ -216,21 +216,17 @@
         {
             /**@var $payment Payment */
 
-            switch ($payment->from) {
-                case Payment::FROM_DISTR:
-                    $this->dnpl = $this->dnpl - $payment->periods;
-                    break;
-                case Payment::FROM_USER:
-                    $this->cnpl = $this->cnpl - $payment->periods;
-                    break;
-                default:
-                    break;
+            if ($payment->from == Payment::FROM_DISTR) {
+                $this->dnpl = $this->dnpl - $payment->periods;
+                $this->calculateValues(false);
+                $this->save();
+
+            } elseif ($payment->from == Payment::FROM_USER) {
+                $this->cnpl = $this->cnpl - $payment->periods;
+                $this->calculateValues(false);
+                $this->save();
+                $this->system->updateLockingData();
             }
-
-            $this->calculateValues(false);
-            $this->save();
-            $this->system->updateLockingData();
-
             return true;
         }
 

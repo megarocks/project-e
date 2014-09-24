@@ -63,7 +63,7 @@
         public function rules()
         {
             return [
-                [['po_num', 'amount', 'periods', 'currency_code', 'payer_email'], 'required'],
+                [['po_num', 'periods'], 'required'],
                 [['po_num', 'amount', 'periods', 'currency_code', 'transaction_id', 'payer_id', 'payer_email', 'from', 'method'], 'safe'],
                 [['po_num'], 'integer'],
                 [['amount'], 'number', 'min' => 1],
@@ -80,11 +80,11 @@
             return [
                 'id', 'po_num', 'amount', 'periods', 'currency_code', 'payer_email', 'method',
                 'created_at' => function () {
-                        return date('M j Y h:i A', strtotime($this->created_at));
-                    },
+                    return date('M j Y h:i A', strtotime($this->created_at));
+                },
                 'updated_at' => function () {
-                        return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
-                    }
+                    return (!is_null($this->updated_at)) ? date('M j Y h:i A', strtotime($this->updated_at)) : null;
+                }
             ];
         }
 
@@ -137,6 +137,16 @@
          */
         public function createModel()
         {
+            $order = PurchaseOrder::findOne(['po_num' => $this->po_num]);
+            $this->currency_code = $order->currency_code;
+            if ($this->from == static::FROM_DISTR) {
+                $this->amount = $this->periods * $order->dmp;
+                $this->payer_email = $order->distributor->email;
+            } elseif ($this->from == static::FROM_USER) {
+                $this->amount = $this->periods * $order->cmp;
+                $this->payer_email = $order->endUser->email;
+            }
+
             return $this->save();
         }
 

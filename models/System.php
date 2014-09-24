@@ -15,6 +15,7 @@
      * @property string $current_code
      * @property string $next_lock_date
      * @property string $init_lock_date
+     * @property string $access_token
      *
      * @property string $main_unlock_code
      * @property string $login_code
@@ -62,9 +63,9 @@
         {
             return [
                 [['sn'], 'required'],
-                [['sn'], 'integer'],
+                [['sn', 'status'], 'integer'],
                 [['sn'], 'unique'],
-                [['status', 'login_code'], 'string'],
+                [['login_code'], 'string'],
                 [['next_lock_date', 'init_lock_date', 'created_at', 'updated_at', 'sn'], 'safe'],
                 [['current_code', 'main_unlock_code'], 'string', 'max' => 512]
             ];
@@ -192,39 +193,42 @@
             return static::findOne(['sn' => $sn]);
         }
 
-        public function getLockingDates()
+        public static function findByAccessToken($token)
+        {
+            return static::findOne(['access_token' => $token]);
+        }
+
+        public function getLockingDates($for)
         {
             $lockingDates = [];
+            $resultLockingDates = [];
 
-            //generating values for all periods staring from initial lock date
+            //create array with all locking dates starting from initial lock date
             for ($i = 1; $i <= $this->purchaseOrder->nop; $i++) {
                 $dateVal = strtotime('+' . $i . 'month ' . $this->init_lock_date);
-                $lockingDate['date'] = date('Y-m-d', $dateVal);
-                $lockingDates[] = $lockingDate;
-            }
-            //leaving only periods which are left to pay
-            $lockingDates = array_slice($lockingDates, -$this->purchaseOrder->npl);
-
-            for ($j = 0; $j < count($lockingDates); $j++) {
-                $dateVal = strtotime($lockingDates[$j]['date']);
-                $lockingDates[$j]['periods'] = $j + 1;
-                if ($j == 0) {
-                    $lockingDates[$j]['pretty_date'] = $j + 1 . ' period. Next locking date: ' . date('F j, Y', $dateVal);
-                } elseif ($j == count($lockingDates)) {
-                    $lockingDates[$j]['pretty_date'] = $j + 1 . ' periods. This will unlock system totally';
-                } else {
-                    $lockingDates[$j]['pretty_date'] = $j + 1 . ' periods. Next locking date: ' . date('F j, Y', $dateVal);
-                }
-
+                $lockingDate['date'] = date('M j Y', $dateVal);
+                $lockingDates[$i] = $lockingDate;
             }
 
-            return $lockingDates;
+            if ($for == Payment::FROM_DISTR) {
+                //leave only unclosed locking dates
+                $lockingDates = array_slice($lockingDates, -$this->purchaseOrder->dnpl);
+            } elseif ($for == Payment::FROM_USER) {
+                $lockingDates = array_slice($lockingDates, -$this->purchaseOrder->cnpl);
+            }
+
+            for ($j = 1; $j < count($lockingDates); $j++) {
+                $resultLockingDates[$j] = $lockingDates[$j - 1];
+                $resultLockingDates[$j]['periods'] = $j;
+            }
+
+            return $resultLockingDates;
         }
 
         public function updateLockingData()
         {
-            $lockDates = $this->getLockingDates();
-            $this->next_lock_date = $lockDates[0]['date'];
+            $lockDates = $this->getLockingDates(Payment::FROM_USER);
+            $this->next_lock_date = date('Y-m-d', strtotime($lockDates[1]['date']));  //TODO Possible here date is shifted and incorrect
             $this->current_code = Yii::$app->security->generateRandomString(10);
             $this->save();
         }

@@ -29,7 +29,7 @@
         <?php endif; ?>
         <?php if (isset($po)) : ?>
             <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
-            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']) ?>
         <?php endif; ?>
     </p>
 
