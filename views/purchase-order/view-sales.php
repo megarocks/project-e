@@ -2,6 +2,7 @@
 
     use app\widgets\PpdDetailView;
     use yii\helpers\Html;
+    use yii\helpers\Url;
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
@@ -11,13 +12,18 @@
     $this->title = Yii::t('app', 'Purchase Order #{po_num} Details', ['po_num' => $model->po_num]);
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Purchase Orders'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
+
+    Yii::$app->user->setReturnUrl(Url::to());
 ?>
 
 <div class="po-view">
     <p>
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (is_null($model->system)) : ?>
-            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+
+        <?php endif; ?>
+        <?php if (!is_null($model->system)) : ?>
+
         <?php endif; ?>
     </p>
 
@@ -49,7 +55,6 @@
                     'label' => Yii::t('app', 'End-User'),
                     'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
-                'email:email',
                 [
                     'label' => Yii::t('app', 'Created at'),
                     'value' => $model->toArray(['created_at'])['created_at'],

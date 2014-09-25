@@ -65,7 +65,7 @@
                     //get first value of array with parameters from parent dropdown
                     $countryId = $parents[0];
                     //find a country by the id
-                    $country = Country::findOne(['id_countries' => $countryId]);
+                    $country = Country::findOne(['id' => $countryId]);
                     //get list of distributors assigned to found country
                     $distributors = $country->distributors;
                     $out = [];
@@ -84,6 +84,81 @@
                 echo Json::encode(['output' => '', 'selected' => '']);
             }
 
+        }
+
+        public function actionCreate()
+        {
+
+            if (Yii::$app->user->can('createDistributor')) {
+                $user = Yii::$app->user->identity;
+                /**@var Distributor $distributor */
+                $distributor = new Distributor();
+
+                $passForNewUser = Yii::$app->security->generateRandomString(6);
+                $relatedUser = new User(
+                    [
+                        'roleField'       => User::ROLE_DISTR,
+                        'password'        => $passForNewUser,
+                        'password_repeat' => $passForNewUser,
+                    ]);
+
+                $request = Yii::$app->request->post();
+                if (!empty($request)) {
+                    $distributor->load($request);
+                    $relatedUser->load($request);
+
+                    if ($relatedUser->createModel()) {
+                        $distributor->user_id = $relatedUser->id;
+                        if ($distributor->createModel()) {
+                            return $this->redirect(['view', 'id' => $distributor->id]);
+                        }
+                    } else {
+                        return $this->render('create-' . $user->role,
+                            [
+                                'distributor' => $distributor,
+                                'relatedUser' => $relatedUser,
+                            ]);
+                    }
+                } else {
+                    return $this->render('create-' . $user->role, [
+                        'distributor' => $distributor,
+                        'relatedUser' => $relatedUser,
+                    ]);
+                }
+            } else {
+                throw new ForbiddenHttpException;
+            }
+        }
+
+        public function actionUpdate($id)
+        {
+
+            if (Yii::$app->user->can('updateDistributor', ['modelId' => $id])) {
+
+                $user = Yii::$app->user->identity;
+                /**@var Distributor $distributor */
+                $distributor = $this->findModel($id);
+                /**@var User $relatedUser */
+                $relatedUser = $distributor->user;
+
+                $request = Yii::$app->request->post();
+
+                if (!empty($request)) {
+                    $distributor->load($request);
+                    $relatedUser->load($request);
+
+                    if ($relatedUser->updateModel() && $distributor->updateModel()) {
+                        return $this->redirect(['view', 'id' => $distributor->id]);
+                    } else {
+                        return $this->render('update-' . $user->role, ['distributor' => $distributor, 'relatedUser' => $relatedUser]);
+                    }
+                } else {
+                    return $this->render('update-' . $user->role, ['distributor' => $distributor, 'relatedUser' => $relatedUser]);
+                }
+
+            } else {
+                throw new ForbiddenHttpException;
+            }
         }
 
     }

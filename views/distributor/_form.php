@@ -6,7 +6,8 @@
     use yii\widgets\ActiveForm;
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\Distributor */
+    /* @var $distributor app\models\Distributor */
+    /* @var $relatedUser app\models\User */
     /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -15,20 +16,24 @@
     <?php $form = ActiveForm::begin(); ?>
 
     <?=
-        $form->field($model, 'country_id')->dropDownList(
+        $form->field($distributor, 'country_id')->dropDownList(
             ['' => Yii::t('app', 'Select Country...')] +
-            ArrayHelper::map(Country::find()->all(), 'id_countries', 'name')
+            ArrayHelper::map(Country::find()->all(), 'id', 'name')
         )
     ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => 45]) ?>
+    <?= $form->field($relatedUser, 'first_name')->textInput(['maxlength' => 45])->label(Yii::t('app', 'Title/First Name')) ?>
+    <?= $form->field($relatedUser, 'roleField')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => 45]) ?>
+    <?= $form->field($relatedUser, 'email')->textInput() ?>
+    <?= $form->field($distributor, 'phone')->textInput() ?>
+    <?= $form->field($distributor, 'contact_person')->textInput() ?>
 
-    <?= $form->errorSummary($model) ?>
+    <?= $form->field($relatedUser, 'password')->hiddenInput()->label(false) ?>
+    <?= $form->field($relatedUser, 'password_repeat')->hiddenInput()->label(false) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($distributor->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $distributor->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

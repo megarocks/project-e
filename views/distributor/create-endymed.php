@@ -4,7 +4,8 @@
 
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\Distributor */
+    /* @var $distributor app\models\Distributor */
+    /* @var $relatedUser app\models\User */
 
     $this->title = Yii::t('app', 'Registering new distributor');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Distributors'), 'url' => ['index']];
@@ -13,7 +14,8 @@
 <div class="distributors-create">
     <?=
         $this->render('_form', [
-            'model' => $model,
+            'distributor' => $distributor,
+            'relatedUser' => $relatedUser,
         ]) ?>
 
 </div>

@@ -380,7 +380,17 @@
                 }
                 $this->role = $this->_roleField;
 
-                return $this->save();
+                if ($this->save()) {
+                    Yii::$app->mailer->compose('user/user-account-updated', ['user' => $this])
+                        ->setFrom('noreply@projecte.com')
+                        ->setTo($this->email)
+                        ->setSubject(Yii::t('app', 'EndyMed PPD account'))
+                        ->send();
+
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
 

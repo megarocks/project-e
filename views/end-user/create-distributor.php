@@ -4,7 +4,8 @@
 
 
     /* @var $this yii\web\View */
-    /* @var $model app\models\EndUser */
+    /* @var $endUser app\models\EndUser */
+    /* @var $relatedUser app\models\User */
 
     $this->title = Yii::t('app', 'Register new end-user accout');
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'End Users'), 'url' => ['index']];
@@ -13,7 +14,8 @@
 <div class="end-users-create">
     <?=
         $this->render('_form', [
-            'model' => $model,
+            'endUser'     => $endUser,
+            'relatedUser' => $relatedUser,
         ]) ?>
 
 </div>

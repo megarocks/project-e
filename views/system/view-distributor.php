@@ -3,97 +3,89 @@
     use app\models\PurchaseOrder;
     use app\widgets\PpdDetailView;
     use yii\helpers\Html;
+    use yii\helpers\Url;
     use yii\widgets\DetailView;
 
     /* @var $this yii\web\View */
     /* @var $model app\models\System */
     /* @var $po app\models\PurchaseOrder */
-
     $po = $model->purchaseOrder;
 
     $this->title = "System #" . $model->sn . " management";
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
+
+    Yii::$app->user->setReturnUrl(Url::to());
 ?>
 
 <div class="systems-view">
     <p>
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
-        <?php if (!isset($po)) : ?>
+        <?php if (($po->dtpl > 0) || ($po->ctpl > 0)) : ?>
+            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/paypal-payment', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']) ?>
+        <?php endif; ?>
+        <?php if ($po->dtpl > 0) : ?>
+            <?= PpdDetailView::widget([
+                'model'      => $po,
+                'attributes' => [
+                    [
+                        'label' => Yii::t('app', 'Debt To Endymed For This System'),
+                        'value' => $po->dtpl . ' ' . $po->currency_code,
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Left number of payments'),
+                        'value' => $po->dnpl,
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Monthly payment'),
+                        'value' => $po->dmp . ' ' . $po->currency_code,
+                    ],
+                ]
+            ]) ?>
+        <?php endif; ?>
+        <?php if ($po->dtpl <= 0) : ?>
 
-        <?php endif; ?>
-        <!--For now Distributor without capability of adding payment manually. Uncomment following to allow it and add rbac rule:-->
-        <!--        <?php /*if (isset($po) && ($po->dtpl <= 0)) : //if distributor has no debt to endymed - he will see this area */ ?>
-            <? /*= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'system_id' => $model->id], ['class' => 'btn btn-primary']) */ ?>
-        --><?php /*endif; */ ?>
-        <?php if (isset($po) && ($po->dtpl > 0)) : //if distributor HAS debt to endymed - he will see this area ?>
-            <?= Html::a(Yii::t('app', 'Purchase Code'), ['payment/purchase-code', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?php endif; ?>
+    <h3 class="text-center"> <?= Yii::t('app', 'Main Unlock Code: {main_code}', ['main_code' => $model->main_unlock_code]) ?> </h3>
+    <?php endif; ?>
     </p>
 
     <h3><?= Yii::t('app', 'System Details') ?> </h3>
 
     <div class="well">
-        <?php
-
-            $systemDetailsAttributes = [
-                'sn',
-                [
-                    'label' => Yii::t('app', 'Status'),
-                    'value' => $model->toArray(['status'])['status'],
-                ],
-                'login_code',
-                'main_unlock_code',
-                'current_code',
-                'init_lock_date',
-                [
-                    'label' => Yii::t('app', 'Email'),
-                    'value' => isset($po) ? $po->email : Yii::t('app', 'Email is not set'),
-                ],
-                'created_at'
-            ];
-
-            //do not show main unlock code while distributor have debt
-            if (isset($po) && $po->dtpl > 0) {
-                unset($systemDetailsAttributes[3]);
-            }
-
-            echo PpdDetailView::widget([
+        <?=
+            PpdDetailView::widget([
                 'model'      => $model,
-                'attributes' => $systemDetailsAttributes,
+                'attributes' => [
+                    'sn',
+                    [
+                        'label' => Yii::t('app', 'Status'),
+                        'value' => $model->toArray(['status'])['status'],
+                    ],
+                    'login_code',
+                    'current_code',
+                    'init_lock_date',
+                    'next_lock_date',
+                    [
+                        'label' => Yii::t('app', 'Created At'),
+                        'value' => $model->toArray(['created_at'])['created_at'],
+                    ],
+                ],
             ]) ?>
     </div>
 
-    <?php if (isset($po)): ?>
-        <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
-        <?=
-    PpdDetailView::widget([
-        'model'      => $po,
-        'attributes' => [
-            'po_num',
-            'csp',
-            'cpup',
-            'nop',
-            'cnpl',
-            'ctpl',
-            'cmp',
-        ],
-    ]) ?>
-
-        <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
-        <?=
+    <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
+    <?=
         PpdDetailView::widget([
             'model'      => $po,
             'attributes' => [
                 'po_num',
-                'dsp',
-                'dpup',
+                'csp',
+                'cpup',
                 'nop',
-                'dnpl',
-                'dtpl',
-                'dmp',
+                'cnpl',
+                'ctpl',
+                'cmp',
             ],
         ]) ?>
-    <?php endif; ?>
 
 </div>

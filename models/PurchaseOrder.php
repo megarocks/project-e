@@ -18,7 +18,6 @@
      * @property number $dsp
      * @property number $csp
      * @property integer $nop
-     * @property integer $npl
      * @property integer $dnpl
      * @property integer $cnpl
      * @property number $cmp
@@ -72,15 +71,13 @@
         public function rules()
         {
             return [
-                [['po_num', 'country_id', 'email', 'currency_code', 'distributor_id', 'end_user_id', 'nop', 'cpup', 'dpup', 'dsp', 'csp'], 'required'],
+                [['po_num', 'country_id', 'currency_code', 'distributor_id', 'end_user_id', 'nop', 'cpup', 'dpup', 'dsp', 'csp'], 'required'],
                 [['cpup', 'dpup', 'dsp', 'csp', 'cmp', 'dmp', 'ctpl', 'dtpl'], 'number', 'min' => 0],
                 [['po_num', 'end_user_id', 'distributor_id', 'country_id', 'system_sn'], 'integer'],
                 [['created_at', 'updated_at', 'currency_code'], 'safe'],
-                [['email'], 'string', 'max' => 64],
-                [['email'], 'email'],
                 [['system_sn', 'po_num'], 'unique'],
                 [['nop'], 'integer', 'min' => 1],
-                [['npl', 'dnpl', 'cnpl'], 'integer', 'min' => 0],
+                [['dnpl', 'cnpl'], 'integer', 'min' => 0],
                 ['cpup',
                     'compare',
                     'skipOnError'      => true,
@@ -131,7 +128,6 @@
                 'nop'            => Yii::t('app', 'NOP (Number of payments in plan)'),
                 'cmp'            => Yii::t('app', 'CMP (Customer Monthly Payment)'),
                 'dmp'            => Yii::t('app', 'DMP (Distributor Monthly Payment)'),
-                'npl'            => Yii::t('app', 'NPL (Number of payments left)'),
                 'dnpl'           => Yii::t('app', 'DNPL (Distributor Number of payments left)'),
                 'cnpl'           => Yii::t('app', 'CNPL (Customer Number of payments left)'),
                 'ctpl'           => Yii::t('app', 'CTPL (Customer Total Payment Left)'),
@@ -160,7 +156,7 @@
          */
         public function getCountry()
         {
-            return $this->hasOne(Country::className(), ['id_countries' => 'country_id']);
+            return $this->hasOne(Country::className(), ['id' => 'country_id']);
         }
 
         /**
@@ -220,21 +216,17 @@
         {
             /**@var $payment Payment */
 
-            switch ($payment->from) {
-                case Payment::FROM_DISTR:
-                    $this->dnpl = $this->dnpl - $payment->periods;
-                    break;
-                case Payment::FROM_USER:
-                    $this->cnpl = $this->cnpl - $payment->periods;
-                    break;
-                default:
-                    break;
+            if ($payment->from == Payment::FROM_DISTR) {
+                $this->dnpl = $this->dnpl - $payment->periods;
+                $this->calculateValues(false);
+                $this->save();
+
+            } elseif ($payment->from == Payment::FROM_USER) {
+                $this->cnpl = $this->cnpl - $payment->periods;
+                $this->calculateValues(false);
+                $this->save();
+                $this->system->updateLockingData();
             }
-
-            $this->calculateValues(false);
-            $this->save();
-            $this->system->updateLockingData();
-
             return true;
         }
 

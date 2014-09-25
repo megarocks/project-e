@@ -17,9 +17,8 @@ use kartik\widgets\DepDrop;
 <div class="po-form">
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'country_id')->dropDownList([null => Yii::t('app', 'Select Country...')] + ArrayHelper::map(Country::find()->all(), 'id_countries', 'name'), ['id' => 'purchaseorder-country_id']) ?>
+    <?= $form->field($model, 'country_id')->dropDownList([null => Yii::t('app', 'Select Country...')] + ArrayHelper::map(Country::find()->all(), 'id', 'name'), ['id' => 'purchaseorder-country_id']) ?>
     <?= $form->field($model, 'po_num')->textInput() ?>
-    <?= $form->field($model, 'email')->textInput() ?>
 
     <?=
         $form->field($model, 'currency_code')->widget(DepDrop::className(), [

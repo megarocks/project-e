@@ -113,9 +113,9 @@
 
             $ack = $response['ACK'];
 
-            if (is_array($response) && (($ack == 'Success') || ($ack == 'SUCCESSWITHWARNING'))) {
-                if ($ack == 'SUCCESSWITHWARNING') {
-                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning')); //TODO Add warning message here
+            if (is_array($response) && (($ack == 'Success') || ($ack == 'SuccessWithWarning'))) {
+                if ($ack == 'SuccessWithWarning') {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning: "') . $response['L_LONGMESSAGE0'] . '"');
                 }
                 $token = $response['TOKEN'];
 
@@ -125,6 +125,11 @@
             }
         }
 
+        /**
+         * @param $token
+         * @throws Exception
+         * @return array
+         */
         public function getPaymentDetails($token)
         {
             $params = [
@@ -133,9 +138,9 @@
             $response = $this->request('GetExpressCheckoutDetails', $params);
 
             $ack = $response['ACK'];
-            if (is_array($response) && (($ack == 'Success') || ($ack == 'SUCCESSWITHWARNING'))) {
-                if ($ack == 'SUCCESSWITHWARNING') {
-                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning')); //TODO Add warning message here
+            if (is_array($response) && (($ack == 'Success') || ($ack == 'SuccessWithWarning'))) {
+                if ($ack == 'SuccessWithWarning') {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning: "') . $response['L_LONGMESSAGE0'] . '"');
                 }
 
                 return $response;
@@ -144,6 +149,15 @@
             }
         }
 
+
+        /**
+         * @param $token
+         * @param $payerId
+         * @param $amount
+         * @param $currencyCode
+         * @return array
+         * @throws Exception
+         */
         public function confirmPayment($token, $payerId, $amount, $currencyCode)
         {
             $requestParams = [
@@ -158,11 +172,10 @@
             $response = $this->request('DoExpressCheckoutPayment', $requestParams);
 
             $ack = $response['ACK'];
-            if (is_array($response) && (($ack == 'Success') || ($ack == 'SUCCESSWITHWARNING'))) {
-                if ($ack == 'SUCCESSWITHWARNING') {
-                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning')); //TODO Add warning message here
+            if (is_array($response) && (($ack == 'Success') || ($ack == 'SuccessWithWarning'))) {
+                if ($ack == 'SuccessWithWarning') {
+                    Yii::$app->session->setFlash('notice', Yii::t('app', 'Operation successful, but with warning: "') . $response['L_LONGMESSAGE0'] . '"');
                 }
-
                 return $response;
             } else {
                 throw new Exception('Failed to confirm payment');
