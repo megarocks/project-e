@@ -2,6 +2,7 @@
 
     namespace app\controllers;
 
+    use app\models\PpdBaseModel;
     use app\models\User;
     use yii\base\Model;
     use yii\db\ActiveRecord;
@@ -74,5 +75,34 @@
             }
         }
 
+        public function actionList($fields = null)
+        {
+            /**
+             * @var $className PpdBaseModel
+             */
+            $className = $this->modelName;
+
+            $models = $className::findAllFiltered();
+
+            $result = [];
+            if ($fields) {
+                $specFields = explode(",", $fields);
+                foreach ($models as $model) {
+                    if ($model->role != User::ROLE_ENDY) {
+                        continue;
+                    }
+                    $result[] = $model->toArray($specFields, $specFields);
+                }
+            } else {
+                foreach ($models as $model) {
+                    if ($model->role != User::ROLE_ENDY) {
+                        continue;
+                    }
+                    $result[] = $model->toArray();
+                }
+            }
+
+            return (Json::encode($result));
+        }
     }
 

@@ -5,14 +5,14 @@
 
     UsersIndexEndymedAsset::register($this);
 
-    $this->title = Yii::t('app', 'Users');
+    $this->title = Yii::t('app', 'Admins');
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="users-index">
     <p>
         <?=
-            Html::a(Yii::t('app', 'Register new account'),
+            Html::a(Yii::t('app', 'Register new admin'),
                 ['create'],
                 ['class' => 'btn btn-success btn-sm']) ?>
     </p>
