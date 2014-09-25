@@ -42,7 +42,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment', 'delete', 'periods-drop-down', 'create-by-distributor'],
+                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment', 'delete', 'periods-drop-down', 'paypal-payment'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -288,8 +288,7 @@
             return PeriodsDropDown::widget(['for' => $for, 'system' => $system]);
         }
 
-
-        public function actionCreateByDistributor($access_token)
+        public function actionPaypalPayment($access_token)
         {
             /**@var $user User */
             $user = Yii::$app->user->identity;

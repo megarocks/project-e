@@ -11,7 +11,7 @@ var initScreen = function (user) {
 
 function getValues() {
     return {
-        payerType: $('input[name="Payment[from]"]:checked', '#payment-create-form').val(),
+        payerType: $('input[name="Payment[from]"]:checked', '#payment-create-form').val() || $('#payment-from').val(),
         periods: $('#payment-periods').val(),
         dmp: $('input[name=dmp]').val(),
         cmp: $('input[name=cmp]').val(),

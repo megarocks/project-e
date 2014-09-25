@@ -5,7 +5,6 @@
     use app\models\Payment;
     use app\models\System;
     use app\widgets\PeriodsDropDown;
-    use yii\helpers\ArrayHelper;
     use yii\helpers\Html;
     use yii\widgets\ActiveForm;
 
@@ -16,7 +15,6 @@
     PaymentCreateAsset::register($this);
 
     $this->title = Yii::t('app', 'Add Payment');
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Systems'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'System #') . $system->sn, 'url' => ['/system/' . $system->id]];
     $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -26,6 +24,7 @@
     ]); ?>
 
     <?= Html::activeHiddenInput($model, 'method', ['value' => Payment::METHOD_PAYPAL]) ?>
+    <?= Html::activeHiddenInput($model, 'from', ['value' => Payment::FROM_USER]) ?>
     <?= Html::hiddenInput('dmp', $system->purchaseOrder->dmp) ?>
     <?= Html::hiddenInput('cmp', $system->purchaseOrder->cmp) ?>
     <?= Html::hiddenInput('access_token', $system->access_token) ?>
@@ -37,16 +36,9 @@
                 'value'    => $system->purchaseOrder->po_num
             ]) ?>
 
-    <?=
-        $form->field($model, 'from')->radioList(
-            [
-                Payment::FROM_DISTR => Yii::t('app', 'Distributor'),
-                Payment::FROM_USER  => Yii::t('app', 'End-User'),
-            ]) ?>
-
     <div class="row form-group">
         <div class="col-xs-6 text-center">
-            <?= PeriodsDropDown::widget(['system' => $system, 'for' => Payment::FROM_DISTR]) ?>
+            <?= PeriodsDropDown::widget(['system' => $system, 'for' => Payment::FROM_USER]) ?>
         </div>
         <div class="col-xs-6">
             <blockquote id="payment-details">
