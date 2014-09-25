@@ -279,6 +279,7 @@
 
             //ASSIGNING ROLES TO USER RECORDS
             $auth->assign($endyMed, 1);
+            $auth->assign($distributor, 2);
         }
 
         public function down()

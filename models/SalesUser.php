@@ -112,12 +112,22 @@
             return $this->save();
         }
 
-        public function deleteModel()
+        /**
+         * @param bool $deleteRelated
+         * @throws \Exception
+         * @return boolean
+         */
+        public function deleteModel($deleteRelated = true)
         {
-            if ($this->user->delete()) {
-                return $this->delete();
+            if ($deleteRelated) {
+                if ($this->user->delete()) {
+                    return $this->delete();
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                return $this->delete();
             }
+
         }
     }

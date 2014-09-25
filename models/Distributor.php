@@ -181,14 +181,25 @@
         }
 
         /**
+         * @param bool $deleteRelated
+         * @throws \Exception
          * @return boolean
          */
-        public function deleteModel()
+        public function deleteModel($deleteRelated = true)
         {
-            if ($this->user->delete()) {
-                return $this->delete();
-            } else {
+            if ((count($this->orders) > 0) || (count($this->endUsers) > 0)) {
                 return false;
             }
+
+            if ($deleteRelated) {
+                if ($this->user->delete()) {
+                    return $this->delete();
+                } else {
+                    return false;
+                }
+            } else {
+                return $this->delete();
+            }
+
         }
     }
