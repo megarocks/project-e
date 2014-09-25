@@ -213,9 +213,9 @@
 
                     return $this->redirect(['index']);
                 } else {
-                    Yii::$app->session->setFlash('danger', Yii::t('app', "Something went wrong while deleting entry. It wasn't deleted"));
+                    Yii::$app->session->setFlash('danger', Yii::t('app', "Record cannot be deleted because it used in another records"));
 
-                    return $this->refresh();
+                    return $this->redirect(['index']);
                 }
             } else {
                 throw new ForbiddenHttpException;

@@ -26,6 +26,7 @@
      *
      * @property string $password
      * @property string $password_repeat
+     * @property PpdBaseModel|string $relatedUserEntity
      *
      */
     class User extends PpdBaseModel implements IdentityInterface
@@ -335,6 +336,27 @@
             $this->save();
         }
 
+        public function getRelatedUserEntity()
+        {
+            switch ($this->role) {
+                case static::ROLE_DISTR:
+                    return $this->hasOne(Distributor::className(), ['user_id' => 'id']);
+                    break;
+                case static::ROLE_MAN:
+                    return $this->hasOne(Manufacturer::className(), ['user_id' => 'id']);
+                    break;
+                case static::ROLE_END_USER:
+                    return $this->hasOne(EndUser::className(), ['user_id' => 'id']);
+                    break;
+                case static::ROLE_SALES:
+                    return $this->hasOne(SalesUser::className(), ['user_id' => 'id']);
+                    break;
+                default:
+                    return static::ROLE_ENDY;
+                    break;
+            }
+        }
+
         /**
          * @return boolean
          */
@@ -399,6 +421,20 @@
          */
         public function deleteModel()
         {
-            return $this->delete();
+            $relatedEntityDeleteResult = false;
+            $mainUserEntityDeleteResult = false;
+            if ($this->relatedUserEntity) {
+                if ($this->relatedUserEntity == static::ROLE_ENDY) {
+                    $relatedEntityDeleteResult = true;
+                } else {
+                    $relatedEntityDeleteResult = $this->relatedUserEntity->deleteModel(false);
+                }
+            }
+
+            if ($relatedEntityDeleteResult) {
+                $mainUserEntityDeleteResult = $this->delete();
+            }
+
+            return $relatedEntityDeleteResult && $mainUserEntityDeleteResult;
         }
     }
