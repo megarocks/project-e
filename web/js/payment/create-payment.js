@@ -21,7 +21,9 @@ function getValues() {
 
 function setValuesOnPage(values) {
     var sumToPay = 0;
+    //get value for unlock date
     var unlockDate = $('option:selected', '#payment-periods').attr('date');
+
     if (values.payerType == 'enduser') {
         sumToPay = (values.cmp * values.periods).toFixed(2);
         $('#next-lock-date-text').show();
@@ -29,6 +31,14 @@ function setValuesOnPage(values) {
     if (values.payerType == 'distributor') {
         sumToPay = (values.dmp * values.periods).toFixed(2);
         $('#next-lock-date-text').hide();
+    }
+
+    if (values.periods == 0) {
+        $('.add-payment-btn').prop('disabled', true);
+        $('#payment-details').hide();
+    } else {
+        $('.add-payment-btn').prop('disabled', false);
+        $('#payment-details').show();
     }
 
     $('#billed-sum-amount').text(sumToPay);
@@ -47,7 +57,7 @@ function handleFromChange() {
         $.get('/payment/periods-drop-down/?for=' + values.payerType + '&access_token=' + values.access_token, function (data) {
             $('#payment-periods').replaceWith(data);
             handlePeriodsChange();
-            setValuesOnPage(values);
+            setValuesOnPage(getValues());
         });
 
     })

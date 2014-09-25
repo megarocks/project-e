@@ -63,15 +63,13 @@
         public function rules()
         {
             return [
-                [['po_num', 'periods'], 'required'],
+                [['po_num', 'periods', 'from'], 'required'],
                 [['po_num', 'amount', 'periods', 'currency_code', 'transaction_id', 'payer_id', 'payer_email', 'from', 'method'], 'safe'],
                 [['po_num'], 'integer'],
                 [['amount'], 'number', 'min' => 1],
                 [['periods'], 'integer', 'min' => 1],
                 [['currency_code'], 'string', 'max' => 3],
                 [['transaction_id', 'payer_id', 'payer_email'], 'string', 'max' => 45],
-                [['transaction_id', 'payer_id'], 'required', 'on' => ['paypal']],
-                [['from'], 'required', 'on' => ['manual']]
             ];
         }
 

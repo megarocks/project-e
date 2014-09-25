@@ -44,12 +44,12 @@
                 Payment::FROM_USER  => Yii::t('app', 'End-User'),
             ]) ?>
 
-    <div class="row">
+    <div class="row form-group">
         <div class="col-xs-6 text-center">
             <?= PeriodsDropDown::widget(['system' => $system, 'for' => Payment::FROM_DISTR]) ?>
         </div>
         <div class="col-xs-6">
-            <blockquote>
+            <blockquote id="payment-details">
                 <p class="lighter line-height-125">
                     <strong><span id="billed-sum-amount"></span>&nbsp;<span
                             id="billed-sum-currency"><?= $system->purchaseOrder->currency_code ?></span></strong> <?= Yii::t('app', 'will be payed') ?>
@@ -64,7 +64,7 @@
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Add Payment'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Add Payment'), ['class' => 'btn btn-primary add-payment-btn']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

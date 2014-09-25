@@ -20,7 +20,11 @@
 
             $periods = $this->system->getLockingDates($this->for);
 
-            return Html::activeDropDownList(new Payment(), 'periods', ArrayHelper::map($periods, 'periods', 'periods'), ['id' => 'payment-periods', 'class' => 'form-control', 'options' => $periods]);
+            if (count($periods) > 0) {
+                return Html::activeDropDownList(new Payment(), 'periods', ArrayHelper::map($periods, 'periods', 'periods'), ['id' => 'payment-periods', 'class' => 'form-control', 'options' => $periods]);
+            } else {
+                return Html::activeDropDownList(new Payment(), 'periods', ['0' => \Yii::t('app', 'All periods are already payed')], ['id' => 'payment-periods', 'class' => 'form-control', 'enabled' => 'false']);
+            }
         }
 
     }

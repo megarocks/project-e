@@ -4,6 +4,7 @@
 
     use app\models\behaviors\DateTimeStampBehavior;
     use Yii;
+    use yii\base\Security;
     use yii\db\ActiveRecord;
 
     /**
@@ -212,14 +213,20 @@
 
             if ($for == Payment::FROM_DISTR) {
                 //leave only unclosed locking dates
+                if ($this->purchaseOrder->dnpl <= 0) {
+                    return [];
+                }
                 $lockingDates = array_slice($lockingDates, -$this->purchaseOrder->dnpl);
             } elseif ($for == Payment::FROM_USER) {
+                if ($this->purchaseOrder->cnpl <= 0) {
+                    return [];
+                }
                 $lockingDates = array_slice($lockingDates, -$this->purchaseOrder->cnpl);
             }
 
-            for ($j = 1; $j < count($lockingDates); $j++) {
-                $resultLockingDates[$j] = $lockingDates[$j - 1];
-                $resultLockingDates[$j]['periods'] = $j;
+            for ($j = 0; $j <= count($lockingDates) - 1; $j++) {
+                $resultLockingDates[$j + 1] = $lockingDates[$j];
+                $resultLockingDates[$j + 1]['periods'] = $j + 1;
             }
 
             return $resultLockingDates;
@@ -240,7 +247,7 @@
         {
             if ($this->validate()) {
                 $this->status = static::STATUS_UNASSIGNED;
-
+                $this->access_token = Yii::$app->security->generateRandomString();
                 return $this->save();
             } else {
                 return false;

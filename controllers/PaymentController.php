@@ -7,6 +7,7 @@
     use app\models\Payment;
     use app\models\PurchaseOrder;
     use app\models\User;
+    use app\widgets\PeriodsDropDown;
     use Yii;
     use app\models\System;
     use yii\db\ActiveRecord;
@@ -41,7 +42,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment', 'delete', 'periods-drop-down'],
+                            'actions' => ['purchase-code', 'success', 'cancel', 'create', 'view', 'index', 'list', 'add-payment', 'delete', 'periods-drop-down', 'create-by-distributor'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -69,7 +70,7 @@
 
                 $system = $this->getSystem($access_token);
 
-                $payment = new Payment(['scenario' => Payment::METHOD_MANUAL, 'from' => Payment::FROM_DISTR]);
+                $payment = new Payment(['from' => Payment::FROM_DISTR]);
 
                 if (!empty($request)) {
                     $payment->load($request);
@@ -114,7 +115,7 @@
                 $user = Yii::$app->user->identity;
 
                 /**@var $payment Payment */
-                $payment = new Payment(['scenario' => Payment::METHOD_MANUAL]);
+                $payment = new Payment();
                 $request = Yii::$app->request->post();
                 if (!empty($request)) {
                     $payment->load($request);
@@ -218,7 +219,7 @@
                     );
 
                     //save payment to DB after confirmation
-                    $payment = new Payment(['scenario' => Payment::METHOD_PAYPAL]);
+                    $payment = new Payment();
                     $payment->loadDataFromPayPal(
                         $system->purchaseOrder->po_num,
                         $paymentDetails,
@@ -254,9 +255,10 @@
          * Method check if login code is set to the session
          * If not set will try to get system by id specified in request
          *
-         * @param null|integer $id
+         * @param null $access_token
+         * @throws NotFoundHttpException
+         * @internal param int|null $id
          *
-         * @throws \yii\web\NotFoundHttpException
          * @return System|null
          */
         private function getSystem($access_token = null)
@@ -283,7 +285,44 @@
         {
             $system = $this->getSystem($access_token);
 
-            return $this->renderAjax('periods-dropdown', ['for' => $for, 'system' => $system]);
+            return PeriodsDropDown::widget(['for' => $for, 'system' => $system]);
+        }
+
+
+        public function actionCreateByDistributor($access_token)
+        {
+            /**@var $user User */
+            $user = Yii::$app->user->identity;
+
+            $request = Yii::$app->request->post();
+
+            $system = $this->getSystem($access_token);
+
+            $payment = new Payment(['from' => Payment::FROM_DISTR]);
+
+            if (!empty($request)) {
+                $payment->load($request);
+                if ($payment->validate()) {
+                    $pp = new PayPal();
+                    $paypal_token = $pp->getToken([
+                        'system_sn'     => $system->sn,
+                        'cost'          => ($payment->from == Payment::FROM_DISTR) ? $system->purchaseOrder->dmp : $system->purchaseOrder->cmp,
+                        'qty'           => $payment->periods,
+                        'description'   => Yii::t('app', 'Code for system #') . $system->sn, //code description
+                        'currency_code' => $system->purchaseOrder->currency_code,
+                        'payment_from'  => $payment->from,
+                    ]);
+                    if (!is_null($paypal_token)) {
+                        $this->redirect('https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . urlencode($paypal_token));
+                    }
+                }
+            } else {
+                return $this->render('create-' . $user->role,
+                    [
+                        'model'  => $payment,
+                        'system' => $system
+                    ]);
+            }
         }
 
     }

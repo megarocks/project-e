@@ -21,8 +21,10 @@
 <div class="systems-view">
     <p>
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
+        <?php if (($po->dtpl > 0) || ($po->ctpl > 0)) : ?>
+            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create-by-distributor', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']) ?>
+        <?php endif; ?>
         <?php if ($po->dtpl > 0) : ?>
-            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/purchase-code', 'system_id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= PpdDetailView::widget([
                 'model'      => $po,
                 'attributes' => [
