@@ -19,12 +19,6 @@
 <div class="po-view">
     <p>
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
-        <?php if (is_null($model->system)) : ?>
-
-        <?php endif; ?>
-        <?php if (!is_null($model->system)) : ?>
-
-        <?php endif; ?>
     </p>
 
     <?=
@@ -55,14 +49,8 @@
                     'label' => Yii::t('app', 'End-User'),
                     'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
-                [
-                    'label' => Yii::t('app', 'Created at'),
-                    'value' => $model->toArray(['created_at'])['created_at'],
-                ],
-                [
-                    'label' => Yii::t('app', 'Updated at'),
-                    'value' => $model->toArray(['updated_at'])['updated_at'],
-                ],
+                'createdAt',
+                'updatedAt',
             ],
         ]) ?>
 

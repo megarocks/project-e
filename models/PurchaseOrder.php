@@ -7,6 +7,7 @@
     use yii\base\InvalidParamException;
     use yii\behaviors\TimestampBehavior;
     use yii\db\ActiveRecord;
+    use yii\web\ForbiddenHttpException;
 
     /**
      * This is the model class for table "po".
@@ -38,6 +39,7 @@
      * @property Country $country
      * @property Distributor $distributor
      * @property System $system
+     * @property boolean $editable
      */
     class PurchaseOrder extends PpdBaseModel
     {
@@ -269,13 +271,18 @@
         }
 
         /**
+         * @throws ForbiddenHttpException
          * @return boolean
          */
         public function updateModel()
         {
-            $this->calculateValues(false);
+            if ($this->editable) {
+                $this->calculateValues(false);
 
-            return $this->save();
+                return $this->save();
+            } else {
+                throw new ForbiddenHttpException('This order is not editable');
+            }
         }
 
         /**
@@ -283,12 +290,17 @@
          */
         public function deleteModel()
         {
-            if (count($this->payments) > 0) {
+            if (!$this->editable) {
                 return false;
             } elseif (!is_null($this->system)) {
                 return false;
             } else {
                 return $this->delete();
             }
+        }
+
+        public function getEditable()
+        {
+            return (count($this->payments) == 0);
         }
     }

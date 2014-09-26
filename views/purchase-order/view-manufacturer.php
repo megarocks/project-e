@@ -30,7 +30,7 @@
             'attributes' => [
                 'po_num',
                 'system_sn',
-                'created_at',
+                'createdAt',
             ],
         ]) ?>
 
