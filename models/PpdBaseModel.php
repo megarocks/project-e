@@ -12,6 +12,13 @@
     use yii\db\ActiveRecord;
     use Yii;
 
+    /**
+     * Class PpdBaseModel
+     * @package app\models
+     *
+     * @property string $createdAt
+     * @property string $updatedAt
+     */
     abstract class PpdBaseModel extends ActiveRecord
     {
 
@@ -39,5 +46,15 @@
             }
 
             return $filteredModels;
+        }
+
+        public function getCreatedAt()
+        {
+            return date('M j Y h:i A', strtotime($this->created_at));
+        }
+
+        public function getUpdatedAt()
+        {
+            return date('M j Y h:i A', strtotime($this->updated_at));
         }
     }

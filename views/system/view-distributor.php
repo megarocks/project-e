@@ -57,18 +57,12 @@
                 'model'      => $model,
                 'attributes' => [
                     'sn',
-                    [
-                        'label' => Yii::t('app', 'Status'),
-                        'value' => $model->toArray(['status'])['status'],
-                    ],
+                    'systemStatus',
                     'login_code',
                     'current_code',
-                    'init_lock_date',
-                    'next_lock_date',
-                    [
-                        'label' => Yii::t('app', 'Created At'),
-                        'value' => $model->toArray(['created_at'])['created_at'],
-                    ],
+                    'initialLockingDate',
+                    'nextLockingDate',
+                    'createdAt',
                 ],
             ]) ?>
     </div>

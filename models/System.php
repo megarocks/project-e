@@ -12,7 +12,7 @@
      *
      * @property integer $id
      * @property integer $sn
-     * @property string $status
+     * @property integer $status
      * @property string $current_code
      * @property string $next_lock_date
      * @property string $init_lock_date
@@ -23,7 +23,10 @@
      * @property string $created_at
      * @property string $updated_at
      *
+     * @property string $nextLockingDate
+     * @property string $initialLockingDate
      * @property PurchaseOrder $purchaseOrder
+     * @property string $systemStatus
      */
     class System extends PpdBaseModel
     {
@@ -238,6 +241,40 @@
             $this->next_lock_date = date('Y-m-d', strtotime($lockDates[1]['date']));  //TODO Possible here date is shifted and incorrect
             $this->current_code = Yii::$app->security->generateRandomString(10);
             $this->save();
+        }
+
+        public function getNextLockingDate()
+        {
+            return date('M j Y', strtotime($this->next_lock_date));
+        }
+
+        public function getInitialLockingDate()
+        {
+            return date('M j Y', strtotime($this->init_lock_date));
+        }
+
+        public function getSystemStatus()
+        {
+            $status = '';
+            switch ($this->status) {
+                case static::STATUS_UNASSIGNED:
+                    $status = Yii::t('app', 'Unassigned');
+                    break;
+                case static::STATUS_UNLOCKED:
+                    $status = Yii::t('app', 'Unlocked');
+                    break;
+                case static::STATUS_ACTIVE_PAYMENT:
+                    $status = Yii::t('app', 'Active/Payment');
+                    break;
+                case static::STATUS_ACTIVE:
+                    $status = Yii::t('app', 'Active');
+                    break;
+                case static::STATUS_LOCKED:
+                    $status = Yii::t('app', 'Locked');
+                    break;
+            }
+
+            return $status;
         }
 
         /**

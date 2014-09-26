@@ -42,11 +42,8 @@
                         'label' => Yii::t('app', 'Purchase Order #'),
                         'value' => isset($model->purchaseOrder) ? $model->purchaseOrder->po_num : Yii::t('app', 'Not Assigned'),
                     ],
-                    [
-                        'label' => Yii::t('app', 'Status'),
-                        'value' => $model->toArray(['status'])['status'],
-                    ],
-                    'created_at'
+                    'systemStatus',
+                    'createdAt',
                 ],
             ]) ?>
     </div>
