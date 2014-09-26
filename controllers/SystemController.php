@@ -100,12 +100,15 @@
                 /*@var $model System*/
                 $model = $this->findModel($id);
 
-                if ($model->purchaseOrder) {
+                if ($model->purchaseOrder && count($model->purchaseOrder->payments) == 0) {
                     $model->purchaseOrder->system_sn = null;
                     if ($model->purchaseOrder->updateModel()) {
                         $model->resetLockingParams();
                         $model->updateModel();
                     }
+                } else {
+                    Yii::$app->session->setFlash('danger', Yii::t('app', 'Unassign denied. There are payment(s) already done for this system'));
+                    $this->refresh();
                 }
 
                 return $this->goBack();
