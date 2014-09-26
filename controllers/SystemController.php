@@ -125,17 +125,17 @@
          */
         public function actionViewSystem()
         {
-            if (Yii::$app->user->can('viewSingleSystem')) {
-                $system = $this->findSystemForEndUser(Yii::$app->user->id);
+            //if (Yii::$app->user->can('viewSingleSystem')) {
+            $system = System::getByLoginCode(Yii::$app->session->get('loginCode'));
 
                 if (!is_null($system)) {
                     $this->redirect(['view', 'id' => $system->id]);
                 } else {
                     return $this->render('view-enduser-system-not-found');
                 }
-            } else {
-                throw new ForbiddenHttpException;
-            }
+            // } else {
+            //     throw new ForbiddenHttpException;
+            // }
         }
 
         /**

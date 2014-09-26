@@ -81,11 +81,14 @@
 
             $request = Yii::$app->request->post();
             if ($visibleForm == 'credentials' && $credentialsLoginForm->load($request) && $credentialsLoginForm->login()) {
+                Yii::$app->session->set('loggedByCode', false);
                 return $this->goBack();
             } elseif ($visibleForm == 'code' && $codeLoginForm->load($request) && $codeLoginForm->login()) {
-                Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
                 $system = System::getByLoginCode($codeLoginForm->loginCode);
+
+                Yii::$app->session->set('loginCode', $codeLoginForm->loginCode);
                 Yii::$app->session->set('systemId', $system->id);
+                Yii::$app->session->set('loggedByCode', true);
 
                 return $this->redirect(['system/view', 'id' => $system->id]);
             } elseif ($visibleForm == 'forgot' && $forgotPasswordForm->load($request) && $forgotPasswordForm->validate()) {
@@ -105,6 +108,10 @@
 
         public function actionLogout()
         {
+            //TODO Why do I need so much values in session?
+            Yii::$app->session->remove('systemId');
+            Yii::$app->session->remove('loginCode');
+            Yii::$app->session->remove('loggedByCode');
             Yii::$app->user->logout();
 
             return $this->goHome();
