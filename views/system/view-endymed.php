@@ -30,6 +30,7 @@
         <?php if (isset($po)) :
             if ($po->editable) :
                 echo Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']);
+                echo "&nbsp";
             endif;
             echo Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']);
         endif; ?>

@@ -190,18 +190,12 @@
             return $this->hasMany(Payment::className(), ['po_num' => 'po_num']);
         }
 
-        private function calculateValues($initial = true)
+        private function calculateValues()
         {
-            if ($initial) {
-                //initialize npl for customer and distributor
-                $this->cpup >= $this->csp ? $this->cnpl = 0 : $this->cnpl = $this->nop;
-                $this->dpup >= $this->dsp ? $this->dnpl = 0 : $this->dnpl = $this->nop;
+            //calculate monthly payment value
+            $this->cmp = ($this->cnpl == 0) ? 0 : ($this->csp - $this->cpup) / $this->cnpl;
+            $this->dmp = ($this->dnpl == 0) ? 0 : ($this->dsp - $this->dpup) / $this->dnpl;
 
-                //calculate monthly payment value
-                $this->cmp = ($this->csp - $this->cpup) / $this->nop;
-                $this->dmp = ($this->dsp - $this->dpup) / $this->nop;
-
-            }
             //calculate rest amount to pay
             $this->ctpl = $this->cmp * $this->cnpl;
             $this->dtpl = $this->dmp * $this->dnpl;
@@ -220,12 +214,12 @@
 
             if ($payment->from == Payment::FROM_DISTR) {
                 $this->dnpl = $this->dnpl - $payment->periods;
-                $this->calculateValues(false);
+                $this->calculateValues();
                 $this->save();
 
             } elseif ($payment->from == Payment::FROM_USER) {
                 $this->cnpl = $this->cnpl - $payment->periods;
-                $this->calculateValues(false);
+                $this->calculateValues();
                 $this->save();
                 $this->system->updateLockingData();
             }
@@ -253,7 +247,7 @@
                     break;
             }
 
-            $this->calculateValues(false);
+            $this->calculateValues();
             $this->save();
             $this->system->updateLockingData();
 
@@ -265,7 +259,10 @@
          */
         public function createModel()
         {
-            $this->calculateValues(true);
+            $this->cpup >= $this->csp ? $this->cnpl = 0 : $this->cnpl = $this->nop;
+            $this->dpup >= $this->dsp ? $this->dnpl = 0 : $this->dnpl = $this->nop;
+
+            $this->calculateValues();
 
             return $this->save();
         }
@@ -277,7 +274,10 @@
         public function updateModel()
         {
             if ($this->editable) {
-                $this->calculateValues(false);
+                $this->cpup >= $this->csp ? $this->cnpl = 0 : $this->cnpl = $this->nop;
+                $this->dpup >= $this->dsp ? $this->dnpl = 0 : $this->dnpl = $this->nop;
+
+                $this->calculateValues();
 
                 return $this->save();
             } else {

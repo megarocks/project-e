@@ -21,9 +21,12 @@
         <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
         <?php if (is_null($model->system)) :
             echo Html::a(Yii::t('app', 'Assign to System'), ['system/assign', 'po_id' => $model->id], ['class' => 'btn btn-primary']);
+            echo "&nbsp";
             if ($model->editable) :
                 echo Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                echo "&nbsp";
                 echo Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]);
+                echo "&nbsp";
             endif;
         endif; ?>
         <?php if (!is_null($model->system) && $model->editable) :
