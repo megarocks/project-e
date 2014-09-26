@@ -20,8 +20,10 @@
 
 <div class="payment-details">
     <p>
-        <?= Html::a(Yii::t('app', 'View System Details'), '/system/' . $system->id, ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'View Order Details'), '/purchase-order/' . $model->purchaseOrder->id, ['class' => 'btn btn-primary']) ?>
+        <?php if (isset($model->purchaseOrder)) : ?>
+            <?= Html::a(Yii::t('app', 'View System Details'), '/system/' . $system->id, ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'View Order Details'), '/purchase-order/' . $model->purchaseOrder->id, ['class' => 'btn btn-primary']) ?>
+        <?php endif ?>
     </p>
 
     <div class="well">
