@@ -3,6 +3,7 @@
     namespace app\rbac;
 
     use app\models\Distributor;
+    use app\models\EndUser;
     use app\models\System;
     use app\models\User;
     use yii\helpers\ArrayHelper;
@@ -32,7 +33,10 @@
             } elseif ($role == User::ROLE_MAN) {
                 return true;
             } elseif ($role == User::ROLE_END_USER) {
-                return true;
+                $currentEndUser = EndUser::findOne(['user_id' => $user]);
+                $requestedSystem = System::findOne(['id' => $params['modelId']]);
+
+                return $currentEndUser->id == $requestedSystem->purchaseOrder->end_user_id;
             } elseif ($role == User::ROLE_DISTR) {
                 $currentDistributor = Distributor::findOne(['user_id' => $user]);
                 $requestedSystem = System::findOne(['id' => $params['modelId']]);
