@@ -36,12 +36,21 @@
                 $currentEndUser = EndUser::findOne(['user_id' => $user]);
                 $requestedSystem = System::findOne(['id' => $params['modelId']]);
 
-                return $currentEndUser->id == $requestedSystem->purchaseOrder->end_user_id;
+                if ($currentEndUser && $requestedSystem->purchaseOrder) {
+                    return $currentEndUser->id == $requestedSystem->purchaseOrder->end_user_id;
+                } else {
+                    return false;
+                }
+
             } elseif ($role == User::ROLE_DISTR) {
                 $currentDistributor = Distributor::findOne(['user_id' => $user]);
                 $requestedSystem = System::findOne(['id' => $params['modelId']]);
 
-                return $currentDistributor->id == $requestedSystem->purchaseOrder->distributor_id;
+                if ($currentDistributor && $requestedSystem->purchaseOrder) {
+                    return $currentDistributor->id == $requestedSystem->purchaseOrder->distributor_id;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
