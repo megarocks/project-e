@@ -20,7 +20,7 @@
 
 <div class="payment-details">
     <p>
-        <?php if (isset($model->purchaseOrder)) : ?>
+        <?php if (isset($model->purchaseOrder) && isset($model->purchaseOrder->system)) : ?>
             <?= Html::a(Yii::t('app', 'View System Details'), '/system/' . $system->id, ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'View Order Details'), '/purchase-order/' . $model->purchaseOrder->id, ['class' => 'btn btn-primary']) ?>
         <?php endif ?>
