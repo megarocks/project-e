@@ -27,10 +27,12 @@
             <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
 
         <?php endif; ?>
-        <?php if (isset($po)) : ?>
-            <?= Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
-            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']) ?>
-        <?php endif; ?>
+        <?php if (isset($po)) :
+            if (count($po->payments) == 0) :
+                echo Html::a(Yii::t('app', 'Unassign from PO'), ['unassign', 'id' => $model->id], ['class' => 'btn btn-danger']);
+            endif;
+            echo Html::a(Yii::t('app', 'Add Payment'), ['payment/create', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']);
+        endif; ?>
     </p>
 
     <h3><?= Yii::t('app', 'System Details') ?> </h3>

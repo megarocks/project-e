@@ -24,9 +24,9 @@
             <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a(Yii::t('app', 'Delete'), ['#'], ['class' => 'btn btn-danger delete-button', 'requestLink' => Url::toRoute(['delete', 'id' => $model->id])]); ?>
         <?php endif; ?>
-        <?php if (!is_null($model->system)) : ?>
-            <?= Html::a(Yii::t('app', 'Unassign from System'), ['system/unassign', 'id' => $model->system->id], ['class' => 'btn btn-danger']) ?>
-        <?php endif; ?>
+        <?php if (!is_null($model->system) && count($model->payments) == 0) :
+            echo Html::a(Yii::t('app', 'Unassign from System'), ['system/unassign', 'id' => $model->system->id], ['class' => 'btn btn-danger']);
+        endif; ?>
     </p>
 
     <?=
