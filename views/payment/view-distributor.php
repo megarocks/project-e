@@ -43,7 +43,7 @@
                     'method',
                     [
                         'label' => Yii::t('app', 'Payment Date/Time'),
-                        'value' => date('M d, Y h:i A', strtotime($model->created_at))
+                        'value' => $model->createdAt,
                     ]
                 ]
             ])

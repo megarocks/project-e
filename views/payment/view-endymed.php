@@ -44,7 +44,7 @@
                     'payer_email:email',
                     'from',
                     'method',
-                    'created_at',
+                    'createdAt',
                 ]
             ])
         ?>
