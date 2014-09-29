@@ -50,6 +50,7 @@
         private function checkIfEndUserRelatesToDistributor($user, $params)
         {
             $distributor = Distributor::findOne(['user_id' => $user]);
+
             $endUser = EndUser::findOne(['id' => $params['modelId']]);
 
             return $distributor->id == $endUser->distributor_id;
