@@ -18,40 +18,97 @@
     Yii::$app->user->setReturnUrl(Url::to());
 ?>
 
-<div class="systems-view">
-    <p>
-        <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
-        <?php if (($po->dtpl > 0) || ($po->ctpl > 0)) : ?>
-            <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/paypal-payment', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']) ?>
-        <?php endif; ?>
-        <?php if ($po->dtpl > 0) : ?>
-            <?= PpdDetailView::widget([
+<?php if ($po->dtpl > 0) : ?>
+
+    <div class="systems-view">
+        <p>
+            <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
+            <?php if (($po->dtpl > 0) || ($po->ctpl > 0)) : ?>
+                <?= Html::a(Yii::t('app', 'Add Payment'), ['payment/paypal-payment', 'access_token' => $model->access_token], ['class' => 'btn btn-primary']) ?>
+            <?php endif; ?>
+        </p>
+
+        <h3><?= Yii::t('app', 'Distributor monetary details') ?> </h3>
+        <?=
+            PpdDetailView::widget([
                 'model'      => $po,
                 'attributes' => [
                     [
-                        'label' => Yii::t('app', 'Debt To Endymed For This System'),
-                        'value' => $po->dtpl . ' ' . $po->currency_code,
-                    ],
-                    [
-                        'label' => Yii::t('app', 'Left number of payments'),
-                        'value' => $po->dnpl,
+                        'label' => Yii::t('app', 'Total cost of this system'),
+                        'value' => $po->dsp . ' ' . $po->currency_code,
                     ],
                     [
                         'label' => Yii::t('app', 'Monthly payment'),
                         'value' => $po->dmp . ' ' . $po->currency_code,
                     ],
-                ]
+                    [
+                        'label' => Yii::t('app', 'Number of left payment'),
+                        'value' => $po->dnpl,
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Rest amount to pay'),
+                        'value' => $po->dtpl . ' ' . $po->currency_code,
+                    ],
+                ],
             ]) ?>
-        <?php endif; ?>
-        <?php if ($po->dtpl <= 0) : ?>
 
-    <h3 class="text-center"> <?= Yii::t('app', 'Main Unlock Code: {main_code}', ['main_code' => $model->main_unlock_code]) ?> </h3>
-    <?php endif; ?>
-    </p>
+        <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
+        <?=
+            PpdDetailView::widget([
+                'model'      => $po,
+                'attributes' => [
+                    'po_num',
+                    'csp',
+                    'cpup',
+                    'nop',
+                    'cnpl',
+                    'ctpl',
+                    'cmp',
+                ],
+            ]) ?>
 
-    <h3><?= Yii::t('app', 'System Details') ?> </h3>
+        <h3><?= Yii::t('app', 'System Technical Details') ?> </h3>
+        <?=
+            PpdDetailView::widget([
+                'model'      => $model,
+                'attributes' => [
+                    'sn',
+                    'systemStatus',
+                    'login_code',
+                    'current_code',
+                    'initialLockingDate',
+                    'nextLockingDate',
+                    'createdAt',
+                ],
+            ]) ?>
 
-    <div class="well">
+    </div>
+
+<?php endif; ?>
+
+<?php if ($po->dtpl <= 0) : ?>
+    <div class="systems-view">
+        <p>
+            <?= Html::a(Yii::t('app', 'View All'), ['index'], ['class' => 'btn btn-default']); ?>
+            <strong><h3
+                    class="text-center"> <?= Yii::t('app', 'Main Unlock Code: {main_code}', ['main_code' => $model->main_unlock_code]) ?> </h3>
+            </strong>
+        </p>
+        <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
+        <?=
+            PpdDetailView::widget([
+                'model'      => $po,
+                'attributes' => [
+                    'po_num',
+                    'csp',
+                    'cpup',
+                    'nop',
+                    'cnpl',
+                    'ctpl',
+                    'cmp',
+                ],
+            ]) ?>
+        <h3><?= Yii::t('app', 'System Technical Details') ?> </h3>
         <?=
             PpdDetailView::widget([
                 'model'      => $model,
@@ -66,20 +123,5 @@
                 ],
             ]) ?>
     </div>
+<?php endif; ?>
 
-    <h3><?= Yii::t('app', 'Customer monetary details') ?> </h3>
-    <?=
-        PpdDetailView::widget([
-            'model'      => $po,
-            'attributes' => [
-                'po_num',
-                'csp',
-                'cpup',
-                'nop',
-                'cnpl',
-                'ctpl',
-                'cmp',
-            ],
-        ]) ?>
-
-</div>
