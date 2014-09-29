@@ -237,9 +237,15 @@
 
         public function updateLockingData()
         {
-            $lockDates = $this->getLockingDates(Payment::FROM_USER);
-            $this->next_lock_date = date('Y-m-d', strtotime($lockDates[1]['date']));  //TODO Possible here date is shifted and incorrect
-            $this->current_code = Yii::$app->security->generateRandomString(10);
+            $lockDates = $this->getLockingDates(Payment::FROM_USER);    //locking params are updated only when user is do payment (or admin on behalf of user)
+            if (count($lockDates) > 0) {
+                $this->next_lock_date = date('Y-m-d', strtotime($lockDates[1]['date']));  //TODO Possible here date is shifted and incorrect
+                $this->current_code = Yii::$app->security->generateRandomString(10);
+            } else {
+                $this->current_code = $this->main_unlock_code;
+                $this->next_lock_date = date('Y-m-d', strtotime('today'));
+                $this->status = static::STATUS_UNLOCKED;
+            }
             $this->save();
         }
 
