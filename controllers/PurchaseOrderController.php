@@ -38,7 +38,7 @@
                     'rules' => [
                         [
                             'allow'   => true,
-                            'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic-currency', 'delete'],
+                            'actions' => ['index', 'view', 'create', 'update', 'list', 'dynamic-currency', 'delete', 'payments'],
                             'roles'   => ['@'],
                         ],
                     ],
@@ -76,6 +76,15 @@
                 }
             }
             echo Json::encode(['output' => '', 'selected' => 'USD']);
+        }
+
+        public function actionPayments($id)
+        {
+            if (Yii::$app->user->can('viewPurchaseOrder', ['modelId' => $id])) {
+                $order = $this->findModel($id);
+
+                return $this->render('payments', ['order' => $order]);
+            }
         }
 
     }

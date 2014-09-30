@@ -22,6 +22,7 @@
      * @property string $created_at
      *
      * @property PurchaseOrder $purchaseOrder
+     * @property System $system
      */
     class Payment extends PpdBaseModel
     {
@@ -77,6 +78,9 @@
         {
             return [
                 'id', 'po_num', 'amount', 'periods', 'currency_code', 'payer_email', 'method',
+                'system_sn' => function () {
+                    return $this->system->sn;
+                },
                 'created_at' => function () {
                     return date('M j Y h:i A', strtotime($this->created_at));
                 },
@@ -112,6 +116,11 @@
         public function getPurchaseOrder()
         {
             return $this->hasOne(PurchaseOrder::className(), ['po_num' => 'po_num']);
+        }
+
+        public function getSystem()
+        {
+            return $this->purchaseOrder->system;
         }
 
         public function loadDataFromPayPal($po_num, $paymentDetails, $confirmDetails)
