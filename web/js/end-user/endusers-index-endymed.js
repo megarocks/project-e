@@ -12,6 +12,7 @@ var initScreen = function (user) {
             {data: "title"},
             {data: "email"},
             {data: "country.name"},
+            {data: "distributor_title"},
             {
                 "data": "id",
                 "render": function (id) {

@@ -71,6 +71,9 @@
         {
             return [
                 'id', 'user_id', 'title', 'email', 'country_id', 'contact_person', 'country',
+                'distributor_title' => function () {
+                    return (!is_null($this->distributor)) ? $this->distributor->title : null;
+                },
                 'created_at' => function () {
                     return date('M j Y h:i A', strtotime($this->created_at));
                 },
