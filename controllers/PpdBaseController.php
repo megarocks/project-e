@@ -33,21 +33,37 @@
          * Returns json array with models
          *
          * @internal param null $fields gives capability to specify required fields. If null will return default set
-         * @param $fields
+         * @internal param $fields
          * @return string
          */
-        public function actionList($fields = null)
+        public function actionList()
         {
             /**
              * @var $className PpdBaseModel
              */
             $className = $this->modelName;
 
-            $models = $className::findAllFiltered();
+            $params = Yii::$app->request->get();
+
+
+            if (count($params) > 0) {
+                $conditions = [];
+                foreach ($params as $param => $value) {
+                    if ($param == 'fields' || $param == '_') {
+                        continue;
+                    } else {
+                        $conditions[$param] = $value;
+                    }
+                }
+                $models = $className::findAllFiltered($conditions);
+            } else {
+                $models = $className::findAllFiltered();
+            }
+
 
             $result = [];
-            if ($fields) {
-                $specFields = explode(",", $fields);
+            if (isset($params['fields'])) {
+                $specFields = explode(",", $params['fields']);
                 foreach ($models as $model) {
                     $result[] = $model->toArray($specFields, $specFields);
                 }

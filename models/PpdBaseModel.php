@@ -9,6 +9,7 @@
     namespace app\models;
 
 
+    use yii\base\Exception;
     use yii\db\ActiveRecord;
     use Yii;
 
@@ -32,6 +33,8 @@
          * Returns array of models which are visible for current user
          *
          * @param $conditions array|null
+         * @throws Exception
+         * @throws \Exception
          * @return array
          */
         public static function findAllFiltered($conditions = null)
@@ -39,12 +42,15 @@
             $reflectionClass = new \ReflectionClass(static::className());
             $modelClassShortName = $reflectionClass->getShortName();
             $filteredModels = [];
-            foreach ((is_array($conditions)) ? static::find()->where($conditions)->all() : static::find()->all() as $model) {
-                if (Yii::$app->user->can('view' . $modelClassShortName, ['modelId' => $model->id])) {
-                    $filteredModels[] = $model;
+            try {
+                foreach ((is_array($conditions)) ? static::find()->where($conditions)->all() : static::find()->all() as $model) {
+                    if (Yii::$app->user->can('view' . $modelClassShortName, ['modelId' => $model->id])) {
+                        $filteredModels[] = $model;
+                    }
                 }
+            } catch (Exception $ex) {
+                throw $ex;
             }
-
             return $filteredModels;
         }
 

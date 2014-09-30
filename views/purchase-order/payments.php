@@ -1,18 +1,23 @@
 <?php
 
+    use app\models\PurchaseOrder;
     use yii\helpers\Html;
     use yii\grid\GridView;
 
-    use app\assets\PaymentEndymedAsset;
+    use app\assets\PurchaseOrderPaymentsAsset;
 
-    PaymentEndymedAsset::register($this);
+    PurchaseOrderPaymentsAsset::register($this);
 
     /* @var $this yii\web\View */
+    /* @var PurchaseOrder $order */
 
     $this->title = Yii::t('app', 'Payments');
+    $this->params['breadcrumbs'][] = Yii::t('app', 'Purchase Order #{po_num}', ['po_num' => $order->po_num]);
     $this->params['breadcrumbs'][] = $this->title;
+
+    echo Html::activeHiddenInput($order, 'po_num');
 ?>
-<div class="distributors-index">
+<div class="order-payments">
     <p>
     </p>
 
@@ -21,13 +26,20 @@
         <tr>
             <th>
                 <a href="#" data-rel="tooltip"
-                   data-original-title="<?= Yii::t('app', 'Date and time when this payment was added to database') ?> ">
+                   data-original-title="<?= Yii::t('app', 'Date and time when this payment was added') ?> ">
                     <?= Yii::t('app', 'Added At') ?>
                 </a>
             </th>
             <th>
-                <a href="#" data-rel="tooltip" data-original-title="<?= Yii::t('app', 'Purchase order number') ?> ">
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Purchase Order #') ?> ">
                     <?= Yii::t('app', 'PO#') ?>
+                </a>
+            </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'System Serial Number') ?> ">
+                    <?= Yii::t('app', 'System SN') ?>
                 </a>
             </th>
             <th>
@@ -46,18 +58,6 @@
                 <a href="#" data-rel="tooltip"
                    data-original-title="<?= Yii::t('app', 'Currency of payment') ?> ">
                     <?= Yii::t('app', 'Currency') ?>
-                </a>
-            </th>
-            <th>
-                <a href="#" data-rel="tooltip"
-                   data-original-title="<?= Yii::t('app', 'Payer contact email') ?> ">
-                    <?= Yii::t('app', 'Payer email') ?>
-                </a>
-            </th>
-            <th>
-                <a href="#" data-rel="tooltip"
-                   data-original-title="<?= Yii::t('app', 'Payment adding method') ?> ">
-                    <?= Yii::t('app', 'Payment Method') ?>
                 </a>
             </th>
             <th><?= Yii::t('app', 'Actions') ?></th>
