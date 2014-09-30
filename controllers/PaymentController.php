@@ -79,7 +79,7 @@
                         $system->purchaseOrder->processPayment($payment);
 
                         //navigate to view with payment details
-                        return $this->redirect('payment/' . $payment->id);
+                        return $this->redirect('/payment/' . $payment->id);
                     } else {
                         return $this->render('create-' . $user->role,
                             [
