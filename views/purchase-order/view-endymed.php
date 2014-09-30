@@ -108,6 +108,7 @@
                     'label' => Yii::t('app', 'End-User'),
                     'value' => isset($model->endUser) ? $model->endUser->title : Yii::t('app', 'End-User not assigned'),
                 ],
+                'lastPaymentDate',
                 'createdAt',
                 'updatedAt'
                 ],

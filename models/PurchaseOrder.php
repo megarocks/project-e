@@ -40,6 +40,7 @@
      * @property Distributor $distributor
      * @property System $system
      * @property boolean $editable
+     * @property string lastPaymentDate
      */
     class PurchaseOrder extends PpdBaseModel
     {
@@ -98,7 +99,7 @@
         public function fields()
         {
             return [
-                'id', 'po_num', 'cpup', 'dpup', 'dsp', 'csp', 'nop', 'ctpl', 'dtpl', 'cnpl', 'dnpl', 'system_sn', 'distributor', 'country', 'endUser',
+                'id', 'po_num', 'cpup', 'dpup', 'dsp', 'csp', 'nop', 'ctpl', 'dtpl', 'cnpl', 'dnpl', 'system_sn', 'distributor', 'country', 'endUser', 'lastPaymentDate',
                 'created_at' => function () {
                     return date('M j Y h:i A', strtotime($this->created_at));
                 },
@@ -304,5 +305,17 @@
         public function getEditable()
         {
             return (count($this->payments) == 0);
+        }
+
+        public function getLastPaymentDate()
+        {
+            if (count($this->payments) > 0) {
+                $lastElementIndex = count($this->payments) - 1;
+                $lastPayment = $this->payments[$lastElementIndex];
+
+                return $lastPayment->createdAt;
+            } else {
+                return null;
+            }
         }
     }
