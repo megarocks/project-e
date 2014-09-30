@@ -118,7 +118,6 @@
                     'login_code',
                     'current_code',
                     'initialLockingDate',
-                    'nextLockingDate',
                     'createdAt',
                 ],
             ]) ?>

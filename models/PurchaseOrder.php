@@ -190,13 +190,14 @@
             return $this->hasMany(Payment::className(), ['po_num' => 'po_num']);
         }
 
-        private function calculateValues($calculateMonthlyAmounts = false)
+        private function calculateValues($calculateMonthlyPayments = false)
         {
-            if ($calculateMonthlyAmounts) {
+            if ($calculateMonthlyPayments) {
                 //calculate monthly payment value
                 $this->cmp = ($this->cnpl == 0) ? 0 : ($this->csp - $this->cpup) / $this->cnpl;
                 $this->dmp = ($this->dnpl == 0) ? 0 : ($this->dsp - $this->dpup) / $this->dnpl;
             }
+
             //calculate rest amount to pay
             $this->ctpl = $this->cmp * $this->cnpl;
             $this->dtpl = $this->dmp * $this->dnpl;
