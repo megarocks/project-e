@@ -14,7 +14,7 @@
 <div class="manufacturers-index">
     <p>
         <?=
-            Html::a(Yii::t('app', 'Register new manufacturer`s account'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
+            Html::a(Yii::t('app', 'Register new manufacturer'), ['create'], ['class' => 'btn btn-success btn-sm']) ?>
     </p>
 
     <table id="end-users-table" class="table-hover">
