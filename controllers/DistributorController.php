@@ -77,7 +77,12 @@
                         $out[] = $res;
                     }
                     //return json array with list of distributors
-                    echo Json::encode(['output' => $out, 'selected' => '']);
+                    if (count($out) > 0) {
+                        echo Json::encode(['output' => $out, 'selected' => $out[0]['id']]);
+                    } else {
+                        echo Json::encode(['output' => $out, 'selected' => '']);
+                    }
+
                 }
             } else {
                 //if country is not specified return empty list

@@ -8,6 +8,7 @@
     use Yii;
     use app\models\EndUser;
     use yii\filters\AccessControl;
+    use yii\helpers\ArrayHelper;
     use yii\helpers\Json;
     use yii\web\ForbiddenHttpException;
     use yii\filters\VerbFilter;
@@ -75,11 +76,13 @@
                 $user = Yii::$app->user->identity;
 
                 $endUser = new EndUser();
+                $countriesList = ArrayHelper::map(Country::find()->all(), 'id', 'name');
 
                 if ($user->role == User::ROLE_DISTR) {
                     $distributor = Distributor::findOne(['user_id' => $user->id]);
                     $endUser->country_id = $distributor->country_id;
                     $endUser->distributor_id = $distributor->id;
+                    $countriesList = [$distributor->country_id => $distributor->country->name];
                 }
 
                 $passForNewUser = Yii::$app->security->generateRandomString(6);
@@ -99,18 +102,27 @@
                         $endUser->user_id = $relatedUser->id;
                         if ($endUser->createModel()) {
                             return $this->redirect(['view', 'id' => $endUser->id]);
+                        } else {
+                            return $this->render('create-' . $user->role,
+                                [
+                                    'endUser'       => $endUser,
+                                    'relatedUser'   => $relatedUser,
+                                    'countriesList' => $countriesList,
+                                ]);
                         }
                     } else {
                         return $this->render('create-' . $user->role,
                             [
                                 'endUser'     => $endUser,
                                 'relatedUser' => $relatedUser,
+                                'countriesList' => $countriesList,
                             ]);
                     }
                 } else {
                     return $this->render('create-' . $user->role, [
                         'endUser'     => $endUser,
                         'relatedUser' => $relatedUser,
+                        'countriesList' => $countriesList,
                     ]);
                 }
             } else {
@@ -128,6 +140,12 @@
                 $endUser = $this->findModel($id);
                 /**@var User $relatedUser */
                 $relatedUser = $endUser->user;
+                $countriesList = ArrayHelper::map(Country::find()->all(), 'id', 'name');
+
+                if ($user->role == User::ROLE_DISTR) {
+                    $distributor = Distributor::findOne(['user_id' => $user->id]);
+                    $countriesList = [$distributor->country_id => $distributor->country->name];
+                }
 
                 $request = Yii::$app->request->post();
 
@@ -138,10 +156,10 @@
                     if ($relatedUser->updateModel() && $endUser->updateModel()) {
                         return $this->redirect(['view', 'id' => $endUser->id]);
                     } else {
-                        return $this->render('update-' . $user->role, ['endUser' => $endUser, 'relatedUser' => $relatedUser]);
+                        return $this->render('update-' . $user->role, ['endUser' => $endUser, 'relatedUser' => $relatedUser, 'countriesList' => $countriesList,]);
                     }
                 } else {
-                    return $this->render('update-' . $user->role, ['endUser' => $endUser, 'relatedUser' => $relatedUser]);
+                    return $this->render('update-' . $user->role, ['endUser' => $endUser, 'relatedUser' => $relatedUser, 'countriesList' => $countriesList,]);
                 }
 
             } else {
