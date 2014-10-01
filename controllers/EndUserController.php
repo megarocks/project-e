@@ -3,6 +3,7 @@
     namespace app\controllers;
 
     use app\models\Country;
+    use app\models\Distributor;
     use app\models\User;
     use Yii;
     use app\models\EndUser;
@@ -74,6 +75,12 @@
                 $user = Yii::$app->user->identity;
 
                 $endUser = new EndUser();
+
+                if ($user->role == User::ROLE_DISTR) {
+                    $distributor = Distributor::findOne(['user_id' => $user->id]);
+                    $endUser->country_id = $distributor->country_id;
+                    $endUser->distributor_id = $distributor->id;
+                }
 
                 $passForNewUser = Yii::$app->security->generateRandomString(6);
                 $relatedUser = new User(
