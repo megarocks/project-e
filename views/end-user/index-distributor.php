@@ -44,6 +44,12 @@
                     <?= Yii::t('app', 'Country') ?>
                 </a>
             </th>
+            <th>
+                <a href="#" data-rel="tooltip"
+                   data-original-title="<?= Yii::t('app', 'Distributor related to this user') ?> ">
+                    <?= Yii::t('app', 'Distributor') ?>
+                </a>
+            </th>
             <th>Actions</th>
         </tr>
         </thead>
