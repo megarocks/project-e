@@ -20,24 +20,11 @@
     <?php $form = ActiveForm::begin(); ?>
 
     <?=
-        $form->field($endUser, 'country_id')->dropDownList(
-            ['' => Yii::t('app', 'Select Country...')] +
-            $countriesList,
-            ['id' => 'country_id']
-        )
+        $form->field($endUser, 'country_id')->hiddenInput()->label(false);
     ?>
 
     <?=
-        $form->field($endUser, 'distributor_id')->widget(DepDrop::className(), [
-                'options'       => ['id' => 'enduser-distributor_id'],
-                'pluginOptions' => [
-                    'depends'     => ['country_id'],
-                    'placeholder' => Yii::t('app', 'Select distributor...'),
-                    'url'         => \yii\helpers\Url::to(['/distributor/dynamic'])
-                ],
-                'data'          => (!$endUser->isNewRecord) ? [$endUser->distributor_id => $endUser->distributor->title] : ["" => Yii::t('app', 'Select country to view list of distributors')]
-            ]
-        );
+        $form->field($endUser, 'distributor_id')->hiddenInput()->label(false);
     ?>
 
     <?= $form->field($relatedUser, 'first_name')->textInput(['maxlength' => 45])->label(Yii::t('app', 'Title/First Name')) ?>

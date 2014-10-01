@@ -28,7 +28,7 @@ use kartik\widgets\DepDrop;
                 'placeholder' => Yii::t('app', 'Select currency...'),
                 'url'         => \yii\helpers\Url::to(['dynamic-currency'])
             ],
-            'data' => ['' => Yii::t('app', 'Select Currency...')] + ArrayHelper::map(Country::find()->all(), 'currency_code', 'currency_code'),
+            'data' => (!$model->isNewRecord) ? [Country::findOne($model->country_id)->currency_code => Country::findOne($model->country_id)->currency_code] + ['USD' => 'USD'] : ["" => Yii::t('app', 'Select country to view list of currencies')]
 
         ]);
     ?>
@@ -45,7 +45,7 @@ use kartik\widgets\DepDrop;
             'placeholder' => Yii::t('app', 'Select distributor...'),
             'url' => \yii\helpers\Url::to(['/distributor/dynamic'])
         ],
-        'data' => ['' => Yii::t('app', 'Select Distributor...')] + ArrayHelper::map(Distributor::find()->all(), 'id', 'title'),
+        'data' => (!$model->isNewRecord) ? ArrayHelper::map(Distributor::findAllFiltered(['country_id' => $model->country_id]), 'id', 'title') : ["" => Yii::t('app', 'Select country to view list of distributors')]
     ]);
     ?>
 
@@ -57,7 +57,7 @@ use kartik\widgets\DepDrop;
                 'placeholder' => Yii::t('app', 'Select end-user...'),
                 'url'         => \yii\helpers\Url::to(['/end-user/dynamic'])
             ],
-            'data' => ['' => Yii::t('app', 'Select End-User...')] + ArrayHelper::map(EndUser::find()->all(), 'id', 'title'),
+            'data' => (!$model->isNewRecord) ? ArrayHelper::map(EndUser::findAllFiltered(['country_id' => $model->country_id]), 'id', 'title') : ["" => Yii::t('app', 'Select country to view list of endusers')]
         ]);
     ?>
 
