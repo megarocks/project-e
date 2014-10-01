@@ -59,7 +59,9 @@
                     'items' => [
                         [
                             'label' => Yii::t('app', 'View/Edit Profile'),
-                            'url'   => ['user/profile']
+                            'url'     => ['user/profile'],
+                            'visible' => !Yii::$app->session->get('loggedByCode'),
+
                         ],
                         [
                             'label'       => Yii::t('app', 'Logout'),
