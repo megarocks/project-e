@@ -6,6 +6,7 @@
 
     /**@var $user User */
     $loginUrl = Url::toRoute('/site/login', true);
+    $passwordResetUrl = \yii\helpers\Url::toRoute(['/site/password-reset', 'password_reset_token' => urlencode($user->password_reset_token)], true);
 ?>
 
 <p>Dear <?= $user->first_name ?>,</p>
@@ -37,4 +38,8 @@
     </tr>
     </tbody>
 </table>
+
+<p>
+    <?= Yii::t('app', 'You can also navigate by this link: {link} to change any details of your account. Please notice that link becomes invalid after the use', ['link' => $passwordResetUrl]) ?>
+</p>
 <p><?= Yii::t('app', 'Have a good day and don`t forget to smile') ?></p>
