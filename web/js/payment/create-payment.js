@@ -7,6 +7,41 @@ var initScreen = function (user) {
     handlePeriodsChange(values);
 
     handleFromChange(values);
+
+    $('.add-payment-btn').bind('click', function (event) {
+        event.preventDefault();
+
+        var values = getValues();
+
+        var paymentDetails = "<h3>Confirm Payment Details:</h3>";
+
+        paymentDetails += "<strong>System SN:</strong>&nbsp;" + values.system_sn + "<br/>"
+        + "<strong>Purchase Order #:</strong>&nbsp;" + values.po_num + "<br/>";
+
+        if (values.payerType == 'enduser') {
+            var sumToPay = (values.cmp * values.periods).toFixed(2);
+
+            paymentDetails += "<strong>End-User:</strong>&nbsp;" + values.end_user_title + "<br/>"
+            + "<strong>Amount:</strong>&nbsp;" + sumToPay + "&nbsp;" + values.currency_code + "<br/>";
+        }
+
+        if (values.payerType == 'distributor') {
+            var sumToPay = (values.dmp * values.periods).toFixed(2);
+
+            paymentDetails += "<strong>Distributor:</strong>&nbsp;" + values.distributor_title + "<br/>"
+            + "<strong>Amount:</strong>&nbsp;" + sumToPay + "&nbsp;" + values.currency_code + "<br/>";
+        }
+
+        bootbox.confirm(paymentDetails, function (result) {
+            if (result) {
+                $('#payment-create-form').submit();
+                console.log('submit');
+            } else {
+                console.log('not submit');
+            }
+        })
+
+    });
 };
 
 function getValues() {
@@ -15,7 +50,12 @@ function getValues() {
         periods: $('#payment-periods').val(),
         dmp: $('input[name=dmp]').val(),
         cmp: $('input[name=cmp]').val(),
-        access_token: $('input[name=access_token]').val()
+        access_token: $('input[name=access_token]').val(),
+        system_sn: $('#system_sn').val(),
+        po_num: $('#po_num').val(),
+        currency_code: $('#currency_code').val(),
+        end_user_title: $('#end_user_title').val(),
+        distributor_title: $('#distributor_title').val()
     };
 }
 
@@ -34,10 +74,10 @@ function setValuesOnPage(values) {
     }
 
     if (values.periods == 0) {
-        $('.add-payment-btn').prop('disabled', true);
+        $('.add-payment-btn').addClass('disabled');
         $('#payment-details').hide();
     } else {
-        $('.add-payment-btn').prop('disabled', false);
+        $('.add-payment-btn').removeClass('disabled');
         $('#payment-details').show();
     }
 

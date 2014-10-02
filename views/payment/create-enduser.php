@@ -28,6 +28,11 @@
     <?= Html::hiddenInput('dmp', $system->purchaseOrder->dmp) ?>
     <?= Html::hiddenInput('cmp', $system->purchaseOrder->cmp) ?>
     <?= Html::hiddenInput('access_token', $system->access_token) ?>
+    <?= Html::hiddenInput('system_sn', $system->sn, ['id' => 'system_sn']) ?>
+    <?= Html::hiddenInput('po_num', $system->purchaseOrder->po_num, ['id' => 'po_num']) ?>
+    <?= Html::hiddenInput('currency_code', $system->purchaseOrder->currency_code, ['id' => 'currency_code']) ?>
+    <?= Html::hiddenInput('end_user_title', $system->purchaseOrder->endUser->title, ['id' => 'end_user_title']) ?>
+    <?= Html::hiddenInput('distributor_title', $system->purchaseOrder->distributor->title, ['id' => 'distributor_title']) ?>
 
     <?=
         $form->field($model, 'po_num')->textInput(
@@ -56,7 +61,7 @@
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Add Payment'), ['class' => 'btn btn-primary add-payment-btn']) ?>
+        <?= Html::a(Yii::t('app', 'Add Payment'), '#', ['class' => 'btn btn-primary add-payment-btn']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
