@@ -11,7 +11,7 @@
     /* @var $model Payment */
     /**@var $system System */
 
-    $this->title = "Payment #" . $model->id . " details";
+    $this->title = "Payment details";
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Payments'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
 
