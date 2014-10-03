@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/system/systems-index-endymed.js'
+            'js/system/systems-index-endymed.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

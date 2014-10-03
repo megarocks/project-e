@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/purchase-order/po-index-endymed.js'
+            'js/purchase-order/po-index-endymed.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

@@ -15,7 +15,7 @@
         public $baseUrl = '@web';
         public $css = [];
         public $js = [
-            '/js/manufacturer/manufacturer-index.js'
+            'js/manufacturer/manufacturer-index.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/purchase-order/po-index-manufacturer.js'
+            'js/purchase-order/po-index-manufacturer.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

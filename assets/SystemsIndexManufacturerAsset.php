@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/system/systems-index-manufacturer.js'
+            'js/system/systems-index-manufacturer.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

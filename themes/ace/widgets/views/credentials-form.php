@@ -49,7 +49,7 @@
             <div class="clearfix">
 
                 <label class="inline">
-                    <?= Html::activeCheckbox($model, 'rememberMe', ['class' => 'ace']) ?>
+                    <?= Html::activeCheckbox($model, 'rememberMe', ['class' => 'ace', 'label' => null]) ?>
                     <span class="lbl"> <?= Yii::t('app', 'Remember Me') ?></span>
                 </label>
 
