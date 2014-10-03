@@ -15,7 +15,7 @@
         public $baseUrl = '@web';
         public $css = [];
         public $js = [
-            '/js/end-user/endusers-index-endymed.js'
+            'js/end-user/endusers-index-endymed.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

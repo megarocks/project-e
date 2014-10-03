@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/site/login-screen.js'
+            'js/site/login-screen.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

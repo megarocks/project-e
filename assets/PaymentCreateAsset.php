@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/payment/create-payment.js'
+            'js/payment/create-payment.js'
         ];
         public $depends = [
             'app\assets\AppAsset',

@@ -18,7 +18,7 @@ class SystemsOrderAsset extends AssetBundle
 
     ];
     public $js = [
-        '/js/systems-order-list.js'
+        'js/systems-order-list.js'
     ];
     public $depends = [
         'app\assets\AppAsset',

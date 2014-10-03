@@ -18,7 +18,7 @@
 
         ];
         public $js = [
-            '/js/system/systems-index-enduser.js'
+            'js/system/systems-index-enduser.js'
         ];
         public $depends = [
             'app\assets\AppAsset',
