@@ -8,10 +8,11 @@
 
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 
-class_name: WebGuy
+class_name: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser
+        - WebHelper
 # you can use WebDriver instead of PhpBrowser to test javascript and ajax.
 # This will require you to install selenium. See http://codeception.com/docs/04-AcceptanceTests#Selenium
 # "restart" option is used by the WebDriver to start each time per test-file new session and cookies,
@@ -19,7 +20,7 @@ modules:
 #        - WebDriver
     config:
         PhpBrowser:
-            url: 'http://localhost:8080'
+            url: 'http://endymed-ppd.php.viawolf.com'
 #        WebDriver:
 #            url: 'http://localhost'
 #            browser: firefox
