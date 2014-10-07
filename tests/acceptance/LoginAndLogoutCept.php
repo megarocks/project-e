@@ -9,11 +9,13 @@
     $I->fillField('#credentialsloginform-password', '123');
     $I->click('.login-form-submit');
     $I->waitForText('Logged as: Root');
-    $I->amOnPage('/');
+    $I->seeCurrentUrlEquals('/');
 
     $I->amGoingTo('Perform logout and navigate to login form');
     $I->seeLink('Logout');
     $I->click('Logged as: Root');
     $I->click('Logout');
-    $I->amOnPage('/site/login');
+    $I->seeCurrentUrlEquals('/site/login');
     $I->dontSee('Logged as: Root');
+    $I->dontSee('Logout');
+    $I->see('Login');
