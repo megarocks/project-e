@@ -57,7 +57,7 @@
                     Html::submitButton(
                         '<i class="ace-icon fa fa-key"></i>' .
                         '<span class="bigger-110">' . Yii::t('app', 'Login') . '</span>',
-                        ['class' => 'width-35 pull-right btn btn-sm btn-primary', 'name' => 'login-button']) ?>
+                        ['class' => 'width-35 pull-right btn btn-sm btn-primary login-form-submit', 'name' => 'login-button']) ?>
             </div>
 
             <div class="space-4"></div>
