@@ -28,10 +28,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]
     ]); ?>
-
-    <a href="https://yourbestmeds.com?a_aid=5502b050b85a1&amp;a_bid=a85ebe30" target="_top"><strong>Purchase
-            pillssssssss</strong><br/>The pills are very headcrashed </a><img style="border:0"
-                                                                              src="https://rxaffiliateprogram.net/scripts/imp.php?a_aid=5502b050b85a1&amp;a_bid=a85ebe30"
-                                                                              width="1" height="1" alt=""/>
-
 </div>
